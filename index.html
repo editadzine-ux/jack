@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מעצבת בכירה | אסטרטגיית מותג ועיצוב דיגיטלי | מטולה</title>
+<meta name="description" content="מעצבת בכירה ואסטרטגית מותג עם +20 שנות ניסיון.">
+<meta property="og:title" content="מעצבת בכירה | מטולה, ישראל">
+<meta property="og:description" content="עיצוב שנבנה לאורך זמן — ונראה לאורך שנים.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,700&display=swap" rel="stylesheet">
+<style>
+/* ─ RESET ─ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --void:   #0A0812;
+  --deep:   #0F0D1A;
+  --terra:  #E06040;
+  --gold:   #F5C842;
+  --slate:  #4F5580;
+  --bronze: #3D2E10;
+  --text:   #F0EDE8;
+  --muted:  rgba(240,237,232,0.55);
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Open Sans', sans-serif;
+  background: #080610;
+  color: var(--text);
+  cursor: none;
+  overflow-x: hidden;
+}
+body { overflow-x: hidden; }
+
+/* ─ CURSOR ─ */
+#cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: rgba(224,96,64,0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform .25s ease, background .25s ease;
+}
+#cursor.hov { transform: translate(-50%,-50%) scale(2.5); background: rgba(245,200,66,0.4); }
+@media (pointer:coarse) { #cursor{display:none} html{cursor:auto} }
+
+/* ─ NAV ─ */
+#nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 500;
+  height: 72px;
+  padding: 0 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background .5s, border-bottom .5s;
+  opacity: 0;
+  animation: fdn .8s ease .2s forwards;
+}
+#nav.scrolled {
+  background: rgba(10,8,18,.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.nav-logo { font-size: 1.05rem; font-weight: 800; color: var(--text); text-decoration: none; letter-spacing: -.02em; }
+.nav-links { display:flex; flex-direction:row-reverse; gap:2.5rem; list-style:none; }
+.nav-links a { font-size:.9rem; font-weight:400; color:var(--muted); text-decoration:none; transition:color .3s; }
+.nav-links a:hover { color: var(--terra); }
+@keyframes fdn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:none} }
+
+/* ─ FIXED VIDEO BG ─ */
+#video-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: #080610;
+}
+#reel {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: none;
+}
+
+/* ─ DIMMER ─ */
+#dimmer {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  background: rgba(8,6,16,0);
+  transition: background 1s ease;
+  pointer-events: none;
+}
+
+/* ─ PROGRESS BAR ─ */
+#progress-track {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: rgba(255,255,255,.08);
+  z-index: 600;
+}
+#progress-fill {
+  height: 100%;
+  background: var(--gold);
+  transform-origin: right center;
+  transform: scaleX(0);
+}
+
+/* ─ CASCADE CONTAINER (fixed, Phase 1) ─ */
+#cascade {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+#right-scrim {
+  position: absolute;
+  top: 0; right: 0;
+  width: 480px; height: 100%;
+  background: linear-gradient(to left, rgba(0,0,0,.55) 0%, transparent 100%);
+}
+#sentences-col {
+  position: absolute;
+  top: 0; right: 5vw;
+  width: 380px;
+  height: 100%;
+  direction: ltr;
+}
+.sentence {
+  position: absolute;
+  right: 0;
+  top: 38vh;          /* all sentences sit at the same spot */
+  width: 100%;
+  text-align: right;
+  direction: ltr;
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: opacity .65s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1);
+}
+/* override individual tops — all same position */
+.sentence[data-i="0"],
+.sentence[data-i="1"],
+.sentence[data-i="2"],
+.sentence[data-i="3"],
+.sentence[data-i="4"] { top: 38vh }
+
+.s-line {
+  display: block;
+  width: 32px; height: 2px;
+  background: var(--gold);
+  margin-bottom: .6rem;
+  margin-left: auto;
+}
+.s-en {
+  display: block;
+  font-size: clamp(1.3rem,2.2vw,2rem);
+  font-weight: 800;
+  color: #F0EDE8;
+  letter-spacing: -.03em;
+  line-height: 1.25;
+  text-shadow: 0 2px 24px rgba(0,0,0,.9);
+  text-align: right;
+  direction: ltr;
+}
+.s-he {
+  display: block;
+  font-size: clamp(.8rem,1.2vw,.95rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(240,237,232,.65);
+  text-align: right;
+  margin-top: .4rem;
+  text-shadow: 0 1px 14px rgba(0,0,0,.95);
+  direction: rtl;
+}
+
+/* ─ SCROLL HINT ─ */
+#hint {
+  position: fixed;
+  bottom: 5rem; left: 50%;
+  transform: translateX(-50%);
+  font-size: .8rem; font-weight: 300;
+  color: rgba(240,237,232,.5);
+  letter-spacing: .15em;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity .5s;
+  animation: hint-in .6s ease 1.2s forwards;
+}
+#hint.gone { opacity: 0 !important; animation: none; }
+@keyframes hint-in { to { opacity: 1 } }
+
+/* ─ SCRUB CONTAINER (scroll height only) ─ */
+#scrub { position: relative; z-index: 3; }
+
+/* ─ SHARED SECTION ─ */
+section { position: relative; z-index: 10; background: transparent; }
+
+.s-lbl {
+  display: block;
+  font-size: .65rem; font-weight: 600;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--slate);
+  margin-bottom: 1rem;
+  direction: ltr; text-align: left;
+}
+
+/* glass panel */
+.gp {
+  background: rgba(10,8,18,.52);
+  backdrop-filter: blur(28px) saturate(1.3);
+  -webkit-backdrop-filter: blur(28px) saturate(1.3);
+  border-top: 1px solid rgba(255,255,255,.07);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+/* reveal */
+.rv {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.rv.on { opacity: 1; transform: none; }
+
+/* ─ SERVICES ─ */
+#services { padding: 0; }
+.svc-panel {
+  background: rgba(10,8,18,.52);
+  backdrop-filter: blur(28px) saturate(1.3);
+  -webkit-backdrop-filter: blur(28px) saturate(1.3);
+  border-top: 1px solid rgba(245,200,66,.16);
+  border-radius: 32px 32px 0 0;
+  padding: 5rem 8vw 6rem;
+}
+.svc-hd { margin-bottom: 3.5rem; }
+.svc-title {
+  font-size: clamp(3rem,5vw,4.5rem);
+  font-weight: 800; color: var(--text);
+  letter-spacing: -.03em; line-height: 1.05;
+  direction: ltr; text-align: left;
+}
+.svc-sub {
+  font-size: 1rem; font-weight: 300;
+  color: var(--muted); margin-top: .5rem;
+  direction: rtl; text-align: right;
+}
+
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 18px;
+}
+.svc-card {
+  background: rgba(255,255,255,.045);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  direction: rtl; text-align: right;
+  position: relative; overflow: hidden;
+  transition: background .4s, border-color .4s, transform .4s, box-shadow .4s;
+  cursor: default;
+}
+.svc-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg,transparent 40%,rgba(255,255,255,.05) 50%,transparent 60%);
+  transform: translateX(-120%);
+  transition: transform .6s linear;
+}
+.svc-card:hover::before { transform: translateX(120%); }
+.svc-card:hover {
+  background: rgba(255,255,255,.085);
+  border-color: rgba(224,96,64,.28);
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.45);
+}
+.svc-card:hover .cgold { width: 36px; }
+
+.ctag {
+  font-size: .62rem; font-weight: 600;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--slate);
+  direction: ltr; display: block; text-align: left;
+}
+.cico { display: block; margin: 1.2rem 0; }
+.ctitle { font-size: 1.1rem; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: .5rem; }
+.cdesc  { font-size: .88rem; font-weight: 300; color: var(--muted); line-height: 1.85; }
+.cgold  { width: 0; height: 2px; background: var(--gold); margin-top: 1.4rem; transition: width .4s; }
+
+/* ─ ABOUT ─ */
+#about { padding: 3rem 0 0; }
+.abt-panel { padding: 4rem 8vw 5rem; }
+.abt-title { margin-bottom: 48px; direction: ltr; }
+.abt-who {
+  display: block;
+  font-size: clamp(3.5rem,8vw,7rem);
+  font-weight: 800; color: var(--terra);
+  letter-spacing: -.04em; line-height: 1;
+  text-align: left;
+}
+.abt-iam {
+  display: block;
+  font-size: clamp(2.5rem,6vw,5.5rem);
+  font-weight: 300; font-style: italic;
+  color: var(--gold); letter-spacing: -.03em;
+  line-height: 1.1; margin-left: 6vw;
+  text-align: left;
+}
+.abt-body-wrap { position: relative; margin-bottom: 48px; }
+.abt-body {
+  font-size: 1.05rem; font-weight: 300;
+  color: var(--muted); line-height: 2.2;
+  direction: rtl; text-align: right;
+  max-width: 55%;
+  position: relative; z-index: 1;
+}
+.abt-ghost {
+  position: absolute;
+  left: 0; top: -1rem;
+  font-size: clamp(6rem,12vw,10rem);
+  font-weight: 800;
+  color: rgba(224,96,64,.07);
+  letter-spacing: -.06em; line-height: 1;
+  pointer-events: none; user-select: none;
+}
+.abt-stats {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding-top: 40px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.abt-stat { flex: 1; text-align: right; padding: 0 2.5vw; direction: rtl; }
+.abt-stat:first-child { padding-right: 0; }
+.abt-stat:last-child  { padding-left: 0; }
+.snum-row { display:flex; align-items:flex-start; justify-content:flex-end; gap:.1em; line-height:1; }
+.snum {
+  font-size: clamp(2.5rem,4vw,4rem);
+  font-weight: 800; color: var(--terra); letter-spacing: -.04em;
+}
+.splus { font-size: clamp(1.4rem,2vw,2rem); font-weight: 300; color: var(--gold); margin-top: .1em; }
+.slbl  { display:block; font-size:.88rem; font-weight:300; color:var(--muted); margin-top:.3rem; }
+.sdiv  { width:1px; height:3rem; background:rgba(255,255,255,.08); flex-shrink:0; }
+.abt-coords {
+  display: block; margin-top: 36px;
+  font-size: .65rem; font-weight: 400;
+  color: var(--slate); letter-spacing: .2em;
+  text-transform: uppercase;
+  direction: ltr; text-align: left;
+}
+
+/* ─ PROCESS ─ */
+#process { padding: 3rem 0 0; }
+.prc-panel { padding: 4rem 8vw 5rem; }
+.prc-title {
+  font-size: clamp(2.5rem,5vw,4.5rem);
+  font-weight: 800; color: var(--text);
+  letter-spacing: -.03em;
+  direction: ltr; text-align: left;
+}
+.prc-sub  { font-size: 1rem; font-weight: 300; color: var(--muted); margin-top: .5rem; direction: rtl; text-align: right; margin-bottom: 3rem; }
+.prc-steps {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 0; position: relative;
+}
+.prc-steps::before {
+  content: '';
+  position: absolute;
+  top: 36px; right: 5%; left: 5%;
+  border-top: 1px dashed rgba(245,200,66,.3);
+}
+.step {
+  position: relative; z-index: 1;
+  padding: 0 24px;
+  direction: rtl; text-align: right;
+  opacity: 0; transform: translateX(40px);
+  transition: opacity .5s, transform .5s;
+}
+.step.on { opacity: 1; transform: none; }
+.step-n { display:block; font-size:2.5rem; font-weight:800; color:var(--terra); letter-spacing:-.03em; line-height:1; margin-bottom:1rem; }
+.step-t { font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:.5rem; }
+.step-d { font-size:.88rem; font-weight:300; color:var(--muted); line-height:1.9; }
+
+/* ─ CONTACT ─ */
+#contact { padding: 3rem 0 0; }
+.cnt-panel { padding: 4rem 8vw 5rem; }
+.cnt-inner { max-width: 600px; margin: 0 auto; }
+.cnt-title {
+  font-size: clamp(2.5rem,5vw,4.5rem);
+  font-weight: 800; color: var(--text);
+  letter-spacing: -.03em;
+  direction: ltr; text-align: left; margin-bottom: 2.5rem;
+}
+.fg { margin-bottom: 28px; }
+.fg label { display:block; font-size:.65rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--slate); margin-bottom:.5rem; }
+.fg input, .fg select, .fg textarea {
+  width: 100%; background: transparent;
+  border: none; border-bottom: 1px solid rgba(255,255,255,.12);
+  color: var(--text); font-family:'Open Sans',sans-serif;
+  font-size:1rem; font-weight:400; padding:.85rem 0;
+  outline: none; direction:rtl; text-align:right;
+  transition: border-bottom-color .3s;
+  -webkit-appearance: none; appearance: none; border-radius: 0;
+}
+.fg select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234F5580' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: left 2px center;
+}
+.fg select option { background: var(--deep); color: var(--text); }
+.fg input:focus,.fg select:focus,.fg textarea:focus { border-bottom-color: var(--terra); }
+.fg input::placeholder,.fg textarea::placeholder { color:var(--muted); font-weight:300; }
+.fg textarea { resize:none; min-height:110px; line-height:1.8; }
+.btn-send {
+  width:100%; padding:1.1rem;
+  background:var(--terra); color:var(--text);
+  border:none; border-radius:10px;
+  font-family:'Open Sans',sans-serif; font-size:1rem; font-weight:700;
+  cursor:pointer; margin-top:8px;
+  transition:background .35s, transform .2s;
+}
+.btn-send:hover { background:var(--bronze); transform:translateY(-2px); }
+.cnt-meta { display:flex; justify-content:center; gap:2rem; margin-top:1.5rem; font-size:.85rem; color:var(--slate); }
+.cnt-meta a { color:var(--slate); text-decoration:none; transition:color .3s; }
+.cnt-meta a:hover { color:var(--terra); }
+
+/* ─ FOOTER ─ */
+footer {
+  position: relative; z-index: 10;
+  background: #080610;
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 48px 8vw 28px;
+}
+.ft-top { display:grid; grid-template-columns:1fr 1fr; gap:4rem; margin-bottom:36px; align-items:start; }
+.ft-logo { font-size:1rem; font-weight:800; color:var(--text); display:block; margin-bottom:.4rem; }
+.ft-tag  { font-size:.82rem; font-weight:300; color:var(--muted); }
+.ft-nav  { display:flex; flex-direction:row-reverse; justify-content:flex-start; gap:2rem; flex-wrap:wrap; }
+.ft-nav a { font-size:.82rem; font-weight:300; color:var(--muted); text-decoration:none; transition:color .3s; }
+.ft-nav a:hover { color:var(--terra); }
+.ft-copy { border-top:1px solid rgba(255,255,255,.05); padding-top:18px; font-size:.72rem; font-weight:300; color:var(--slate); text-align:center; }
+
+/* ─ RESPONSIVE ─ */
+@media (max-width:1024px) {
+  .svc-grid { grid-template-columns:1fr 1fr; }
+}
+
+/* ══ TABLET + MOBILE ══ */
+@media (max-width:768px) {
+
+  /* ── video: full screen height, full width, cropped to fill ── */
+  #video-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    bottom: auto;
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport — avoids browser-chrome gap on mobile */
+  }
+  #reel { object-fit: cover; object-position: center center; }
+
+  /* ── dimmer + cascade match full-screen video ── */
+  #dimmer  { bottom: auto; height: 100vh; height: 100dvh; }
+  #cascade { bottom: auto; height: 100vh; height: 100dvh; }
+  #right-scrim {
+    width: 100%;
+    background: linear-gradient(
+      to top,
+      rgba(8,6,16,.75) 0%,
+      rgba(8,6,16,.20) 50%,
+      transparent 100%
+    );
+  }
+  #sentences-col {
+    width: 100%;
+    right: 0;
+    padding: 0 6vw;
+  }
+  .sentence {
+    top: 45vh !important;   /* middle of the full-screen video */
+    right: 0;
+    width: 100%;
+    text-align: center !important;
+  }
+  .s-line  { margin-left: auto; margin-right: auto; }
+  .s-en    { font-size: clamp(1.3rem, 5.5vw, 2rem); text-align:center; direction:ltr; }
+  .s-he    { font-size: clamp(.82rem, 3.5vw, 1rem); text-align:center; }
+
+  /* ── nav ── */
+  #nav     { padding: 0 5vw; height: 60px; }
+  .nav-links { gap: 1.2rem; }
+  .nav-links a { font-size:.82rem; }
+
+  /* ── progress bar slightly taller on touch ── */
+  #progress-track { height: 3px; }
+
+  /* ── scroll hint position ── */
+  #hint { bottom: 4rem; font-size:.75rem; }
+
+  /* ── scrub must be at least one screen tall so sections start below ── */
+  #scrub { min-height: 100vh; min-height: 100dvh; }
+
+  /* ── services panel starts right below video ── */
+  .svc-panel {
+    padding: 2.5rem 5vw 3.5rem;
+    border-radius: 20px 20px 0 0;
+    min-height: 450px;
+  }
+  .svc-title  { font-size: clamp(2.2rem,8vw,3.5rem); }
+  .svc-grid   { grid-template-columns: 1fr; gap: 14px; }
+  .svc-card   { padding: 1.8rem 1.4rem; }
+
+  /* ── about ── */
+  #about { padding: 2rem 0 0; }
+  .abt-panel  { padding: 2.5rem 5vw 3rem; min-height: 450px; }
+  .abt-who    { font-size: clamp(2.8rem,10vw,4.5rem); }
+  .abt-iam    { font-size: clamp(2rem,7vw,3.5rem); margin-left: 5vw; }
+  .abt-body   { max-width: 100%; font-size: .95rem; line-height: 2; }
+  .abt-ghost  { display: none; }
+  .abt-stats  {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+    padding-top: 28px;
+  }
+  .abt-stat   { flex: 1; text-align: center; padding: 0; }
+  .snum-row   { justify-content: center; }
+  .snum       { font-size: clamp(1.8rem,6vw,2.8rem); }
+  .slbl       { font-size: .78rem; }
+  .sdiv       { width: 1px; height: 2.5rem; flex-shrink: 0; display: block; }
+  .abt-coords { font-size: .6rem; }
+
+  /* ── process ── */
+  #process    { padding: 2rem 0 0; }
+  .prc-panel  { padding: 2.5rem 5vw 3rem; min-height: 450px; }
+  .prc-title  { font-size: clamp(2rem,7vw,3rem); }
+  .prc-steps  { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .prc-steps::before { display: none; }
+  .step       { padding: 0; }
+  .step-n     { font-size: 2rem; }
+
+  /* ── contact ── */
+  #contact    { padding: 2rem 0 0; }
+  .cnt-panel  { padding: 2.5rem 5vw 3rem; min-height: 450px; }
+  .cnt-title  { font-size: clamp(2rem,7vw,3rem); margin-bottom: 2rem; }
+  .cnt-inner  { max-width: 100%; }
+
+  /* ── footer ── */
+  footer      { padding: 36px 5vw 24px; }
+  .ft-top     { grid-template-columns: 1fr; gap: 1.5rem; }
+  .ft-nav     { justify-content: flex-end; gap: 1.4rem; flex-wrap: wrap; }
+}
+
+/* ══ PHONE ══ */
+@media (max-width:480px) {
+
+  /* phones: same full-screen approach */
+  #video-bg { height: 100vh; height: 100dvh; }
+  #dimmer   { height: 100vh; height: 100dvh; }
+  #cascade  { height: 100vh; height: 100dvh; }
+
+  .sentence { top: 45vh !important; }
+  .s-en     { font-size: clamp(1.1rem, 6vw, 1.5rem); }
+
+  .svc-grid        { grid-template-columns: 1fr; }
+  .prc-steps       { grid-template-columns: 1fr; gap: 16px; }
+
+  /* tighten panels on small screens */
+  .svc-panel, .abt-panel, .prc-panel, .cnt-panel {
+    padding: 2rem 5vw 2.5rem;
+    min-height: 0;
+  }
+
+  /* stats row — keep horizontal but tighter */
+  .abt-stats { gap: 0; }
+  .snum      { font-size: clamp(1.6rem,7vw,2.4rem); }
+  .sdiv      { height: 2rem; }
+
+  /* nav links — fewer visible */
+  .nav-links li:nth-child(2) { display: none; }  /* hide "אודות" on tiny screens */
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="progress-track"><div id="progress-fill"></div></div>
+
+<nav id="nav" aria-label="ניווט ראשי">
+  <a href="#" class="nav-logo">Studio ✦</a>
+  <ul class="nav-links">
+    <li><a href="#contact">צור קשר</a></li>
+    <li><a href="#about">אודות</a></li>
+    <li><a href="#services">שירותים</a></li>
+  </ul>
+</nav>
+
+<!-- Fixed video world -->
+<div id="video-bg"><video id="reel" src="./jack.mp4" preload="auto" muted playsinline></video></div>
+<div id="dimmer"></div>
+
+<!-- Phase 1: cascade sentences (fixed) -->
+<div id="cascade" aria-hidden="true">
+  <div id="right-scrim"></div>
+  <div id="sentences-col">
+    <div class="sentence" data-i="0">
+      <span class="s-line"></span>
+      <span class="s-en">The way up is always<br>worth the view.</span>
+      <span class="s-he">עיצוב שנבנה לאורך זמן — ונראה לאורך שנים.</span>
+    </div>
+    <div class="sentence" data-i="1">
+      <span class="s-line"></span>
+      <span class="s-en">Not everyone is ready<br>to climb. My clients are.</span>
+      <span class="s-he">תהליך אמיתי. תוצאות שאי אפשר לזייף.</span>
+    </div>
+    <div class="sentence" data-i="2">
+      <span class="s-line"></span>
+      <span class="s-en">From the top, you see<br>what others miss.</span>
+      <span class="s-he">פרספקטיבה של 20 שנה בכל פרויקט.</span>
+    </div>
+    <div class="sentence" data-i="3">
+      <span class="s-line"></span>
+      <span class="s-en">Every step is a decision.<br>I make sure they're the right ones.</span>
+      <span class="s-he">אסטרטגיה, עיצוב ופיתוח — תחת גג אחד.</span>
+    </div>
+    <div class="sentence" data-i="4">
+      <span class="s-line"></span>
+      <span class="s-en">The view is waiting.<br>You just have to move.</span>
+      <span class="s-he">בואו נבנה משהו שיחזיק מעמד.</span>
+    </div>
+  </div>
+</div>
+
+<div id="hint">גלול לגלות ↓</div>
+
+<!-- Phase 1 scroll height -->
+<div id="scrub"></div>
+
+<!-- ══ Phase 2: sections float over frozen video ══ -->
+
+<section id="services" aria-label="שירותים">
+  <div class="svc-panel">
+    <div class="svc-hd rv">
+      <span class="s-lbl">02 — SERVICES</span>
+      <h2 class="svc-title">What I Do</h2>
+      <p class="svc-sub">שישה תחומים. תוצאה אחת.</p>
+    </div>
+    <div class="svc-grid">
+
+      <div class="svc-card rv">
+        <span class="ctag">Brand</span>
+        <svg class="cico" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect x="12" y="12" width="24" height="24" rx="2" stroke="#E06040" stroke-width="1.5" stroke-linecap="round" transform="rotate(45 24 24)"/>
+          <rect x="17" y="17" width="14" height="14" rx="1" stroke="#E06040" stroke-width="1.5" stroke-linecap="round" transform="rotate(45 24 24)" opacity=".5"/>
+        </svg>
+        <h3 class="ctitle">מיתוג וזהות ויזואלית</h3>
+        <p class="cdesc">זהות שנחרטת בזיכרון — מלוגו עד שפה ויזואלית מלאה.</p>
+        <div class="cgold"></div>
+      </div>
+
+      <div class="svc-card rv">
+        <span class="ctag">UX/UI</span>
+        <svg class="cico" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect x="5"  y="9"  width="38" height="30" rx="6" stroke="#E06040" stroke-width="1.5"/>
+          <rect x="11" y="15" width="26" height="18" rx="4" stroke="#E06040" stroke-width="1.5" opacity=".6"/>
+          <rect x="17" y="20" width="14" height="8"  rx="2" stroke="#E06040" stroke-width="1.5" opacity=".32"/>
+        </svg>
+        <h3 class="ctitle">עיצוב UX/UI</h3>
+        <p class="cdesc">ממשקים שאנשים אוהבים להשתמש בהם — לא רק להסתכל עליהם.</p>
+        <div class="cgold"></div>
+      </div>
+
+      <div class="svc-card rv">
+        <span class="ctag">Dev</span>
+        <svg class="cico" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect x="6"  y="6"  width="15" height="15" rx="3" stroke="#E06040" stroke-width="1.5"/>
+          <rect x="27" y="6"  width="15" height="15" rx="3" stroke="#E06040" stroke-width="1.5"/>
+          <rect x="6"  y="27" width="15" height="15" rx="3" stroke="#E06040" stroke-width="1.5"/>
+          <rect x="27" y="27" width="15" height="15" rx="3" stroke="#E06040" stroke-width="1.5"/>
+          <line x1="21" y1="13.5" x2="27" y2="13.5" stroke="#E06040" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="21" y1="34.5" x2="27" y2="34.5" stroke="#E06040" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="13.5" y1="21" x2="13.5" y2="27" stroke="#E06040" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="34.5" y1="21" x2="34.5" y2="27" stroke="#E06040" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3 class="ctitle">פיתוח WordPress</h3>
+        <p class="cdesc">אתרים מהירים, עצמאיים ומותאמים לצרכי העסק.</p>
+        <div class="cgold"></div>
+      </div>
+
+      <div class="svc-card rv">
+        <span class="ctag">AI</span>
+        <svg class="cico" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="4"  stroke="#E06040" stroke-width="1.5"/>
+          <circle cx="9"  cy="15" r="3"  stroke="#E06040" stroke-width="1.5"/>
+          <circle cx="39" cy="15" r="3"  stroke="#E06040" stroke-width="1.5"/>
+          <circle cx="9"  cy="33" r="3"  stroke="#E06040" stroke-width="1.5"/>
+          <circle cx="39" cy="33" r="3"  stroke="#E06040" stroke-width="1.5"/>
+          <circle cx="24" cy="6"  r="3"  stroke="#E06040" stroke-width="1.5"/>
+          <line x1="24" y1="20" x2="24" y2="9"  stroke="#E06040" stroke-width="1.2" opacity=".55" stroke-linecap="round"/>
+          <line x1="21" y1="22" x2="12" y2="17" stroke="#E06040" stroke-width="1.2" opacity=".55" stroke-linecap="round"/>
+          <line x1="27" y1="22" x2="36" y2="17" stroke="#E06040" stroke-width="1.2" opacity=".55" stroke-linecap="round"/>
+          <line x1="21" y1="26" x2="12" y2="31" stroke="#E06040" stroke-width="1.2" opacity=".55" stroke-linecap="round"/>
+          <line x1="27" y1="26" x2="36" y2="31" stroke="#E06040" stroke-width="1.2" opacity=".55" stroke-linecap="round"/>
+        </svg>
+        <h3 class="ctitle">אתרי AI</h3>
+        <p class="cdesc">שילוב כלי בינה מלאכותית בחוויה דיגיטלית שלמה.</p>
+        <div class="cgold"></div>
+      </div>
+
+      <div class="svc-card rv">
+        <span class="ctag">CRO</span>
+        <svg class="cico" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <polygon points="24,5 44,23 4,23" stroke="#E06040" stroke-width="1.5" stroke-linejoin="round"/>
+          <rect x="13" y="23" width="22" height="12" stroke="#E06040" stroke-width="1.5"/>
+          <rect x="18" y="35" width="12" height="8"  stroke="#E06040" stroke-width="1.5"/>
+          <line x1="24" y1="28" x2="24" y2="32" stroke="#E06040" stroke-width="1.5" stroke-linecap="round"/>
+          <polyline points="21,30 24,33 27,30" stroke="#E06040" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3 class="ctitle">עמודי נחיתה</h3>
+        <p class="cdesc">עמודים שממירים — כי כל אלמנט נבנה עם כוונה.</p>
+        <div class="cgold"></div>
+      </div>
+
+      <div class="svc-card rv">
+        <span class="ctag">UX Research</span>
+        <svg class="cico" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="21" cy="20" r="11" stroke="#E06040" stroke-width="1.5"/>
+          <line x1="29" y1="29" x2="42" y2="42" stroke="#E06040" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="21" cy="17" r="4"  stroke="#E06040" stroke-width="1.2" opacity=".5"/>
+          <path d="M13 28c0-4.4 3.6-8 8-8" stroke="#E06040" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+        </svg>
+        <h3 class="ctitle">אפיון ממשקים</h3>
+        <p class="cdesc">מחקר, wireframes ואפיון שחוסכים זמן וכסף בפיתוח.</p>
+        <div class="cgold"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="about" aria-label="אודות">
+  <div class="abt-panel gp">
+    <div class="rv">
+      <span class="s-lbl">03 — ABOUT</span>
+      <div class="abt-title">
+        <span class="abt-who">Who</span>
+        <span class="abt-iam">I Am.</span>
+      </div>
+    </div>
+    <div class="abt-body-wrap rv">
+      <p class="abt-body">
+        אני מעצבת בכירה עם למעלה מ-20 שנות ניסיון בעיצוב דיגיטלי, מיתוג ופיתוח אתרים.
+        אני גרה ועובדת ממטולה — הנקודה הגבוהה ביותר בצפון.
+        מהגובה הזה רואים הכל בבהירות אחרת —
+        וכך אני מתייחסת לכל פרויקט: עם פרספקטיבה, אסטרטגיה ועיניים פקוחות.
+      </p>
+      <div class="abt-ghost" aria-hidden="true">20</div>
+    </div>
+    <div class="abt-stats rv" id="about-stats">
+      <div class="abt-stat">
+        <div class="snum-row"><span class="splus">+</span><span class="snum" data-target="20">20</span></div>
+        <span class="slbl">שנות ניסיון</span>
+      </div>
+      <div class="sdiv"></div>
+      <div class="abt-stat">
+        <div class="snum-row"><span class="splus">+</span><span class="snum" data-target="300">300</span></div>
+        <span class="slbl">פרויקטים</span>
+      </div>
+      <div class="sdiv"></div>
+      <div class="abt-stat">
+        <div class="snum-row"><span class="snum" data-target="6">6</span></div>
+        <span class="slbl">תחומי התמחות</span>
+      </div>
+    </div>
+    <span class="abt-coords rv">METULA, IL · 33.28°N 35.57°E</span>
+  </div>
+</section>
+
+<section id="process" aria-label="תהליך עבודה">
+  <div class="prc-panel gp">
+    <div class="rv">
+      <span class="s-lbl">04 — PROCESS</span>
+      <h2 class="prc-title">The Climb</h2>
+      <p class="prc-sub">ארבעה שלבים. תוצאה אחת.</p>
+    </div>
+    <div class="prc-steps">
+      <div class="step" data-delay="0">
+        <span class="step-n">01</span>
+        <h3 class="step-t">גילוי</h3>
+        <p class="step-d">מבינים את העסק, הקהל והמתחרים לעומק.</p>
+      </div>
+      <div class="step" data-delay="120">
+        <span class="step-n">02</span>
+        <h3 class="step-t">הגדרה</h3>
+        <p class="step-d">מגדירים מטרות, מפרט ואסטרטגיה ברורה.</p>
+      </div>
+      <div class="step" data-delay="240">
+        <span class="step-n">03</span>
+        <h3 class="step-t">עיצוב</h3>
+        <p class="step-d">בונים חוויה שעובדת — לא רק נראית טוב.</p>
+      </div>
+      <div class="step" data-delay="360">
+        <span class="step-n">04</span>
+        <h3 class="step-t">מסירה</h3>
+        <p class="step-d">מספקים, מלמדים, ונשארים זמינים.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" aria-label="צור קשר">
+  <div class="cnt-panel gp">
+    <div class="cnt-inner rv">
+      <span class="s-lbl">05 — CONTACT</span>
+      <h2 class="cnt-title">Start The Climb.</h2>
+      <form onsubmit="return false;" novalidate>
+        <div class="fg"><label for="fn">שם</label><input type="text" id="fn" placeholder="מה שמכם?"></div>
+        <div class="fg"><label for="fe">מייל</label><input type="email" id="fe" placeholder="your@email.com" dir="ltr" style="text-align:right"></div>
+        <div class="fg">
+          <label for="ft">סוג הפרויקט</label>
+          <select id="ft">
+            <option value="" disabled selected>בחרו סוג פרויקט</option>
+            <option>מיתוג</option><option>עיצוב UX/UI</option>
+            <option>WordPress</option><option>אתר AI</option>
+            <option>עמוד נחיתה</option><option>אחר</option>
+          </select>
+        </div>
+        <div class="fg"><label for="fm">הודעה</label><textarea id="fm" placeholder="ספרו לי על הפרויקט שלכם…"></textarea></div>
+        <button type="submit" class="btn-send">→ שלחו הודעה</button>
+      </form>
+      <div class="cnt-meta">
+        <a href="mailto:studio@example.com">studio@example.com</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener">@studio_il</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-top">
+    <div><span class="ft-logo">Studio ✦</span><span class="ft-tag">מעצבת בכירה | מטולה, ישראל</span></div>
+    <nav class="ft-nav">
+      <a href="#services">שירותים</a><a href="#about">אודות</a>
+      <a href="#process">תהליך</a><a href="#contact">צור קשר</a>
+    </nav>
+  </div>
+  <div class="ft-copy">© 2025 — כל הזכויות שמורות</div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+  const mobile = () => window.matchMedia('(pointer:coarse)').matches;
+
+  const cursor   = document.getElementById('cursor');
+  const nav      = document.getElementById('nav');
+  const reel     = document.getElementById('reel');
+  const scrub    = document.getElementById('scrub');
+  const pfill    = document.getElementById('progress-fill');
+  const dimmer   = document.getElementById('dimmer');
+  const hint     = document.getElementById('hint');
+  const sentences= document.querySelectorAll('.sentence');
+  const SRC      = [0.05, 0.25, 0.45, 0.65, 0.82]; // reveal thresholds
+
+  let ticking = false, scrollPct = 0, maxScroll = 0;
+  let cx = -200, cy = -200, tx = -200, ty = -200;
+  let hintGone = false, phase2 = false, prevActiveIdx = -1;
+
+  /* ── init scroll height ── */
+  function init() {
+    const dur = reel.duration || 12;
+    scrub.style.height = Math.round(dur * 500) + 'px';  /* 500px/sec = slower scrub */
+    maxScroll = Math.max(scrub.offsetHeight - window.innerHeight, 1);
+  }
+  reel.addEventListener('loadedmetadata', init);
+  reel.addEventListener('error', () => { scrub.style.height=(innerHeight*5)+'px'; maxScroll=innerHeight*4; });
+  if (reel.readyState >= 1 && reel.duration) init();
+  window.addEventListener('resize', init);
+
+  /* ── SINGLE rAF LOOP ── */
+  function tick() {
+    ticking = false;
+
+    /* video scrub */
+    if (reel.readyState >= 2 && reel.duration) {
+      reel.currentTime = scrollPct >= 0.99
+        ? reel.duration
+        : scrollPct * reel.duration;
+    }
+
+    /* progress bar — RTL fill (scaleX from right) */
+    pfill.style.transform = `scaleX(${Math.min(scrollPct, 1)})`;
+
+    /* phase transition */
+    if (scrollPct >= 0.99 && !phase2) {
+      phase2 = true;
+      dimmer.style.background = 'rgba(8,6,16,0.80)';
+      sentences.forEach(el => {
+        el.style.transitionDelay = '0s';
+        el.style.transition = 'opacity .5s ease-in, transform .5s ease-in';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+      });
+    } else if (scrollPct < 0.99 && phase2) {
+      phase2 = false;
+      dimmer.style.background = 'rgba(8,6,16,0)';
+      /* reset all sentences so cascade re-triggers cleanly */
+      sentences.forEach(el => {
+        el.style.transition = 'none';
+        el.style.transitionDelay = '0s';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-30px)';
+      });
+      prevActiveIdx = -1; /* force re-evaluation on next tick */
+    }
+
+    /* cascade sentences — one at a time, only update on change */
+    if (!phase2) {
+      let activeIdx = -1;
+      for (let i = 0; i < SRC.length; i++) { if (scrollPct >= SRC[i]) activeIdx = i; }
+
+      if (activeIdx !== prevActiveIdx) {
+        /* 1. fade-out the current sentence fast */
+        if (prevActiveIdx >= 0) {
+          const el = sentences[prevActiveIdx];
+          el.style.transition = 'opacity .25s ease, transform .25s ease';
+          el.style.transitionDelay = '0s';
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(24px)';
+        }
+        /* 2. fade-in the new sentence after the old one is gone */
+        if (activeIdx >= 0) {
+          const el = sentences[activeIdx];
+          el.style.transition = 'opacity .65s cubic-bezier(.16,1,.3,1), transform .65s cubic-bezier(.16,1,.3,1)';
+          el.style.transitionDelay = prevActiveIdx >= 0 ? '0.28s' : '0s';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }
+        prevActiveIdx = activeIdx;
+      }
+    }
+
+    /* nav bg */
+    nav.classList.toggle('scrolled', window.scrollY > 80);
+  }
+
+  function frame() { if (!ticking) { requestAnimationFrame(tick); ticking = true; } }
+
+  window.addEventListener('scroll', () => {
+    scrollPct = clamp(window.scrollY / maxScroll, 0, 1);
+    if (!hintGone && window.scrollY > 10) { hintGone = true; hint.classList.add('gone'); }
+    frame();
+  }, { passive: true });
+
+  /* cursor lerp — own continuous loop */
+  document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (!mobile()) {
+      cx += (tx - cx) * 0.10;
+      cy += (ty - cy) * 0.10;
+      cursor.style.left = cx + 'px';
+      cursor.style.top  = cy + 'px';
+    }
+  })();
+
+  document.querySelectorAll('a,button,.svc-card,.btn-send').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hov'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hov'));
+  });
+
+  /* ── IntersectionObservers ── */
+  const rvObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !e.target.classList.contains('on')) {
+        e.target.classList.add('on');
+        rvObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.rv').forEach(el => rvObs.observe(el));
+
+  /* cards stagger */
+  const cardObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.svc-card').forEach((c,i) => setTimeout(() => c.classList.add('on'), i*80));
+        cardObs.disconnect();
+      }
+    });
+  }, { threshold: 0.1 });
+  const grid = document.querySelector('.svc-grid');
+  if (grid) cardObs.observe(grid);
+
+  /* steps stagger */
+  const stepObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.step').forEach(s => setTimeout(() => s.classList.add('on'), +s.dataset.delay||0));
+        stepObs.disconnect();
+      }
+    });
+  }, { threshold: 0.2 });
+  const steps = document.querySelector('.prc-steps');
+  if (steps) stepObs.observe(steps);
+
+  /* count-up */
+  function countUp(el) {
+    const target = +el.dataset.target, dur = 1400, t0 = performance.now();
+    (function f(now) {
+      const p = Math.min((now-t0)/dur,1), e = 1-Math.pow(1-p,3);
+      el.textContent = Math.round(e*target);
+      p < 1 ? requestAnimationFrame(f) : (el.textContent = target);
+    })(t0);
+  }
+  const statsObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.snum[data-target]').forEach(countUp);
+        statsObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  const statsRow = document.getElementById('about-stats');
+  if (statsRow) statsObs.observe(statsRow);
+
+})();
+</script>
+</body>
+</html>

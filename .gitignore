@@ -1,0 +1,13 @@
+# Claude internal
+.claude/
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Mac
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
