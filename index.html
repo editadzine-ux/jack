@@ -393,6 +393,80 @@ section { position: relative; z-index: 10; background: transparent; }
 .step-t { font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:.5rem; }
 .step-d { font-size:.88rem; font-weight:300; color:var(--muted); line-height:1.9; }
 
+/* ─ PORTFOLIO ─ */
+#portfolio { padding: 3rem 0 0; }
+.pf-panel  { padding: 3rem 8vw 0; }
+.pf-title  {
+  font-size: clamp(2.5rem,5vw,4.5rem);
+  font-weight: 800; color: var(--text);
+  letter-spacing: -.03em;
+  direction: ltr; text-align: left;
+}
+.pf-sub { font-size:1rem; font-weight:300; color:var(--muted); margin-top:.5rem; direction:rtl; text-align:right; margin-bottom:2.5rem; }
+
+/* grid */
+.pf-grid {
+  display: grid;
+  grid-template-rows: 4fr 4fr 4fr;
+  grid-template-columns: 4fr 4fr 4fr;
+  gap: 4px;
+  height: 88vh;
+  transition: grid-template-rows .4s ease, grid-template-columns .4s ease;
+}
+.pf-cell {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0a0812;
+}
+.pf-cell video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .5s ease, opacity .5s ease;
+  opacity: .72;
+  transform: scale(1.04);
+}
+.pf-cell:hover video {
+  opacity: 1;
+  transform: scale(1);
+}
+.pf-info {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.4rem 1.2rem;
+  background: linear-gradient(to top, rgba(8,6,16,.82) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.pf-cell:hover .pf-info { opacity: 1; }
+.pf-tag  { font-size:.58rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:.3rem; direction:ltr; }
+.pf-name { font-size:clamp(.9rem,1.4vw,1.15rem); font-weight:700; color:var(--text); direction:ltr; line-height:1.3; }
+.pf-num  {
+  position: absolute;
+  top: .9rem; left: .9rem;
+  font-size: .62rem; font-weight: 600;
+  color: rgba(240,237,232,.35);
+  letter-spacing: .1em;
+  direction: ltr;
+}
+
+/* mobile portfolio */
+@media (max-width:768px) {
+  .pf-grid {
+    grid-template-rows: repeat(9,200px);
+    grid-template-columns: 1fr;
+    height: auto;
+    transition: none;
+  }
+  .pf-panel { padding: 2.5rem 0 0; }
+  .pf-info  { opacity: 1; }
+  .pf-cell video { opacity: 1; transform: scale(1); }
+}
+
 /* ─ CONTACT ─ */
 #contact { padding: 3rem 0 0; }
 .cnt-panel { padding: 4rem 8vw 5rem; }
@@ -602,6 +676,7 @@ footer {
   <ul class="nav-links">
     <li><a href="#contact">צור קשר</a></li>
     <li><a href="#about">אודות</a></li>
+    <li><a href="#portfolio">פורטפוליו</a></li>
     <li><a href="#services">שירותים</a></li>
   </ul>
 </nav>
@@ -749,10 +824,77 @@ footer {
   </div>
 </section>
 
+<section id="portfolio" aria-label="פורטפוליו">
+  <div class="pf-panel gp">
+    <div class="rv" style="padding:3rem 0 0">
+      <span class="s-lbl">03 — PORTFOLIO</span>
+      <h2 class="pf-title">Selected Work</h2>
+      <p class="pf-sub">עבודות נבחרות — מיתוג, דיגיטל, חוויה.</p>
+    </div>
+  </div>
+  <div class="pf-grid" id="pf-grid">
+
+    <div class="pf-cell" data-row="0" data-col="0">
+      <span class="pf-num">01</span>
+      <video src="https://static.cdn-luma.com/files/981e483f71aa764b/Company%20Thing%20Exported.mp4" loop muted playsinline preload="none"></video>
+      <div class="pf-info"><span class="pf-tag">Brand</span><span class="pf-name">Corporate Identity</span></div>
+    </div>
+
+    <div class="pf-cell" data-row="0" data-col="1">
+      <span class="pf-num">02</span>
+      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/WebGL%20Exported%20(1).mp4" loop muted playsinline preload="none"></video>
+      <div class="pf-info"><span class="pf-tag">Digital</span><span class="pf-name">WebGL Experience</span></div>
+    </div>
+
+    <div class="pf-cell" data-row="0" data-col="2">
+      <span class="pf-num">03</span>
+      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Jitter%20Exported%20Poster.mp4" loop muted playsinline preload="none"></video>
+      <div class="pf-info"><span class="pf-tag">Motion</span><span class="pf-name">Motion Design</span></div>
+    </div>
+
+    <div class="pf-cell" data-row="1" data-col="0">
+      <span class="pf-num">04</span>
+      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Exported%20Web%20Video.mp4" loop muted playsinline preload="none"></video>
+      <div class="pf-info"><span class="pf-tag">Campaign</span><span class="pf-name">Web Campaign</span></div>
+    </div>
+
+    <div class="pf-cell" data-row="1" data-col="1">
+      <span class="pf-num">05</span>
+      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Logo%20Exported.mp4" loop muted playsinline preload="none"></video>
+      <div class="pf-info"><span class="pf-tag">Identity</span><span class="pf-name">Logo System</span></div>
+    </div>
+
+    <div class="pf-cell" data-row="1" data-col="2">
+      <span class="pf-num">06</span>
+      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Animation%20Exported%20(4).mp4" loop muted playsinline preload="none"></video>
+      <div class="pf-info"><span class="pf-tag">UI/UX</span><span class="pf-name">UI Animation</span></div>
+    </div>
+
+    <div class="pf-cell" data-row="2" data-col="0">
+      <span class="pf-num">07</span>
+      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Illustration%20Exported%20(1).mp4" loop muted playsinline preload="none"></video>
+      <div class="pf-info"><span class="pf-tag">Illustration</span><span class="pf-name">Visual Language</span></div>
+    </div>
+
+    <div class="pf-cell" data-row="2" data-col="1">
+      <span class="pf-num">08</span>
+      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Art%20Direction%20Exported.mp4" loop muted playsinline preload="none"></video>
+      <div class="pf-info"><span class="pf-tag">Editorial</span><span class="pf-name">Art Direction</span></div>
+    </div>
+
+    <div class="pf-cell" data-row="2" data-col="2">
+      <span class="pf-num">09</span>
+      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Product%20Video.mp4" loop muted playsinline preload="none"></video>
+      <div class="pf-info"><span class="pf-tag">Video</span><span class="pf-name">Product Film</span></div>
+    </div>
+
+  </div>
+</section>
+
 <section id="about" aria-label="אודות">
   <div class="abt-panel gp">
     <div class="rv">
-      <span class="s-lbl">03 — ABOUT</span>
+      <span class="s-lbl">04 — ABOUT</span>
       <div class="abt-title">
         <span class="abt-who">Who</span>
         <span class="abt-iam">I Am.</span>
@@ -790,7 +932,7 @@ footer {
 <section id="process" aria-label="תהליך עבודה">
   <div class="prc-panel gp">
     <div class="rv">
-      <span class="s-lbl">04 — PROCESS</span>
+      <span class="s-lbl">05 — PROCESS</span>
       <h2 class="prc-title">The Climb</h2>
       <p class="prc-sub">ארבעה שלבים. תוצאה אחת.</p>
     </div>
@@ -822,7 +964,7 @@ footer {
 <section id="contact" aria-label="צור קשר">
   <div class="cnt-panel gp">
     <div class="cnt-inner rv">
-      <span class="s-lbl">05 — CONTACT</span>
+      <span class="s-lbl">06 — CONTACT</span>
       <h2 class="cnt-title">Start The Climb.</h2>
       <form onsubmit="return false;" novalidate>
         <div class="fg"><label for="fn">שם</label><input type="text" id="fn" placeholder="מה שמכם?"></div>
@@ -1036,6 +1178,50 @@ footer {
   }, { threshold: 0.5 });
   const statsRow = document.getElementById('about-stats');
   if (statsRow) statsObs.observe(statsRow);
+
+  /* ── PORTFOLIO dynamic grid ── */
+  (function(){
+    const pfGrid = document.getElementById('pf-grid');
+    if (!pfGrid) return;
+    const pfCells = pfGrid.querySelectorAll('.pf-cell');
+    const HOVER = 6, REST = (12 - HOVER) / 2;
+    const touch = () => window.matchMedia('(pointer:coarse)').matches;
+
+    pfCells.forEach(cell => {
+      const row = +cell.dataset.row;
+      const col = +cell.dataset.col;
+      const vid = cell.querySelector('video');
+
+      cell.addEventListener('mouseenter', () => {
+        if (touch()) return;
+        pfGrid.style.gridTemplateRows    = [0,1,2].map(r => r===row ? `${HOVER}fr` : `${REST}fr`).join(' ');
+        pfGrid.style.gridTemplateColumns = [0,1,2].map(c => c===col ? `${HOVER}fr` : `${REST}fr`).join(' ');
+        vid && vid.play();
+      });
+
+      cell.addEventListener('mouseleave', () => {
+        if (touch()) return;
+        pfGrid.style.gridTemplateRows    = '4fr 4fr 4fr';
+        pfGrid.style.gridTemplateColumns = '4fr 4fr 4fr';
+        vid && vid.pause();
+      });
+
+      /* touch: tap to play/pause */
+      cell.addEventListener('click', () => {
+        if (!touch()) return;
+        if (vid && vid.paused) vid.play(); else vid && vid.pause();
+      });
+    });
+
+    /* IntersectionObserver: pause all vids when grid off-screen */
+    const pfObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting)
+          pfCells.forEach(c => { const v = c.querySelector('video'); v && v.pause(); });
+      });
+    }, { threshold: 0 });
+    pfObs.observe(pfGrid);
+  })();
 
 })();
 </script>
