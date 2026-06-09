@@ -510,6 +510,187 @@ section { position: relative; z-index: 10; background: transparent; }
 .cnt-meta a { color:var(--slate); text-decoration:none; transition:color .3s; }
 .cnt-meta a:hover { color:var(--terra); }
 
+/* ═══════════════════════════════════════════
+   ADVANCED DESIGN LAYER — atmosphere & craft
+   ═══════════════════════════════════════════ */
+
+/* ── film grain canvas ── */
+#grain {
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  opacity: .06;
+  mix-blend-mode: screen;
+}
+
+/* ── ambient floating particles ── */
+.pt {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 4;
+  animation: pt-rise linear infinite;
+}
+@keyframes pt-rise {
+  0%   { transform: translateY(0) translateX(0) scale(0);   opacity: 0; }
+  8%   { opacity: 1; transform: scale(1); }
+  92%  { opacity: .25; }
+  100% { transform: translateY(-105vh) translateX(var(--dx)) scale(.5); opacity: 0; }
+}
+
+/* ── marquee ticker ── */
+.mq-strip {
+  position: relative; z-index: 10;
+  overflow: hidden;
+  padding: 13px 0;
+  border-top: 1px solid rgba(245,200,66,.1);
+  border-bottom: 1px solid rgba(245,200,66,.08);
+  background: rgba(8,6,16,.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.mq-track {
+  display: flex;
+  white-space: nowrap;
+  width: max-content;
+  animation: mq-run 35s linear infinite;
+}
+.mq-track:hover { animation-play-state: paused; }
+.mq-item {
+  font-size: .58rem; font-weight: 700;
+  letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(245,200,66,.38);
+  padding: 0 2.8rem; flex-shrink: 0;
+}
+.mq-dot { color: var(--terra); opacity: .7; }
+@keyframes mq-run { to { transform: translateX(-50%); } }
+
+/* ── progress spark ── */
+#progress-spark {
+  position: absolute;
+  top: 50%; right: 0;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  transform: translate(50%,-50%);
+  box-shadow: 0 0 8px 3px rgba(245,200,66,.8), 0 0 22px 6px rgba(245,200,66,.25);
+  pointer-events: none;
+}
+
+/* ── deco line ── */
+.deco-line {
+  height: 1px; width: 0;
+  background: linear-gradient(90deg, var(--gold), rgba(224,96,64,.5) 55%, transparent);
+  margin-bottom: 2.2rem;
+  transition: width 1.4s cubic-bezier(.16,1,.3,1);
+}
+.deco-line.on { width: 140px; }
+
+/* ── ambient orb ── */
+.amb-orb {
+  position: absolute; border-radius: 50%;
+  pointer-events: none; z-index: 0;
+  filter: blur(80px);
+}
+
+/* ── topographic SVG in about ── */
+.topo-bg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.topo-bg.on { opacity: .055; }
+
+/* ── coordinate badge ── */
+.coord-badge {
+  display: inline-flex; align-items: center; gap: .55rem;
+  padding: .4rem .9rem;
+  border: 1px solid rgba(245,200,66,.22);
+  border-radius: 100px;
+  font-size: .58rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(245,200,66,.55);
+  direction: ltr; margin-top: 1.6rem;
+  position: relative; overflow: hidden;
+}
+.coord-badge::before {
+  content: ''; width: 5px; height: 5px;
+  background: var(--terra); border-radius: 50%;
+  box-shadow: 0 0 8px 3px rgba(224,96,64,.7);
+  animation: badge-pulse 2.2s ease infinite;
+  flex-shrink: 0;
+}
+.coord-badge::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(245,200,66,.06) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: badge-sweep 4s ease 2s infinite;
+}
+@keyframes badge-pulse {
+  0%,100% { transform: scale(1); opacity:1; }
+  50%      { transform: scale(1.5); opacity:.5; }
+}
+@keyframes badge-sweep { to { transform: translateX(200%); } }
+
+/* ── section ghost number ── */
+.sec-ghost {
+  position: absolute;
+  font-size: clamp(7rem,16vw,13rem);
+  font-weight: 800; letter-spacing: -.05em;
+  color: rgba(255,255,255,.022);
+  pointer-events: none; user-select: none;
+  line-height: 1; direction: ltr; z-index: 0;
+}
+
+/* ── scroll cue ── */
+#scroll-cue {
+  position: fixed; bottom: 2.8rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  pointer-events: none; z-index: 6;
+  opacity: 0; animation: cue-fade .8s ease 1.6s forwards;
+  transition: opacity .5s;
+}
+#scroll-cue.gone { opacity: 0 !important; animation: none; }
+.cue-label { font-size: .55rem; font-weight: 600; letter-spacing: .28em; color: rgba(245,200,66,.4); text-transform: uppercase; }
+.cue-line {
+  width: 1px; height: 44px;
+  background: linear-gradient(to bottom, rgba(245,200,66,.6), transparent);
+  transform-origin: top;
+  animation: cue-draw 2s ease-in-out 1.8s infinite;
+}
+@keyframes cue-fade { to { opacity: 1 } }
+@keyframes cue-draw {
+  0%   { transform: scaleY(0); transform-origin: top;    opacity: 1; }
+  45%  { transform: scaleY(1); transform-origin: top;    opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+}
+
+/* ── north star on logo ── */
+.logo-star {
+  display: inline-block;
+  color: var(--gold);
+  animation: star-spin 12s linear infinite;
+  transform-origin: center;
+}
+@keyframes star-spin { to { transform: rotate(360deg); } }
+
+/* ── mountain glyph ── */
+.mtn { display: inline-flex; align-items: center; gap: .4rem; opacity: .5; margin-right: .4rem; }
+
+/* ── word reveal ── */
+.wrev { overflow: hidden; display: inline-block; vertical-align: top; margin-right: .3em; }
+.wrev > b {
+  display: block;
+  transform: translateY(110%);
+  transition: transform .75s cubic-bezier(.16,1,.3,1);
+  font-weight: inherit;
+}
+.wrev.on > b { transform: translateY(0); }
+
 /* ─ FOOTER ─ */
 footer {
   position: relative; z-index: 10;
@@ -668,11 +849,16 @@ footer {
 </head>
 <body>
 
+<canvas id="grain" aria-hidden="true"></canvas>
 <div id="cursor"></div>
-<div id="progress-track"><div id="progress-fill"></div></div>
+<div id="progress-track"><div id="progress-fill"></div><div id="progress-spark"></div></div>
+<div id="scroll-cue" aria-hidden="true">
+  <span class="cue-label">גלול</span>
+  <div class="cue-line"></div>
+</div>
 
 <nav id="nav" aria-label="ניווט ראשי">
-  <a href="#" class="nav-logo">Studio ✦</a>
+  <a href="#" class="nav-logo">Studio <span class="logo-star">✦</span></a>
   <ul class="nav-links">
     <li><a href="#contact">צור קשר</a></li>
     <li><a href="#about">אודות</a></li>
@@ -724,9 +910,36 @@ footer {
 
 <!-- ══ Phase 2: sections float over frozen video ══ -->
 
+<!-- marquee ticker -->
+<div class="mq-strip" aria-hidden="true">
+  <div class="mq-track">
+    <span class="mq-item">Brand Strategy</span><span class="mq-item mq-dot">✦</span>
+    <span class="mq-item">Visual Identity</span><span class="mq-item mq-dot">·</span>
+    <span class="mq-item">UX / UI Design</span><span class="mq-item mq-dot">✦</span>
+    <span class="mq-item">Metula, IL</span><span class="mq-item mq-dot">·</span>
+    <span class="mq-item">33.28° N</span><span class="mq-item mq-dot">✦</span>
+    <span class="mq-item">20 Years</span><span class="mq-item mq-dot">·</span>
+    <span class="mq-item">300+ Projects</span><span class="mq-item mq-dot">✦</span>
+    <span class="mq-item">WordPress Dev</span><span class="mq-item mq-dot">·</span>
+    <span class="mq-item">AI Integration</span><span class="mq-item mq-dot">✦</span>
+    <span class="mq-item">Brand Strategy</span><span class="mq-item mq-dot">·</span>
+    <span class="mq-item">Visual Identity</span><span class="mq-item mq-dot">✦</span>
+    <span class="mq-item">UX / UI Design</span><span class="mq-item mq-dot">·</span>
+    <span class="mq-item">Metula, IL</span><span class="mq-item mq-dot">✦</span>
+    <span class="mq-item">33.28° N</span><span class="mq-item mq-dot">·</span>
+    <span class="mq-item">20 Years</span><span class="mq-item mq-dot">✦</span>
+    <span class="mq-item">300+ Projects</span><span class="mq-item mq-dot">·</span>
+    <span class="mq-item">WordPress Dev</span><span class="mq-item mq-dot">✦</span>
+    <span class="mq-item">AI Integration</span><span class="mq-item mq-dot">·</span>
+  </div>
+</div>
+
 <section id="services" aria-label="שירותים">
-  <div class="svc-panel">
+  <div class="svc-panel" style="position:relative;overflow:hidden;">
+    <span class="sec-ghost" style="top:-1.5rem;left:6vw;opacity:.018;">02</span>
+    <div class="amb-orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(224,96,64,.18),transparent 70%);top:-100px;right:-80px;"></div>
     <div class="svc-hd rv">
+      <div class="deco-line"></div>
       <span class="s-lbl">02 — SERVICES</span>
       <h2 class="svc-title">What I Do</h2>
       <p class="svc-sub">שישה תחומים. תוצאה אחת.</p>
@@ -892,8 +1105,25 @@ footer {
 </section>
 
 <section id="about" aria-label="אודות">
-  <div class="abt-panel gp">
-    <div class="rv">
+  <div class="abt-panel gp" style="position:relative;overflow:hidden;">
+
+    <!-- topographic contour lines (mountain story) -->
+    <svg class="topo-bg" id="topo-svg" viewBox="0 0 900 420" preserveAspectRatio="xMidYMid slice">
+      <path d="M-20 400 Q80 340 180 370 Q300 410 420 320 Q520 240 660 290 Q760 330 920 270" stroke="rgba(245,200,66,1)" stroke-width="1.2" fill="none"/>
+      <path d="M-20 350 Q70 285 170 315 Q290 355 410 265 Q510 185 655 230 Q758 268 920 210" stroke="rgba(245,200,66,1)" stroke-width="1" fill="none"/>
+      <path d="M-20 300 Q60 232 160 260 Q280 298 400 208 Q498 128 648 170 Q752 204 920 148" stroke="rgba(245,200,66,1)" stroke-width=".9" fill="none"/>
+      <path d="M-20 250 Q55 180 155 208 Q270 245 392 155 Q490 78 642 115 Q748 146 920 90" stroke="rgba(245,200,66,1)" stroke-width=".8" fill="none"/>
+      <path d="M-20 200 Q50 130 150 158 Q262 194 385 105 Q482 32 636 62 Q744 90 920 36" stroke="rgba(245,200,66,1)" stroke-width=".7" fill="none"/>
+      <!-- summit lines (sparse, higher elevation) -->
+      <path d="M400 160 Q460 110 530 130 Q580 148 620 110" stroke="rgba(224,96,64,.8)" stroke-width=".7" fill="none"/>
+      <path d="M430 120 Q480 78 540 95 Q575 108 600 78" stroke="rgba(224,96,64,.6)" stroke-width=".6" fill="none"/>
+    </svg>
+
+    <div class="amb-orb" style="width:500px;height:300px;background:radial-gradient(ellipse,rgba(224,96,64,.12),transparent 70%);bottom:-60px;right:-80px;"></div>
+    <div class="amb-orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(245,200,66,.08),transparent 70%);top:20px;left:30%;"></div>
+
+    <div class="rv" style="position:relative;z-index:1;">
+      <div class="deco-line"></div>
       <span class="s-lbl">04 — ABOUT</span>
       <div class="abt-title">
         <span class="abt-who">Who</span>
@@ -925,13 +1155,23 @@ footer {
         <span class="slbl">תחומי התמחות</span>
       </div>
     </div>
-    <span class="abt-coords rv">METULA, IL · 33.28°N 35.57°E</span>
+    <div class="rv" style="position:relative;z-index:1;">
+      <span class="coord-badge">
+        <svg class="mtn" width="16" height="11" viewBox="0 0 16 11" fill="none">
+          <polyline points="0,11 3.5,4 6,7.5 9,1.5 13,6 16,3" stroke="rgba(245,200,66,.7)" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        Metula, IL · 33.28°N 35.57°E
+      </span>
+    </div>
   </div>
 </section>
 
 <section id="process" aria-label="תהליך עבודה">
-  <div class="prc-panel gp">
-    <div class="rv">
+  <div class="prc-panel gp" style="position:relative;overflow:hidden;">
+    <span class="sec-ghost" style="bottom:-1rem;right:4vw;">04</span>
+    <div class="amb-orb" style="width:350px;height:350px;background:radial-gradient(circle,rgba(79,85,128,.2),transparent 70%);top:-80px;left:-60px;"></div>
+    <div class="rv" style="position:relative;z-index:1;">
+      <div class="deco-line"></div>
       <span class="s-lbl">05 — PROCESS</span>
       <h2 class="prc-title">The Climb</h2>
       <p class="prc-sub">ארבעה שלבים. תוצאה אחת.</p>
@@ -962,8 +1202,10 @@ footer {
 </section>
 
 <section id="contact" aria-label="צור קשר">
-  <div class="cnt-panel gp">
-    <div class="cnt-inner rv">
+  <div class="cnt-panel gp" style="position:relative;overflow:hidden;">
+    <div class="amb-orb" style="width:450px;height:450px;background:radial-gradient(circle,rgba(224,96,64,.1),transparent 70%);top:-100px;left:50%;transform:translateX(-50%);"></div>
+    <div class="cnt-inner rv" style="position:relative;z-index:1;">
+      <div class="deco-line"></div>
       <span class="s-lbl">06 — CONTACT</span>
       <h2 class="cnt-title">Start The Climb.</h2>
       <form onsubmit="return false;" novalidate>
@@ -1097,13 +1339,20 @@ footer {
 
     /* nav bg */
     nav.classList.toggle('scrolled', window.scrollY > 80);
+
+    /* spark */
+    if (typeof window.__sparkUpdate === 'function') window.__sparkUpdate();
   }
 
   function frame() { if (!ticking) { requestAnimationFrame(tick); ticking = true; } }
 
   window.addEventListener('scroll', () => {
     scrollPct = clamp(window.scrollY / maxScroll, 0, 1);
-    if (!hintGone && window.scrollY > 10) { hintGone = true; hint.classList.add('gone'); }
+    if (!hintGone && window.scrollY > 10) {
+      hintGone = true;
+      hint.classList.add('gone');
+      if (scrollCue) scrollCue.classList.add('gone');
+    }
     frame();
   }, { passive: true });
 
@@ -1178,6 +1427,148 @@ footer {
   }, { threshold: 0.5 });
   const statsRow = document.getElementById('about-stats');
   if (statsRow) statsObs.observe(statsRow);
+
+  const scrollCue = document.getElementById('scroll-cue');
+
+  /* ═══════════════════════════════════
+     FILM GRAIN — cinematic canvas noise
+     ═══════════════════════════════════ */
+  (function(){
+    const c = document.getElementById('grain');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    let W, H;
+    function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    // Use a smaller tile for performance, then draw it tiled
+    const TILE = 256;
+    const tc = document.createElement('canvas'); tc.width = tc.height = TILE;
+    const tx = tc.getContext('2d');
+    let frame = 0;
+    (function draw(){
+      requestAnimationFrame(draw);
+      if (frame++ % 2 !== 0) return; // 30fps grain is enough
+      const img = tx.createImageData(TILE, TILE);
+      const d = img.data;
+      for (let i = 0; i < d.length; i+=4){
+        const v = (Math.random()*255)|0;
+        d[i]=d[i+1]=d[i+2]=v; d[i+3]=22;
+      }
+      tx.putImageData(img, 0, 0);
+      const pat = ctx.createPattern(tc, 'repeat');
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle = pat;
+      ctx.fillRect(0,0,W,H);
+    })();
+  })();
+
+  /* ═══════════════════════════════════
+     FLOATING PARTICLES — ambient gold dust
+     ═══════════════════════════════════ */
+  (function(){
+    if (mobile()) return;
+    const COLORS = ['rgba(245,200,66,', 'rgba(224,96,64,', 'rgba(240,237,232,'];
+    for (let i = 0; i < 14; i++){
+      const p = document.createElement('div');
+      p.className = 'pt';
+      const size   = .8 + Math.random() * 2.2;
+      const col    = COLORS[Math.floor(Math.random()*COLORS.length)];
+      const alpha  = .15 + Math.random() * .25;
+      const dur    = 14 + Math.random() * 18;
+      const delay  = -Math.random() * dur;
+      const dx     = (Math.random() - .5) * 120;
+      p.style.cssText = `
+        left:${5 + Math.random()*90}vw;
+        bottom:${-5 + Math.random()*15}vh;
+        width:${size}px; height:${size}px;
+        background:${col}${alpha});
+        box-shadow:0 0 ${size*3}px ${col}${alpha*.7});
+        --dx:${dx}px;
+        animation-duration:${dur}s;
+        animation-delay:${delay}s;
+      `;
+      document.body.appendChild(p);
+    }
+  })();
+
+  /* ═══════════════════════════════════
+     PROGRESS SPARK — glowing tip
+     ═══════════════════════════════════ */
+  const spark = document.getElementById('progress-spark');
+  function updateSpark(){
+    if (!spark) return;
+    const pct = Math.min(scrollPct, 1);
+    // In RTL the fill goes right-to-left; spark follows the left edge of the fill
+    spark.style.right = (pct * 100) + '%';
+  }
+
+  /* ═══════════════════════════════════
+     MAGNETIC BUTTONS
+     ═══════════════════════════════════ */
+  if (!mobile()) {
+    document.querySelectorAll('.btn-send').forEach(el => {
+      el.addEventListener('mousemove', e => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width  / 2) * .25;
+        const y = (e.clientY - r.top  - r.height / 2) * .25;
+        el.style.transform = `translateY(-2px) translate(${x}px,${y}px)`;
+      });
+      el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+    });
+  }
+
+  /* ═══════════════════════════════════
+     3D CARD TILT — service cards
+     ═══════════════════════════════════ */
+  if (!mobile()) {
+    document.querySelectorAll('.svc-card').forEach(card => {
+      card.style.transition = 'background .4s, border-color .4s, box-shadow .4s, transform .15s ease-out';
+      card.addEventListener('mousemove', e => {
+        const r  = card.getBoundingClientRect();
+        const xp = (e.clientX - r.left)  / r.width  - .5;
+        const yp = (e.clientY - r.top)   / r.height - .5;
+        card.style.transform = `translateY(-10px) perspective(700px) rotateY(${xp*16}deg) rotateX(${-yp*12}deg)`;
+        card.style.boxShadow = `${-xp*18}px ${-yp*14}px 48px rgba(0,0,0,.5), 0 0 30px rgba(224,96,64,.12)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.boxShadow = '';
+      });
+    });
+  }
+
+  /* ═══════════════════════════════════
+     DECO LINES — draw in on scroll
+     ═══════════════════════════════════ */
+  const decoObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('on'); decoObs.unobserve(e.target); }});
+  }, { threshold: .6 });
+  document.querySelectorAll('.deco-line').forEach(el => decoObs.observe(el));
+
+  /* ═══════════════════════════════════
+     TOPOGRAPHIC LINES — fade in on about reveal
+     ═══════════════════════════════════ */
+  const topoSvg = document.getElementById('topo-svg');
+  if (topoSvg) {
+    const topoObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting){ topoSvg.classList.add('on'); topoObs.disconnect(); }});
+    }, { threshold: .2 });
+    topoObs.observe(topoSvg.closest('.abt-panel'));
+  }
+
+  /* ═══════════════════════════════════
+     SCROLL CUE — hide after first scroll
+     ═══════════════════════════════════ */
+  // (hintGone already tracked; reuse it for scroll cue)
+  window.addEventListener('scroll', () => {
+    if (!hintGone) return; // hint logic already handles this
+    if (scrollCue && window.scrollY > 5) scrollCue.classList.add('gone');
+  }, { passive: true });
+
+  /* Wire spark into the existing tick fn via a post-tick hook */
+  const _origTick = tick;
+  window.__sparkUpdate = updateSpark;
 
   /* ── PORTFOLIO dynamic grid ── */
   (function(){
