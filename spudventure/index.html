@@ -2,12 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>SPUDVENTURE</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0604; }
-    body { font-family: 'Courier New', Courier, monospace; user-select: none; }
+    body {
+      font-family: 'Courier New', Courier, monospace; user-select: none;
+      -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none; touch-action: none;
+    }
     #app { position: fixed; inset: 0; }
     canvas { display: block; }
 
@@ -111,27 +115,40 @@
     #touch { position: absolute; inset: 0; display: none; }
     #hud.touch #touch { display: block; }
     #hud.touch #controls-hint { display: none; }
-    #joy-base {
-      position: absolute; left: 26px; bottom: 26px; width: 134px; height: 134px;
-      border-radius: 50%; background: rgba(240,237,232,.07);
-      border: 1px solid rgba(240,237,232,.25);
+    /* whole left half of the screen is the joystick zone */
+    #joy-zone {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 48%;
       pointer-events: auto; touch-action: none;
+    }
+    #joy-base {
+      position: absolute; width: 134px; height: 134px; margin: -67px;
+      border-radius: 50%; background: rgba(240,237,232,.1);
+      border: 1px solid rgba(240,237,232,.35); display: none;
     }
     #joy-knob {
       position: absolute; left: 50%; top: 50%; width: 58px; height: 58px;
       margin: -29px; border-radius: 50%;
-      background: rgba(240,237,232,.28); border: 1px solid rgba(240,237,232,.45);
+      background: rgba(240,237,232,.35); border: 1px solid rgba(240,237,232,.5);
+    }
+    #touch-hint {
+      position: absolute; left: 22px; bottom: 26px; max-width: 44%;
+      color: rgba(240,237,232,.5); font-size: 13px; letter-spacing: 1px;
+      line-height: 1.7; transition: opacity 2s ease;
     }
     .touch-btn {
-      position: absolute; width: 76px; height: 76px; border-radius: 50%;
-      background: rgba(240,237,232,.07); border: 1px solid rgba(240,237,232,.3);
-      color: rgba(240,237,232,.75); font-family: inherit; font-size: 12px;
+      position: absolute; width: 88px; height: 88px; border-radius: 50%;
+      background: rgba(240,237,232,.12); border: 1px solid rgba(240,237,232,.4);
+      color: rgba(240,237,232,.85); font-family: inherit; font-size: 13px;
       letter-spacing: 1px; display: flex; align-items: center; justify-content: center;
       pointer-events: auto; touch-action: none;
     }
-    .touch-btn:active { background: rgba(255,120,30,.25); }
-    #btn-jump { right: 24px; bottom: 56px; }
-    #btn-roll { right: 116px; bottom: 18px; }
+    .touch-btn:active { background: rgba(255,120,30,.3); }
+    #btn-jump { right: 20px; bottom: 70px; }
+    #btn-roll { right: 122px; bottom: 16px; }
+    #ver {
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      font-size: 10px; letter-spacing: 2px; color: rgba(240,237,232,.3);
+    }
   </style>
 </head>
 <body>

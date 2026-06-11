@@ -37,6 +37,11 @@ export class HUD {
     this.root.appendChild(this.hint);
     setTimeout(() => { this.hint.style.opacity = '0'; }, 12000);
 
+    // build marker so it's easy to tell which version is loaded
+    const ver = el('div', { id: 'ver' });
+    ver.textContent = 'V3';
+    this.root.appendChild(ver);
+
     this._buildClock();
 
     // end screen
@@ -45,63 +50,111 @@ export class HUD {
   }
 
   /**
-   * Virtual joystick + jump/roll buttons for touch devices.
+   * Touch controls: the whole left half of the screen is a dynamic joystick
+   * (it appears wherever the finger lands), plus JUMP and ROLL buttons.
+   * Uses raw touch events on real touch devices — pointer events are only a
+   * fallback — so it works across mobile browsers.
    * handlers: { onMove(x, z), onJump(), onRollTap(), onRunHold(held) }
    */
   initTouch(handlers) {
     this.root.classList.add('touch');
     const wrap = el('div', { id: 'touch' });
 
+    const zone = el('div', { id: 'joy-zone' });
     const base = el('div', { id: 'joy-base' });
     const knob = el('div', { id: 'joy-knob' });
     base.appendChild(knob);
-    wrap.appendChild(base);
+    zone.appendChild(base);
+    wrap.appendChild(zone);
 
-    let joyId = null;
-    const setKnob = (x, y) => {
-      knob.style.transform = `translate(${x}px, ${y}px)`;
+    const hint = el('div', { id: 'touch-hint' });
+    hint.innerHTML = '‏גררי אצבע כאן כדי לזוז<br>DRAG HERE TO MOVE';
+    wrap.appendChild(hint);
+    setTimeout(() => { hint.style.opacity = '0'; }, 14000);
+
+    const RADIUS = 55;
+    let joyId = null, ox = 0, oy = 0;
+
+    const startJoy = (x, y, id) => {
+      joyId = id; ox = x; oy = y;
+      base.style.display = 'block';
+      base.style.left = `${x}px`;
+      base.style.top = `${y}px`;
+      knob.style.transform = 'translate(0px, 0px)';
     };
-    const handleJoy = (e) => {
-      const r = base.getBoundingClientRect();
-      const half = r.width / 2;
-      let dx = (e.clientX - (r.left + half)) / half;
-      let dy = (e.clientY - (r.top + half)) / half;
+    const moveJoy = (x, y) => {
+      let dx = (x - ox) / RADIUS;
+      let dy = (y - oy) / RADIUS;
       const len = Math.hypot(dx, dy);
       if (len > 1) { dx /= len; dy /= len; }
-      setKnob(dx * half * 0.65, dy * half * 0.65);
+      knob.style.transform = `translate(${dx * RADIUS * 0.7}px, ${dy * RADIUS * 0.7}px)`;
       handlers.onMove(dx, dy); // screen down = toward camera = +z
     };
-    base.addEventListener('pointerdown', (e) => {
-      joyId = e.pointerId;
-      base.setPointerCapture(e.pointerId);
-      handleJoy(e);
-    });
-    base.addEventListener('pointermove', (e) => { if (e.pointerId === joyId) handleJoy(e); });
-    const endJoy = (e) => {
-      if (e.pointerId !== joyId) return;
+    const endJoy = () => {
       joyId = null;
-      setKnob(0, 0);
+      base.style.display = 'none';
       handlers.onMove(0, 0);
     };
-    base.addEventListener('pointerup', endJoy);
-    base.addEventListener('pointercancel', endJoy);
 
-    const jump = el('button', { id: 'btn-jump', class: 'touch-btn' });
+    const hasTouch = 'ontouchstart' in window;
+    if (hasTouch) {
+      zone.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (joyId !== null) return;
+        const t = e.changedTouches[0];
+        startJoy(t.clientX, t.clientY, t.identifier);
+      }, { passive: false });
+      zone.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        for (const t of e.changedTouches) {
+          if (t.identifier === joyId) moveJoy(t.clientX, t.clientY);
+        }
+      }, { passive: false });
+      const end = (e) => {
+        for (const t of e.changedTouches) {
+          if (t.identifier === joyId) endJoy();
+        }
+      };
+      zone.addEventListener('touchend', end);
+      zone.addEventListener('touchcancel', end);
+    } else {
+      zone.addEventListener('pointerdown', (e) => {
+        zone.setPointerCapture(e.pointerId);
+        startJoy(e.clientX, e.clientY, e.pointerId);
+      });
+      zone.addEventListener('pointermove', (e) => { if (e.pointerId === joyId) moveJoy(e.clientX, e.clientY); });
+      const end = (e) => { if (e.pointerId === joyId) endJoy(); };
+      zone.addEventListener('pointerup', end);
+      zone.addEventListener('pointercancel', end);
+    }
+
+    const bindBtn = (btn, onDown, onUp) => {
+      if (hasTouch) {
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); onDown(); }, { passive: false });
+        if (onUp) {
+          for (const ev of ['touchend', 'touchcancel']) {
+            btn.addEventListener(ev, (e) => { e.preventDefault(); onUp(); }, { passive: false });
+          }
+        }
+      } else {
+        btn.addEventListener('pointerdown', (e) => { e.preventDefault(); onDown(); });
+        if (onUp) {
+          for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) {
+            btn.addEventListener(ev, () => onUp());
+          }
+        }
+      }
+    };
+
+    const jump = el('button', { id: 'btn-jump', class: 'touch-btn', type: 'button' });
     jump.textContent = 'JUMP';
-    jump.addEventListener('pointerdown', (e) => { e.preventDefault(); handlers.onJump(); });
+    bindBtn(jump, handlers.onJump);
     wrap.appendChild(jump);
 
     // tap = roll, keep holding = run
-    const roll = el('button', { id: 'btn-roll', class: 'touch-btn' });
+    const roll = el('button', { id: 'btn-roll', class: 'touch-btn', type: 'button' });
     roll.textContent = 'ROLL';
-    roll.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      handlers.onRollTap();
-      handlers.onRunHold(true);
-    });
-    for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) {
-      roll.addEventListener(ev, () => handlers.onRunHold(false));
-    }
+    bindBtn(roll, () => { handlers.onRollTap(); handlers.onRunHold(true); }, () => handlers.onRunHold(false));
     wrap.appendChild(roll);
 
     this.root.appendChild(wrap);
