@@ -2,7 +2,7 @@ name: Deploy SPUDVENTURE to GitHub Pages
 
 on:
   push:
-    branches: [claude/spudventure-threejs-game-tgpyti]
+    branches: [main]
     paths:
       - 'spudventure/**'
       - '.github/workflows/deploy-game.yml'
