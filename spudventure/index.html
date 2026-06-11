@@ -102,9 +102,36 @@
     /* Controls hint (fades out, not a popup) */
     #controls-hint {
       position: absolute; bottom: 16px; right: 18px; font-size: 12px;
-      letter-spacing: 2px; color: rgba(240,237,232,.35);
+      letter-spacing: 2px; color: rgba(240,237,232,.45);
+      text-align: right; line-height: 1.8;
       transition: opacity 2s ease;
     }
+
+    /* ── Touch controls (shown only on touch devices) ── */
+    #touch { position: absolute; inset: 0; display: none; }
+    #hud.touch #touch { display: block; }
+    #hud.touch #controls-hint { display: none; }
+    #joy-base {
+      position: absolute; left: 26px; bottom: 26px; width: 134px; height: 134px;
+      border-radius: 50%; background: rgba(240,237,232,.07);
+      border: 1px solid rgba(240,237,232,.25);
+      pointer-events: auto; touch-action: none;
+    }
+    #joy-knob {
+      position: absolute; left: 50%; top: 50%; width: 58px; height: 58px;
+      margin: -29px; border-radius: 50%;
+      background: rgba(240,237,232,.28); border: 1px solid rgba(240,237,232,.45);
+    }
+    .touch-btn {
+      position: absolute; width: 76px; height: 76px; border-radius: 50%;
+      background: rgba(240,237,232,.07); border: 1px solid rgba(240,237,232,.3);
+      color: rgba(240,237,232,.75); font-family: inherit; font-size: 12px;
+      letter-spacing: 1px; display: flex; align-items: center; justify-content: center;
+      pointer-events: auto; touch-action: none;
+    }
+    .touch-btn:active { background: rgba(255,120,30,.25); }
+    #btn-jump { right: 24px; bottom: 56px; }
+    #btn-roll { right: 116px; bottom: 18px; }
   </style>
 </head>
 <body>

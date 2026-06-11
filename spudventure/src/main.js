@@ -34,6 +34,16 @@ const gameCam = new GameCamera(window.innerWidth / window.innerHeight);
 const postfx = new PostFX(renderer, scene, gameCam.camera);
 const hud = new HUD();
 
+// touch devices get a virtual joystick + jump/roll buttons
+if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+  hud.initTouch({
+    onMove: (x, z) => physics.setTouchMove(x, z),
+    onJump: () => physics.queueJump(),
+    onRollTap: () => physics.tryRoll(),
+    onRunHold: (held) => { physics.touchRun = held; },
+  });
+}
+
 // ── game state ──
 let state = 'intro'; // intro | playing | win | lose
 let health = 3;

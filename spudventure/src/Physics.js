@@ -31,12 +31,16 @@ export class Physics {
     this._rollCooldown = 0;
     this._rollDir = new THREE.Vector3();
 
+    this.touchDir = new THREE.Vector3();
+    this.touchRun = false;
+
     this.keys = {};
     this._onKeyDown = (e) => {
       const k = e.code;
       if (this.keys[k]) return;
       this.keys[k] = true;
       if (k === 'Space') { this._jumpBuffer = JUMP_BUFFER; e.preventDefault(); }
+      if (k.startsWith('Arrow')) e.preventDefault();
       if ((k === 'ShiftLeft' || k === 'ShiftRight') && this.enabled) this._tryRoll();
     };
     this._onKeyUp = (e) => { this.keys[e.code] = false; };
@@ -46,12 +50,21 @@ export class Physics {
 
   get inputDir() {
     const d = new THREE.Vector3(
-      (this.keys['KeyD'] ? 1 : 0) - (this.keys['KeyA'] ? 1 : 0),
+      (this.keys['KeyD'] || this.keys['ArrowRight'] ? 1 : 0) -
+      (this.keys['KeyA'] || this.keys['ArrowLeft'] ? 1 : 0),
       0,
-      (this.keys['KeyS'] ? 1 : 0) - (this.keys['KeyW'] ? 1 : 0)
+      (this.keys['KeyS'] || this.keys['ArrowDown'] ? 1 : 0) -
+      (this.keys['KeyW'] || this.keys['ArrowUp'] ? 1 : 0)
     );
-    return d.lengthSq() > 0 ? d.normalize() : d;
+    if (d.lengthSq() > 0) return d.normalize();
+    if (this.touchDir.lengthSq() > 0.04) return this.touchDir.clone().normalize();
+    return d;
   }
+
+  // virtual joystick: x right, z down-screen (toward camera)
+  setTouchMove(x, z) { this.touchDir.set(x, 0, z); }
+  queueJump() { this._jumpBuffer = JUMP_BUFFER; }
+  tryRoll() { if (this.enabled) this._tryRoll(); }
 
   _tryRoll() {
     if (this.rolling || this._rollCooldown > 0 || !this.grounded) return;
@@ -97,7 +110,7 @@ export class Physics {
 
     // ── horizontal movement ──
     const dir = this.enabled ? this.inputDir : new THREE.Vector3();
-    this.running = this.keys['ShiftLeft'] || this.keys['ShiftRight'];
+    this.running = this.keys['ShiftLeft'] || this.keys['ShiftRight'] || this.touchRun;
 
     let targetSpeed = this.panic ? PANIC_SPEED : (this.running ? RUN_SPEED : WALK_SPEED);
     if (steamed) targetSpeed *= 0.5;
