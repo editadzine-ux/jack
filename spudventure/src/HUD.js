@@ -39,7 +39,7 @@ export class HUD {
 
     // build marker so it's easy to tell which version is loaded
     const ver = el('div', { id: 'ver' });
-    ver.textContent = 'V3';
+    ver.textContent = 'V4';
     this.root.appendChild(ver);
 
     this._buildClock();
@@ -205,6 +205,28 @@ export class HUD {
     this.strips[idx]?.classList.add('peeled');
   }
 
+  /** Sync strips to a health value (used when skin grows back between rounds). */
+  setHealth(health) {
+    this.strips.forEach((s, i) => s.classList.toggle('peeled', i >= health));
+  }
+
+  /** Big short "ROUND N" flash between rounds. */
+  showRoundBanner(n) {
+    const banner = el('div', { class: 'round-banner' });
+    banner.textContent = `ROUND ${n}`;
+    this.root.appendChild(banner);
+    requestAnimationFrame(() => banner.classList.add('show'));
+    setTimeout(() => {
+      banner.classList.remove('show');
+      setTimeout(() => banner.remove(), 900);
+    }, 1800);
+  }
+
+  hideEnd() {
+    this.endEl.classList.remove('shown');
+    this.endEl.innerHTML = '';
+  }
+
   setPanic(visible, level) {
     this.panicWrap.classList.toggle('visible', visible);
     if (visible) this.panicBar.style.width = `${Math.round(level * 100)}%`;
@@ -236,14 +258,14 @@ export class HUD {
     requestAnimationFrame(() => this.endEl.classList.add('shown'));
   }
 
-  showLose(elapsedSeconds) {
+  showLose(elapsedSeconds, round = 1) {
     this.endEl.innerHTML = '';
     const title = el('div', { class: 'end-title' });
     title.textContent = 'COOKED.';
     const m = Math.floor(elapsedSeconds / 60);
     const s = Math.floor(elapsedSeconds % 60).toString().padStart(2, '0');
     const sub = el('div', { class: 'end-sub' });
-    sub.textContent = `(${m}:${s})`;
+    sub.textContent = round > 1 ? `(${m}:${s} · ROUND ${round})` : `(${m}:${s})`;
     const btn = el('button', { id: 'restart-btn' });
     btn.textContent = 'RUN AGAIN';
     btn.addEventListener('click', () => location.reload());
