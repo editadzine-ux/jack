@@ -39,7 +39,7 @@ export class HUD {
 
     // build marker so it's easy to tell which version is loaded
     const ver = el('div', { id: 'ver' });
-    ver.textContent = 'V6';
+    ver.textContent = 'V7';
     this.root.appendChild(ver);
 
     this._buildClock();
@@ -264,7 +264,10 @@ export class HUD {
       sub.textContent = `For good. (${m}:${s})`;
       const btn = el('button', { id: 'restart-btn' });
       btn.textContent = 'RUN AGAIN';
-      btn.addEventListener('click', () => location.reload());
+      btn.addEventListener('click', () => {
+        localStorage.removeItem('spud.level'); // a full fresh run
+        location.reload();
+      });
       this.endEl.append(title, sub, btn);
       setTimeout(() => btn.classList.add('shown'), 2000);
     } else {
@@ -274,7 +277,8 @@ export class HUD {
     requestAnimationFrame(() => this.endEl.classList.add('shown'));
   }
 
-  showLose(elapsedSeconds, level = 1) {
+  /** onRestart retries the same level — no starting over from scratch. */
+  showLose(elapsedSeconds, level = 1, onRestart = () => location.reload()) {
     this.endEl.innerHTML = '';
     const title = el('div', { class: 'end-title' });
     title.textContent = 'COOKED.';
@@ -283,8 +287,8 @@ export class HUD {
     const sub = el('div', { class: 'end-sub' });
     sub.textContent = level > 1 ? `(${m}:${s} · LEVEL ${level})` : `(${m}:${s})`;
     const btn = el('button', { id: 'restart-btn' });
-    btn.textContent = 'RUN AGAIN';
-    btn.addEventListener('click', () => location.reload());
+    btn.textContent = level > 1 ? `RETRY LEVEL ${level}` : 'RUN AGAIN';
+    btn.addEventListener('click', onRestart);
     this.endEl.append(title, sub, btn);
     requestAnimationFrame(() => this.endEl.classList.add('shown'));
     setTimeout(() => btn.classList.add('shown'), 2000);
