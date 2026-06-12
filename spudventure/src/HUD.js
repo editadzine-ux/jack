@@ -39,7 +39,7 @@ export class HUD {
 
     // build marker so it's easy to tell which version is loaded
     const ver = el('div', { id: 'ver' });
-    ver.textContent = 'V4';
+    ver.textContent = 'V5';
     this.root.appendChild(ver);
 
     this._buildClock();
@@ -210,16 +210,20 @@ export class HUD {
     this.strips.forEach((s, i) => s.classList.toggle('peeled', i >= health));
   }
 
-  /** Big short "ROUND N" flash between rounds. */
-  showRoundBanner(n) {
-    const banner = el('div', { class: 'round-banner' });
-    banner.textContent = `ROUND ${n}`;
+  /** Big short banner flash ("LEVEL 2 · SLICK RIDE", "EXIT OPEN"...). */
+  flashBanner(text, green = false) {
+    const banner = el('div', { class: green ? 'round-banner green' : 'round-banner' });
+    banner.textContent = text;
     this.root.appendChild(banner);
     requestAnimationFrame(() => banner.classList.add('show'));
     setTimeout(() => {
       banner.classList.remove('show');
       setTimeout(() => banner.remove(), 900);
-    }, 1800);
+    }, 1900);
+  }
+
+  showLevelBanner(n, name) {
+    this.flashBanner(`LEVEL ${n} · ${name}`);
   }
 
   hideEnd() {
@@ -248,24 +252,36 @@ export class HUD {
     this.minuteHand.setAttribute('transform', `rotate(${Math.floor(s / 60) * 6} 38 38)`);
   }
 
-  showWin() {
+  /** Between levels: "For now." — after level 4: the real ending. */
+  showWin(final = false, totalSeconds = 0) {
     this.endEl.innerHTML = '';
     const title = el('div', { class: 'end-title' });
     title.textContent = 'ESCAPED.';
     const sub = el('div', { class: 'end-sub' });
-    sub.textContent = 'For now.';
-    this.endEl.append(title, sub);
+    if (final) {
+      const m = Math.floor(totalSeconds / 60);
+      const s = Math.floor(totalSeconds % 60).toString().padStart(2, '0');
+      sub.textContent = `For good. (${m}:${s})`;
+      const btn = el('button', { id: 'restart-btn' });
+      btn.textContent = 'RUN AGAIN';
+      btn.addEventListener('click', () => location.reload());
+      this.endEl.append(title, sub, btn);
+      setTimeout(() => btn.classList.add('shown'), 2000);
+    } else {
+      sub.textContent = 'For now.';
+      this.endEl.append(title, sub);
+    }
     requestAnimationFrame(() => this.endEl.classList.add('shown'));
   }
 
-  showLose(elapsedSeconds, round = 1) {
+  showLose(elapsedSeconds, level = 1) {
     this.endEl.innerHTML = '';
     const title = el('div', { class: 'end-title' });
     title.textContent = 'COOKED.';
     const m = Math.floor(elapsedSeconds / 60);
     const s = Math.floor(elapsedSeconds % 60).toString().padStart(2, '0');
     const sub = el('div', { class: 'end-sub' });
-    sub.textContent = round > 1 ? `(${m}:${s} · ROUND ${round})` : `(${m}:${s})`;
+    sub.textContent = level > 1 ? `(${m}:${s} · LEVEL ${level})` : `(${m}:${s})`;
     const btn = el('button', { id: 'restart-btn' });
     btn.textContent = 'RUN AGAIN';
     btn.addEventListener('click', () => location.reload());

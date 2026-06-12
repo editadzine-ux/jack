@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 const GRAVITY = -18;
-const JUMP_FORCE = 7;
+const JUMP_FORCE = 8; // absurdly high for a potato — that's the point
 const WALK_SPEED = 5;
 const RUN_SPEED = 8;
 const ROLL_SPEED = 10;
@@ -24,6 +24,8 @@ export class Physics {
     this.running = false;
     this.panic = false;
     this.enabled = false; // off during intro / endgame
+    this.gravityScale = 1;     // ~0.15 in the zero-g level
+    this.oilEverywhere = false; // level 2: the whole floor is olive oil
 
     this._coyote = 0;
     this._jumpBuffer = 0;
@@ -89,6 +91,7 @@ export class Physics {
   }
 
   inButter() {
+    if (this.oilEverywhere) return true;
     const b = this.kitchen.butterZone;
     return Math.abs(this.position.x - b.x) < b.half && Math.abs(this.position.z - b.z) < b.half;
   }
@@ -153,7 +156,7 @@ export class Physics {
     }
 
     // ── gravity ──
-    this.velocity.y += GRAVITY * dt;
+    this.velocity.y += GRAVITY * this.gravityScale * dt;
     this.position.addScaledVector(this.velocity, dt);
 
     // ground plane

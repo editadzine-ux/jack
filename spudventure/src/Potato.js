@@ -69,6 +69,7 @@ export class Potato {
     this.animT = 0;
     this.idleT = 0;
     this.panic = false;
+    this.space = false; // zero-g: legs flail uselessly in the air
     this.scaleYTarget = 1;
     this.flashT = 0;
     this.facing = 0;
@@ -116,7 +117,9 @@ export class Potato {
     if (phys.rolling) {
       this.rollPivot.rotation.x += dt * 14 * speedMul;
       this.scaleYTarget = 0.75;
-      this.legs[0].rotation.x = this.legs[1].rotation.x = 0.4; // tucked
+      // tiny legs flapping frantically mid-roll
+      this.legs[0].rotation.x = Math.sin(this.animT * 40) * 1.2;
+      this.legs[1].rotation.x = Math.sin(this.animT * 40 + Math.PI) * 1.2;
     } else {
       // unwind to upright quickly once the roll ends
       this.rollPivot.rotation.x *= Math.max(0, 1 - dt * 18);
@@ -130,8 +133,15 @@ export class Potato {
           this.scaleYTarget = 1.4;
           this._stretchedAtApex = true;
         }
-        this.legs[0].rotation.x = -0.7;
-        this.legs[1].rotation.x = 0.5;
+        if (this.space) {
+          // zero-g: the legs don't help. they know it. they flail anyway.
+          this.legs[0].rotation.x = Math.sin(this.animT * 26) * 1.3;
+          this.legs[1].rotation.x = Math.sin(this.animT * 26 + Math.PI) * 1.3;
+          this.bodyGroup.rotation.z = Math.sin(this.animT * 3) * 0.18;
+        } else {
+          this.legs[0].rotation.x = -0.7;
+          this.legs[1].rotation.x = 0.5;
+        }
       } else if (moving) {
         const running = hSpeed > 6.2;
         // walk 12Hz, run 22Hz (scaled to stay readable at 60fps)
