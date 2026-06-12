@@ -22,8 +22,10 @@ export class Lighting {
     this.fill = new THREE.HemisphereLight(0x303844, 0x1a1410, 0.5);
     scene.add(this.fill);
 
-    // Exit light: small green point light above the cutting board
-    this.exitLight = new THREE.PointLight(0x2bff66, 24, 12, 1.8);
+    // Exit light: small green point light above the cutting board.
+    // Off while the exit is locked, soft glow once it opens.
+    this.exitOn = false;
+    this.exitLight = new THREE.PointLight(0x2bff66, 0, 12, 1.8);
     this.exitLight.position.copy(exitPos).add(new THREE.Vector3(0, 2.4, 0));
     scene.add(this.exitLight);
 
@@ -36,7 +38,7 @@ export class Lighting {
     const flicker = 1 + Math.sin(t * 23) * 0.04 + Math.sin(t * 7.3) * 0.05;
     this.ovenLight.intensity = this._base * (0.8 + pulse * 0.5) * flicker * (rage ? 1.5 : 1);
     this.ovenLight.color.setHex(rage ? 0xffc9a0 : 0xff5a1a);
-    this.exitLight.intensity = 24 + Math.sin(t * 2.2) * 6;
+    this.exitLight.intensity = this.exitOn ? 11 + Math.sin(t * 2.2) * 3 : 0;
   }
 }
 

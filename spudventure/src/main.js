@@ -72,7 +72,7 @@ if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
 // 1 ניחוח — oven chase | 2 קרש גלישה — olive oil + spice rain
 // 3 מסיבת ילדים — hungry kids | 4 חלל — zero-g oven finale
 const LEVELS = {
-  1: { name: 'SIZZLE', exitDelay: 0 },
+  1: { name: 'SIZZLE', exitDelay: 18 },
   2: { name: 'SLICK RIDE', exitDelay: 35 },
   3: { name: 'PARTY SNACK', exitDelay: 35 },
   4: { name: 'ZERO-G', exitDelay: 25 },
@@ -88,6 +88,17 @@ let invuln = 0;
 let timeScale = 1;
 let levelTime = 0;  // total run time, shown on the clock and end screens
 let elapsed = 0;
+
+// each level hides the exit in a different random corner
+let lastExitSpot = -1;
+function placeExit() {
+  const spots = kitchen.exitSpots;
+  let i;
+  do { i = (Math.random() * spots.length) | 0; } while (i === lastExitSpot);
+  lastExitSpot = i;
+  kitchen.setExitPosition(spots[i][0], spots[i][1]);
+  lighting.exitLight.position.set(spots[i][0], 2.4, spots[i][1]);
+}
 
 function startLevel(n) {
   level = n;
@@ -141,8 +152,10 @@ function startLevel(n) {
     hud.setRage(true);
   }
 
-  kitchen.setExitActive(LEVELS[n].exitDelay === 0);
-  lighting.exitLight.color.setHex(kitchen.exitActive ? 0x2bff66 : 0xff3324);
+  // exit always starts locked and nearly invisible, in a fresh spot
+  placeExit();
+  kitchen.setExitActive(false);
+  lighting.exitOn = false;
 
   state = 'playing';
   physics.enabled = true;
@@ -319,7 +332,7 @@ function tick() {
     // exit gate
     if (!kitchen.exitActive && levelClock >= LEVELS[level].exitDelay) {
       kitchen.setExitActive(true);
-      lighting.exitLight.color.setHex(0x2bff66);
+      lighting.exitOn = true;
       hud.flashBanner('EXIT OPEN', true);
     }
     if (kitchen.exitActive) {

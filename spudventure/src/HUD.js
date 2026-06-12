@@ -39,7 +39,7 @@ export class HUD {
 
     // build marker so it's easy to tell which version is loaded
     const ver = el('div', { id: 'ver' });
-    ver.textContent = 'V5';
+    ver.textContent = 'V6';
     this.root.appendChild(ver);
 
     this._buildClock();
