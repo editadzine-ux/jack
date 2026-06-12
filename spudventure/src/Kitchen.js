@@ -74,11 +74,10 @@ export class Kitchen {
     this._buildParty();
   }
 
-  /** Locked exits glow dull red until the level lets you leave. */
+  /** Locked exits stay almost invisible — finding the open one is the game. */
   setExitActive(active) {
     this.exitActive = active;
-    this.exitRimMat.emissive.setHex(active ? 0x2bff66 : 0xff3324);
-    this.exitLightColor = active ? 0x2bff66 : 0xff3324;
+    this.exitRimMat.emissive.setHex(active ? 0x2bff66 : 0x182218);
   }
 
   setOil(on) { this.oilSheen.visible = on; }
@@ -279,18 +278,20 @@ export class Kitchen {
   }
 
   _buildCuttingBoard() {
+    // the whole exit is one movable group — each level relocates it
+    this.exitGroup = new THREE.Group();
     const wood = makeWoodTexture();
     const board = new THREE.Mesh(
       new THREE.BoxGeometry(4.4, 0.3, 3.2),
       new THREE.MeshStandardMaterial({ map: wood, roughness: 0.7 })
     );
-    board.position.set(this.exitPos.x, 0.15, this.exitPos.z);
+    board.position.y = 0.15;
     board.castShadow = board.receiveShadow = true;
-    this.group.add(board);
+    this.exitGroup.add(board);
 
-    // green emissive rim
+    // rim: near-invisible while locked, soft green when open
     const rimMat = new THREE.MeshStandardMaterial({
-      color: 0x1a3320, emissive: 0x2bff66, emissiveIntensity: 1.6, roughness: 0.5,
+      color: 0x1a2018, emissive: 0x182218, emissiveIntensity: 0.12, roughness: 0.5,
     });
     const rimGeoX = new THREE.BoxGeometry(4.6, 0.12, 0.12);
     const rimGeoZ = new THREE.BoxGeometry(0.12, 0.12, 3.4);
@@ -301,11 +302,25 @@ export class Kitchen {
     this.exitRims = [];
     for (const [x, y, z, geo] of rims) {
       const rim = new THREE.Mesh(geo, rimMat);
-      rim.position.set(this.exitPos.x + x, y, this.exitPos.z + z);
-      this.group.add(rim);
+      rim.position.set(x, y, z);
+      this.exitGroup.add(rim);
       this.exitRims.push(rim);
     }
     this.exitRimMat = rimMat;
+    this.exitGroup.position.set(this.exitPos.x, 0, this.exitPos.z);
+    this.group.add(this.exitGroup);
+  }
+
+  /** Candidate exit corners — far enough apart to make finding it matter. */
+  get exitSpots() {
+    return [
+      [11.5, 7.2], [-12.3, 7.2], [12.3, -7.6], [-12.3, -7.6],
+    ];
+  }
+
+  setExitPosition(x, z) {
+    this.exitPos.set(x, 0, z);
+    this.exitGroup.position.set(x, 0, z);
   }
 
   _buildButterZone() {
@@ -374,10 +389,10 @@ export class Kitchen {
   }
 
   update(dt, t) {
-    // exit rim breathing (calmer while locked)
+    // exit rim breathing: subtle glow when open, near-dark when locked
     this.exitRimMat.emissiveIntensity = this.exitActive
-      ? 1.4 + Math.sin(t * 2.2) * 0.5
-      : 0.7 + Math.sin(t * 1.2) * 0.2;
+      ? 0.8 + Math.sin(t * 2.2) * 0.3
+      : 0.12;
 
     // party balloons bob
     if (this.partyGroup.visible) {
