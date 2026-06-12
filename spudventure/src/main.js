@@ -47,6 +47,7 @@ if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
 // ── game state ──
 let state = 'intro'; // intro | playing | win | lose
 let health = 3;
+let round = 1;
 let invuln = 0;
 let timeScale = 1;
 let levelTime = 0;
@@ -85,7 +86,7 @@ function checkOvenHit() {
   if (health <= 0) startLose();
 }
 
-// ── win ──
+// ── win: a breath of glory, then the next round ──
 function startWin() {
   state = 'win';
   physics.enabled = false;
@@ -101,6 +102,33 @@ function startWin() {
     timeScale = 1;
     hud.showWin();
   });
+  gsap.delayedCall(3.4, () => {
+    round += 1;
+    startRound();
+  });
+}
+
+// ── next round: same kitchen, angrier oven ──
+function startRound() {
+  hud.hideEnd();
+
+  // one strip of skin grows back between escapes
+  health = Math.min(3, health + 1);
+  hud.setHealth(health);
+  if (health > 1) {
+    oven.clearRage();
+    hud.setRage(false);
+  }
+
+  oven.reset(round);
+  physics.position.set(0, 0, 4.5);
+  physics.velocity.set(0, 0, 0);
+  potato.group.position.copy(physics.position);
+  invuln = 2;
+
+  state = 'playing';
+  physics.enabled = true;
+  hud.showRoundBanner(round);
 }
 
 // ── lose ──
@@ -132,7 +160,7 @@ function startLose() {
   tl.to(potato.group.scale, { x: 0.01, y: 0.01, z: 0.01, duration: 0.25 }, '-=0.15');
   tl.call(() => {
     timeScale = 1;
-    hud.showLose(levelTime);
+    hud.showLose(levelTime, round);
   });
 }
 
@@ -211,6 +239,8 @@ tick();
 window.__spud = {
   physics, oven, potato, kitchen,
   get state() { return state; },
+  get round() { return round; },
+  get health() { return health; },
   forceWin: () => { physics.position.copy(kitchen.exitPos); },
   forceHit: () => { invuln = 0; oven.group.position.copy(physics.position); },
 };

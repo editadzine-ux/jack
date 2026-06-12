@@ -5,6 +5,7 @@ const BASE_PLAYER_SPEED = 8; // run speed — phase speeds are fractions of this
 export class OvenEnemy {
   constructor(scene, startPos) {
     this.scene = scene;
+    this.startPos = startPos.clone();
     this.group = new THREE.Group();
     this.group.position.copy(startPos);
     scene.add(this.group);
@@ -14,6 +15,7 @@ export class OvenEnemy {
     this.dormantT = 4;
     this.elapsed = 0;
     this.speedBonus = 0;
+    this.roundBoost = 0;
     this.rage = false;
     this.recoilT = 0; // pause after landing a hit
     this.velocity = new THREE.Vector3();
@@ -127,6 +129,27 @@ export class OvenEnemy {
     this.phase = 'rage';
   }
 
+  clearRage() {
+    if (!this.rage) return;
+    this.rage = false;
+    if (this.phase === 'rage') this.phase = 'pursuit';
+  }
+
+  /** Reset for the next round — back to the wall, dormant, a bit meaner. */
+  reset(round) {
+    this.group.position.copy(this.startPos);
+    this.group.rotation.y = 0;
+    this.velocity.set(0, 0, 0);
+    this.phase = 'dormant';
+    this.dormantT = Math.max(1.5, 4 - (round - 1) * 0.5);
+    this.elapsed = 0;
+    this.speedBonus = 0;
+    this.recoilT = 0;
+    this.roundBoost = (round - 1) * 0.07;
+    this.door.rotation.x = 0;
+    this._doorOpen = false;
+  }
+
   /** Burst of sparks from the contact point (world space). */
   sparkBurst(point, count = 200) {
     const pos = new Float32Array(count * 3);
@@ -181,9 +204,10 @@ export class OvenEnemy {
       if (this.dormantT <= 0) this.phase = 'pursuit';
     } else {
       this.body.position.x = 0;
-      // +0.3 speed every 30s of pursuit, capped at 95% of player speed
+      // +0.3 speed every 30s of pursuit, capped at 95% of player speed.
+      // Later rounds start faster via roundBoost.
       this.speedBonus = Math.floor((this.elapsed - 4) / 30) * 0.3;
-      const frac = this.rage ? 0.9 : 0.6;
+      const frac = this.rage ? 0.9 : Math.min(0.6 + this.roundBoost, 0.9);
       speed = Math.min(frac * BASE_PLAYER_SPEED + Math.max(0, this.speedBonus), 0.95 * BASE_PLAYER_SPEED);
       if (this.recoilT > 0) { this.recoilT -= dt; speed = 0; }
     }
