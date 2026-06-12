@@ -114,6 +114,10 @@ function startLevel(n) {
   physics.velocity.set(0, 0, 0);
   potato.group.position.copy(physics.position);
   potato.group.scale.set(1, 1, 1);
+  potato.group.rotation.set(0, 0, 0);
+  potato.rollPivot.rotation.set(0, 0, 0);
+  potato.bodyGroup.rotation.set(0, 0, 0);
+  potato.facing = 0;
   invuln = 2;
 
   // baseline config
@@ -159,13 +163,25 @@ function startLevel(n) {
 
   state = 'playing';
   physics.enabled = true;
+  localStorage.setItem('spud.level', String(n)); // failing resumes from here
   hud.showLevelBanner(n, LEVELS[n].name);
 }
 
+// retry the level you died on, with fresh skin
+function retryLevel() {
+  gsap.killTweensOf(potato.group.position);
+  gsap.killTweensOf(potato.group.scale);
+  gsap.killTweensOf(potato.group.rotation);
+  timeScale = 1;
+  health = 2; // startLevel tops it back up to 3
+  startLevel(level);
+}
+
 potato.group.position.copy(physics.position);
+const savedLevel = Math.min(4, Math.max(1, parseInt(localStorage.getItem('spud.level') || '1', 10) || 1));
 gameCam.playIntro(physics.position, () => {
   health = 2; // startLevel tops it back up to 3
-  startLevel(1);
+  startLevel(savedLevel);
 });
 
 // ── damage (shared by oven, kids and falling spice) ──
@@ -255,7 +271,7 @@ function startLose() {
   }
   tl.call(() => {
     timeScale = 1;
-    hud.showLose(levelTime, level);
+    hud.showLose(levelTime, level, retryLevel);
   });
 }
 
