@@ -61,6 +61,8 @@ export class Kitchen {
     this.butterZone = { x: -5, z: 2, half: 1.5 };
     this.steamVents = [];
 
+    this.exitActive = true;
+
     this._buildFloorAndWalls();
     this._buildPots();
     this._buildPans();
@@ -68,6 +70,67 @@ export class Kitchen {
     this._buildCuttingBoard();
     this._buildButterZone();
     this._buildSteamVents();
+    this._buildOilSheen();
+    this._buildParty();
+  }
+
+  /** Locked exits glow dull red until the level lets you leave. */
+  setExitActive(active) {
+    this.exitActive = active;
+    this.exitRimMat.emissive.setHex(active ? 0x2bff66 : 0xff3324);
+    this.exitLightColor = active ? 0x2bff66 : 0xff3324;
+  }
+
+  setOil(on) { this.oilSheen.visible = on; }
+  setParty(on) { this.partyGroup.visible = on; }
+
+  _buildOilSheen() {
+    // level 2: the whole counter is slick with olive oil
+    this.oilSheen = new THREE.Mesh(
+      new THREE.PlaneGeometry(FLOOR_W, FLOOR_D),
+      new THREE.MeshStandardMaterial({
+        color: 0xd8c24a, roughness: 0.04, metalness: 0.25,
+        transparent: true, opacity: 0.28, depthWrite: false,
+      })
+    );
+    this.oilSheen.rotation.x = -Math.PI / 2;
+    this.oilSheen.position.y = 0.015;
+    this.oilSheen.visible = false;
+    this.group.add(this.oilSheen);
+  }
+
+  _buildParty() {
+    // level 3: balloons bobbing along the walls
+    this.partyGroup = new THREE.Group();
+    this.balloons = [];
+    const colors = [0xff4d6d, 0xffd23f, 0x4dd2ff, 0x9dff4d, 0xff8c42, 0xd24dff];
+    for (let i = 0; i < 8; i++) {
+      const balloon = new THREE.Group();
+      const color = colors[i % colors.length];
+      const ball = new THREE.Mesh(
+        new THREE.SphereGeometry(0.55, 16, 14),
+        new THREE.MeshStandardMaterial({ color, roughness: 0.25, metalness: 0.05 })
+      );
+      ball.scale.set(1, 1.2, 1);
+      balloon.add(ball);
+      const string = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.012, 0.012, 2.4, 4),
+        new THREE.MeshBasicMaterial({ color: 0xcccccc })
+      );
+      string.position.y = -1.85;
+      balloon.add(string);
+      const onBack = i < 4;
+      balloon.position.set(
+        onBack ? -10 + i * 6.6 : (i % 2 ? -14 : 14),
+        3.6 + Math.random() * 1.2,
+        onBack ? -9.2 : -6 + ((i - 4) | 0) * 4
+      );
+      balloon.userData.phase = Math.random() * Math.PI * 2;
+      this.partyGroup.add(balloon);
+      this.balloons.push(balloon);
+    }
+    this.partyGroup.visible = false;
+    this.group.add(this.partyGroup);
   }
 
   _buildFloorAndWalls() {
@@ -311,8 +374,18 @@ export class Kitchen {
   }
 
   update(dt, t) {
-    // exit rim breathing
-    this.exitRimMat.emissiveIntensity = 1.4 + Math.sin(t * 2.2) * 0.5;
+    // exit rim breathing (calmer while locked)
+    this.exitRimMat.emissiveIntensity = this.exitActive
+      ? 1.4 + Math.sin(t * 2.2) * 0.5
+      : 0.7 + Math.sin(t * 1.2) * 0.2;
+
+    // party balloons bob
+    if (this.partyGroup.visible) {
+      for (const b of this.balloons) {
+        b.position.y += Math.sin(t * 1.4 + b.userData.phase) * dt * 0.35;
+        b.rotation.z = Math.sin(t * 0.9 + b.userData.phase) * 0.12;
+      }
+    }
 
     // steam vents: 5s cycle, active for the first 2s
     for (const v of this.steamVents) {

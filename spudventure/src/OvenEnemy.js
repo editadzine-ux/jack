@@ -11,6 +11,7 @@ export class OvenEnemy {
     scene.add(this.group);
 
     this.radius = 1.9;
+    this.active = true;
     this.phase = 'dormant';
     this.dormantT = 4;
     this.elapsed = 0;
@@ -129,6 +130,12 @@ export class OvenEnemy {
     this.phase = 'rage';
   }
 
+  /** Levels without the oven hide it entirely. */
+  setActive(a) {
+    this.active = a;
+    this.group.visible = a;
+  }
+
   clearRage() {
     if (!this.rage) return;
     this.rage = false;
@@ -185,6 +192,8 @@ export class OvenEnemy {
   }
 
   update(dt, t, playerPos, kitchen) {
+    this._updateBursts(dt); // sparks fly even on oven-free levels
+    if (!this.active) return;
     this.elapsed += dt;
 
     // ── window glow pulse 0.8–1.4 (white-hot in rage) ──
@@ -287,7 +296,9 @@ export class OvenEnemy {
     }
     pos.needsUpdate = true;
 
-    // ── spark bursts ──
+  }
+
+  _updateBursts(dt) {
     for (let i = this._bursts.length - 1; i >= 0; i--) {
       const burst = this._bursts[i];
       burst.life -= dt;
