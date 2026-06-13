@@ -126,6 +126,7 @@ function startLevel(n) {
   oven.setActive(false);
   oven.clearRage();
   hud.setRage(false);
+  hud.setDoorStatus(null);
 
   // pick & show the arena, hide the others
   const cfg = LEVELS[n];
@@ -174,6 +175,10 @@ function startLevel(n) {
   physics.enabled = true;
   localStorage.setItem('spud.level', String(n));
   hud.showLevelBanner(n, cfg.name);
+  if (cfg.cyclicExit) {
+    // tell the player exactly what to do in the oven
+    gsap.delayedCall(2.0, () => { if (state === 'playing' && level === n) hud.flashBanner('WAIT FOR THE GREEN DOOR', true); });
+  }
 }
 
 // retry the level you died on, fresh skin
@@ -238,6 +243,7 @@ function startWin(byFall = false) {
   hud.setRage(false);
   hud.setPanic(false, 0);
   hud.setDangerArrow(0, 99);
+  hud.setDoorStatus(null);
 
   const final = level >= FINAL_LEVEL;
   if (byFall) {
@@ -268,6 +274,7 @@ function startLose(cause = 'squash') {
   hud.setRage(false);
   hud.setPanic(false, 0);
   hud.setDangerArrow(0, 99);
+  hud.setDoorStatus(null);
 
   timeScale = 0.3;
   const tl = gsap.timeline();
@@ -372,9 +379,10 @@ function tick() {
 
     // exit gate
     if (cfg.cyclicExit) {
-      // the arena drives exitActive itself (oven door); sync the light + arrow
+      // the arena drives exitActive itself (oven door); sync light, arrow & HUD
       lighting.exitLight.position.set(currentArena.exitPos.x, 2.4, currentArena.exitPos.z);
       lighting.exitOn = currentArena.exitActive;
+      hud.setDoorStatus(currentArena.doorPhase);
     } else if (!currentArena.exitActive && levelClock >= cfg.exitDelay) {
       currentArena.setExitActive(true);
       lighting.exitOn = true;
