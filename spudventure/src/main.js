@@ -7,6 +7,9 @@ import { Physics } from './Physics.js';
 import { OvenEnemy } from './OvenEnemy.js';
 import { SpiceRain } from './SpiceRain.js';
 import { Kids } from './Kids.js';
+import { TableLevel } from './TableLevel.js';
+import { FridgeLevel } from './FridgeLevel.js';
+import { OvenInteriorLevel } from './OvenInteriorLevel.js';
 import { GameCamera } from './Camera.js';
 import { PostFX } from './PostFX.js';
 import { HUD } from './HUD.js';
@@ -34,32 +37,15 @@ const physics = new Physics(kitchen);
 const oven = new OvenEnemy(scene, OVEN_START);
 const spiceRain = new SpiceRain(scene, kitchen);
 const kids = new Kids(scene, kitchen);
+const table = new TableLevel(scene);
+const fridge = new FridgeLevel(scene);
+const ovenInterior = new OvenInteriorLevel(scene);
 const gameCam = new GameCamera(window.innerWidth / window.innerHeight);
 const postfx = new PostFX(renderer, scene, gameCam.camera);
 const hud = new HUD();
 
-// level 4 starfield
-const stars = (() => {
-  const count = 600;
-  const pos = new Float32Array(count * 3);
-  for (let i = 0; i < count; i++) {
-    const v = new THREE.Vector3().randomDirection().multiplyScalar(50 + Math.random() * 15);
-    if (v.y < 1) v.y = 1 + Math.random() * 30; // keep them in the sky
-    pos.set([v.x, v.y, v.z], i * 3);
-  }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const points = new THREE.Points(geo, new THREE.PointsMaterial({
-    color: 0xcfe0ff, size: 0.3, sizeAttenuation: true, fog: false,
-    transparent: true, opacity: 0.9, depthWrite: false,
-  }));
-  points.visible = false;
-  scene.add(points);
-  return points;
-})();
-
-// touch devices get a virtual joystick + jump/roll buttons
-if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+const IS_TOUCH = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+if (IS_TOUCH) {
   hud.initTouch({
     onMove: (x, z) => physics.setTouchMove(x, z),
     onJump: () => physics.queueJump(),
@@ -69,50 +55,58 @@ if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
 }
 
 // ── levels ──
-// 1 ניחוח — oven chase | 2 קרש גלישה — olive oil + spice rain
-// 3 מסיבת ילדים — hungry kids | 4 חלל — zero-g oven finale
+// 1 ניחוח · 2 קרש גלישה · 3 מסיבת ילדים · 4 שולחן האוכל · 5 המקרר · 6 פנים התנור
 const LEVELS = {
-  1: { name: 'SIZZLE', exitDelay: 18 },
-  2: { name: 'SLICK RIDE', exitDelay: 35 },
-  3: { name: 'PARTY SNACK', exitDelay: 35 },
-  4: { name: 'ZERO-G', exitDelay: 25 },
+  1: { name: 'KITCHEN', arena: kitchen, exitDelay: 16 },
+  2: { name: 'OIL SLICK', arena: kitchen, exitDelay: 32 },
+  3: { name: 'KIDS PARTY', arena: kitchen, exitDelay: 32 },
+  4: { name: 'DINNER TABLE', arena: table, exitDelay: 24 },
+  5: { name: 'THE FRIDGE', arena: fridge, exitDelay: 26, winByFall: true },
+  6: { name: 'INSIDE THE OVEN', arena: ovenInterior, exitDelay: 0, cyclicExit: true },
 };
-const FINAL_LEVEL = 4;
+const FINAL_LEVEL = 6;
 
 // ── game state ──
-let state = 'intro'; // intro | playing | win | lose
+let state = 'menu'; // menu | intro | playing | win | lose
 let health = 3;
 let level = 1;
-let levelClock = 0; // seconds inside the current level (gates the exit)
+let levelClock = 0;
 let invuln = 0;
 let timeScale = 1;
-let levelTime = 0;  // total run time, shown on the clock and end screens
+let levelTime = 0;
 let elapsed = 0;
+let currentArena = kitchen;
+let exitOpenedOnce = false;
+let advanceCall = null; // pending "next level" timer after a win
 
-// each level hides the exit in a different random corner
+// each level hides the exit in a different random spot
 let lastExitSpot = -1;
-function placeExit() {
-  const spots = kitchen.exitSpots;
+function placeExit(arena) {
+  const spots = arena.exitSpots;
   let i;
-  do { i = (Math.random() * spots.length) | 0; } while (i === lastExitSpot);
+  do { i = (Math.random() * spots.length) | 0; } while (spots.length > 1 && i === lastExitSpot);
   lastExitSpot = i;
-  kitchen.setExitPosition(spots[i][0], spots[i][1]);
-  lighting.exitLight.position.set(spots[i][0], 2.4, spots[i][1]);
+  arena.setExitPosition(spots[i][0], spots[i][1]);
+  lighting.exitLight.position.set(arena.exitPos.x, 2.4, arena.exitPos.z);
 }
 
 function startLevel(n) {
+  n = Math.min(FINAL_LEVEL, Math.max(1, n));
+  if (advanceCall) { advanceCall.kill(); advanceCall = null; }
   level = n;
   levelClock = 0;
+  exitOpenedOnce = false;
   hud.hideEnd();
+  gsap.killTweensOf(potato.group.position);
+  gsap.killTweensOf(potato.group.scale);
+  gsap.killTweensOf(potato.group.rotation);
 
   // one strip of skin grows back between escapes
   health = Math.min(3, health + 1);
   hud.setHealth(health);
 
-  // reset the spud
-  physics.position.set(0, 0, 4.5);
+  // reset the spud (spawn point depends on the arena, set just below)
   physics.velocity.set(0, 0, 0);
-  potato.group.position.copy(physics.position);
   potato.group.scale.set(1, 1, 1);
   potato.group.rotation.set(0, 0, 0);
   potato.rollPivot.rotation.set(0, 0, 0);
@@ -123,68 +117,92 @@ function startLevel(n) {
   // baseline config
   physics.gravityScale = 1;
   physics.oilEverywhere = false;
+  physics.externalForce.set(0, 0, 0);
   potato.space = false;
   kitchen.setOil(false);
   kitchen.setParty(false);
-  stars.visible = false;
   spiceRain.setActive(false);
   kids.setActive(false);
   oven.setActive(false);
   oven.clearRage();
   hud.setRage(false);
 
-  if (n === 1) {
-    oven.setActive(true);
-    oven.reset(1);
-  } else if (n === 2) {
-    physics.oilEverywhere = true;
-    kitchen.setOil(true);
-    spiceRain.setActive(true);
-  } else if (n === 3) {
-    kitchen.setParty(true);
-    kids.setActive(true);
-  } else if (n === 4) {
-    physics.gravityScale = 0.15;
-    potato.space = true;
-    stars.visible = true;
-    oven.setActive(true);
-    oven.reset(1);
-    oven.roundBoost = 0.12; // the finale oven means it
-  }
-  if (health === 1 && oven.active) {
-    oven.setRage();
-    hud.setRage(true);
+  // pick & show the arena, hide the others
+  const cfg = LEVELS[n];
+  currentArena = cfg.arena;
+  physics.env = currentArena;
+
+  // spawn at the arena's safe start point
+  const sp = currentArena.spawn || { x: 0, z: 5 };
+  physics.position.set(sp.x, 0, sp.z);
+  potato.group.position.copy(physics.position);
+
+  kitchen.group.visible = (currentArena === kitchen);
+  table.setActive(currentArena === table);
+  fridge.setActive(currentArena === fridge);
+  ovenInterior.setActive(currentArena === ovenInterior);
+
+  // per-arena atmosphere
+  if (currentArena === table) {
+    lighting.setMood('table'); scene.background.setHex(0x0a0604); scene.fog.density = 0.012;
+  } else if (currentArena === fridge) {
+    lighting.setMood('fridge'); scene.background.setHex(0x0a141c); scene.fog.density = 0.01;
+  } else if (currentArena === ovenInterior) {
+    lighting.setMood('ovenInterior'); scene.background.setHex(0x100402); scene.fog.density = 0.022;
+  } else {
+    lighting.setMood('kitchen'); scene.background.setHex(0x0a0604); scene.fog.density = 0.011;
   }
 
-  // exit always starts locked and nearly invisible, in a fresh spot
-  placeExit();
-  kitchen.setExitActive(false);
+  // per-level hazards
+  if (n === 1) {
+    oven.setActive(true); oven.reset(1);
+  } else if (n === 2) {
+    physics.oilEverywhere = true; kitchen.setOil(true); spiceRain.setActive(true);
+  } else if (n === 3) {
+    kitchen.setParty(true); kids.setActive(true);
+  } else if (n === 5) {
+    physics.oilEverywhere = true; // frost is slippery too
+  }
+  if (health === 1 && oven.active) { oven.setRage(); hud.setRage(true); }
+
+  // exit starts locked & nearly invisible, fresh spot
+  placeExit(currentArena);
+  currentArena.setExitActive(false);
   lighting.exitOn = false;
 
   state = 'playing';
   physics.enabled = true;
-  localStorage.setItem('spud.level', String(n)); // failing resumes from here
-  hud.showLevelBanner(n, LEVELS[n].name);
+  localStorage.setItem('spud.level', String(n));
+  hud.showLevelBanner(n, cfg.name);
 }
 
-// retry the level you died on, with fresh skin
+// retry the level you died on, fresh skin
 function retryLevel() {
-  gsap.killTweensOf(potato.group.position);
-  gsap.killTweensOf(potato.group.scale);
-  gsap.killTweensOf(potato.group.rotation);
   timeScale = 1;
   health = 2; // startLevel tops it back up to 3
   startLevel(level);
 }
 
-potato.group.position.copy(physics.position);
-const savedLevel = Math.min(4, Math.max(1, parseInt(localStorage.getItem('spud.level') || '1', 10) || 1));
-gameCam.playIntro(physics.position, () => {
-  health = 2; // startLevel tops it back up to 3
-  startLevel(savedLevel);
-});
+// full reset to level 1
+function resetToStart() {
+  localStorage.removeItem('spud.level');
+  location.reload();
+}
+hud.onReset(resetToStart);
 
-// ── damage (shared by oven, kids and falling spice) ──
+// ── boot: menu → cinematic intro → play ──
+potato.group.position.copy(physics.position);
+const savedLevel = Math.min(FINAL_LEVEL, Math.max(1, parseInt(localStorage.getItem('spud.level') || '1', 10) || 1));
+function beginRun() {
+  state = 'intro';
+  gameCam.playIntro(physics.position, () => {
+    health = 2; // startLevel tops it back up to 3
+    startLevel(savedLevel);
+  });
+}
+hud.showStart(IS_TOUCH, beginRun);
+
+// ── damage (shared by every hazard) ──
 function damagePlayer(dir, contact) {
   if (state !== 'playing' || invuln > 0) return;
   health -= 1;
@@ -194,14 +212,11 @@ function damagePlayer(dir, contact) {
   potato.hit();
   gameCam.shake();
   postfx.damageSpike();
-  oven.sparkBurst(contact, 200);
+  oven.sparkBurst(contact, 200); // sparks fly regardless of which hazard
   hud.loseStrip(health);
 
-  if (health === 1 && oven.active) {
-    oven.setRage();
-    hud.setRage(true);
-  }
-  if (health <= 0) startLose();
+  if (health === 1 && oven.active) { oven.setRage(); hud.setRage(true); }
+  if (health <= 0) startLose(oven.active ? 'oven' : 'squash');
 }
 
 const _tmp = new THREE.Vector3();
@@ -215,33 +230,40 @@ function checkOvenHit() {
   damagePlayer(dir, contact);
 }
 
-// ── win: next level, or the actual ending ──
-function startWin() {
+// ── win ──
+function startWin(byFall = false) {
   state = 'win';
   physics.enabled = false;
-  physics.velocity.set(0, physics.velocity.y, 0);
-  oven.recoilT = 999; // the oven gives up. for now.
+  oven.recoilT = 999;
   hud.setRage(false);
   hud.setPanic(false, 0);
   hud.setDangerArrow(0, 99);
 
   const final = level >= FINAL_LEVEL;
-  // slow-motion 0.5s, then the verdict
+  if (byFall) {
+    // drop into the fridge drawer
+    physics.velocity.set(0, 0, 0);
+    gsap.to(potato.group.position, { y: -3, duration: 0.9, ease: 'power1.in' });
+    gsap.to(potato.group.scale, { x: 0.4, y: 0.4, z: 0.4, duration: 0.9 });
+  } else {
+    physics.velocity.set(0, physics.velocity.y, 0);
+  }
+
   timeScale = 0.25;
   gsap.delayedCall(0.5, () => {
     timeScale = 1;
     hud.showWin(final, levelTime);
   });
   if (!final) {
-    gsap.delayedCall(3.4, () => startLevel(level + 1));
+    const next = level + 1;
+    advanceCall = gsap.delayedCall(3.4, () => startLevel(next));
   }
 }
 
 // ── lose ──
-function startLose() {
+function startLose(cause = 'squash') {
   state = 'lose';
   physics.enabled = false;
-  physics.velocity.set(0, 0, 0);
   oven.recoilT = 999;
   hud.setRage(false);
   hud.setPanic(false, 0);
@@ -250,22 +272,23 @@ function startLose() {
   timeScale = 0.3;
   const tl = gsap.timeline();
 
-  if (oven.active) {
-    // the oven door opens, the potato slides in
+  if (cause === 'oven') {
+    physics.velocity.set(0, 0, 0);
     oven.openDoor();
     const yaw = oven.group.rotation.y;
     const fwd = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw));
     const doorFront = oven.group.position.clone().addScaledVector(fwd, 2.6).setY(0.2);
     const inside = oven.group.position.clone().addScaledVector(fwd, 0.6).setY(1.6);
-    tl.to(potato.group.position, {
-      x: doorFront.x, y: doorFront.y, z: doorFront.z, duration: 1.1, ease: 'power1.in', delay: 0.5,
-    });
-    tl.to(potato.group.position, {
-      x: inside.x, y: inside.y, z: inside.z, duration: 0.9, ease: 'power2.in',
-    });
+    tl.to(potato.group.position, { x: doorFront.x, y: doorFront.y, z: doorFront.z, duration: 1.1, ease: 'power1.in', delay: 0.5 });
+    tl.to(potato.group.position, { x: inside.x, y: inside.y, z: inside.z, duration: 0.9, ease: 'power2.in' });
     tl.to(potato.group.scale, { x: 0.01, y: 0.01, z: 0.01, duration: 0.25 }, '-=0.15');
+  } else if (cause === 'fell') {
+    // plummeted off the table
+    physics.velocity.set(0, 0, 0);
+    tl.to(potato.group.position, { y: -16, duration: 1.4, ease: 'power1.in' });
+    tl.to(potato.group.rotation, { x: '+=10', z: '+=6', duration: 1.4, ease: 'none' }, '<');
   } else {
-    // squashed flat by spice / grabbed by kids — flatten and spin out
+    physics.velocity.set(0, 0, 0);
     tl.to(potato.group.rotation, { y: '+=9', duration: 1.6, ease: 'power1.out', delay: 0.4 });
     tl.to(potato.group.scale, { x: 1.5, y: 0.06, z: 1.5, duration: 0.7, ease: 'power2.in' }, '<');
   }
@@ -275,29 +298,24 @@ function startLose() {
   });
 }
 
-// ── danger arrow: screen-space angle from potato to nearest threat ──
+// ── danger arrow: nearest threat across oven, kids and arena hazards ──
 const _pPos = new THREE.Vector3();
 const _oPos = new THREE.Vector3();
 function threatInfo() {
-  let dist = Infinity;
-  let pos = null;
-  if (oven.active && oven.phase !== 'dormant') {
-    dist = Math.hypot(physics.position.x - oven.group.position.x, physics.position.z - oven.group.position.z);
-    pos = oven.group.position;
-  }
-  if (kids.active) {
-    for (const kid of kids.kids) {
-      const d = Math.hypot(physics.position.x - kid.group.position.x, physics.position.z - kid.group.position.z);
-      if (d < dist) { dist = d; pos = kid.group.position; }
-    }
-  }
+  let dist = Infinity, pos = null;
+  const consider = (p) => {
+    const d = Math.hypot(physics.position.x - p.x, physics.position.z - p.z);
+    if (d < dist) { dist = d; pos = p; }
+  };
+  if (oven.active && oven.phase !== 'dormant') consider(oven.group.position);
+  if (kids.active) for (const kid of kids.kids) consider(kid.group.position);
+  if (currentArena.threats) for (const p of currentArena.threats()) consider(p);
   return { dist, pos };
 }
-
 function arrowAngleTo(targetPos) {
   _pPos.copy(potato.group.position).setY(1).project(gameCam.camera);
   _oPos.copy(targetPos).setY(1).project(gameCam.camera);
-  return Math.atan2(_oPos.x - _pPos.x, _oPos.y - _pPos.y); // 0 = up, CW positive
+  return Math.atan2(_oPos.x - _pPos.x, _oPos.y - _pPos.y);
 }
 
 // ── main loop ──
@@ -310,17 +328,17 @@ function tick() {
   lastT = now;
   const dt = rawDt * timeScale;
   elapsed += dt;
-  if (state === 'playing') {
-    levelTime += rawDt;
-    levelClock += rawDt;
-  }
+  if (state === 'playing') { levelTime += rawDt; levelClock += rawDt; }
 
   const threat = threatInfo();
-
-  // the closer the danger, the faster the fear (panic boost)
   const panic = state === 'playing' && threat.dist < 6;
   physics.panic = panic;
   potato.setPanic(panic);
+
+  // fridge suction must be applied before the physics step
+  if (state === 'playing' && currentArena.applySuction) {
+    if (currentArena.applySuction(physics)) startLose('squash');
+  }
 
   if (state === 'intro' || state === 'playing') {
     physics.update(dt);
@@ -329,9 +347,14 @@ function tick() {
   }
   invuln = Math.max(0, invuln - dt);
 
-  kitchen.update(dt, elapsed);
+  // arena + entity updates
+  if (currentArena === kitchen) {
+    kitchen.update(dt, elapsed);
+  } else if (state !== 'menu') {
+    currentArena.update(dt, elapsed, potato.group.position, physics, damagePlayer);
+  }
   potato.update(dt, physics);
-  if (state !== 'intro') {
+  if (state !== 'intro' && state !== 'menu') {
     oven.update(dt, elapsed, potato.group.position, kitchen);
     kids.update(dt, elapsed, potato.group.position);
     spiceRain.update(dt, elapsed, physics.position, physics.velocity, damagePlayer);
@@ -345,18 +368,29 @@ function tick() {
     const grab = kids.checkHit(physics.position, physics.radius);
     if (grab) damagePlayer(grab.dir, grab.contact);
 
+    const cfg = LEVELS[level];
+
     // exit gate
-    if (!kitchen.exitActive && levelClock >= LEVELS[level].exitDelay) {
-      kitchen.setExitActive(true);
+    if (cfg.cyclicExit) {
+      // the arena drives exitActive itself (oven door); sync the light + arrow
+      lighting.exitLight.position.set(currentArena.exitPos.x, 2.4, currentArena.exitPos.z);
+      lighting.exitOn = currentArena.exitActive;
+    } else if (!currentArena.exitActive && levelClock >= cfg.exitDelay) {
+      currentArena.setExitActive(true);
       lighting.exitOn = true;
       hud.flashBanner('EXIT OPEN', true);
     }
-    if (kitchen.exitActive) {
-      const exitDist = Math.hypot(
-        physics.position.x - kitchen.exitPos.x,
-        physics.position.z - kitchen.exitPos.z
-      );
-      if (exitDist < kitchen.exitRadius) startWin();
+
+    // fell off / fell in
+    if (physics.position.y < -3.5) {
+      if (currentArena.checkFallWin && currentArena.checkFallWin(physics.position.x, physics.position.z)) {
+        startWin(true);
+      } else {
+        startLose('fell');
+      }
+    } else if (currentArena.exitActive && !cfg.winByFall) {
+      const exitDist = Math.hypot(physics.position.x - currentArena.exitPos.x, physics.position.z - currentArena.exitPos.z);
+      if (exitDist < currentArena.exitRadius) startWin();
     }
   }
 
@@ -376,12 +410,17 @@ tick();
 
 // debug/test handle
 window.__spud = {
-  physics, oven, potato, kitchen, kids, spiceRain,
+  physics, oven, potato, kitchen, kids, spiceRain, table, fridge, ovenInterior,
   get state() { return state; },
   get level() { return level; },
   get health() { return health; },
-  openExit: () => kitchen.setExitActive(true),
-  forceWin: () => { kitchen.setExitActive(true); physics.position.copy(kitchen.exitPos); },
+  get arena() { return currentArena; },
+  begin: () => beginRun(),
+  openExit: () => currentArena.setExitActive(true),
+  forceWin: () => {
+    if (LEVELS[level].winByFall) { currentArena.setExitActive(true); physics.position.set(currentArena.exitPos.x, 0.1, currentArena.exitPos.z); }
+    else { currentArena.setExitActive(true); physics.position.copy(currentArena.exitPos); }
+  },
   forceHit: () => { invuln = 0; damagePlayer(new THREE.Vector3(0, 0, 1), potato.group.position.clone().setY(1)); },
   setLevel: (n) => startLevel(n),
 };

@@ -62,6 +62,8 @@ export class Kitchen {
     this.steamVents = [];
 
     this.exitActive = true;
+    this.fallOffEdges = false; // walls everywhere — you can't fall off a counter
+    this.spawn = { x: 0, z: 5 };
 
     this._buildFloorAndWalls();
     this._buildPots();
@@ -73,6 +75,8 @@ export class Kitchen {
     this._buildOilSheen();
     this._buildParty();
   }
+
+  isOverFloor() { return true; }
 
   /** Locked exits stay almost invisible — finding the open one is the game. */
   setExitActive(active) {
