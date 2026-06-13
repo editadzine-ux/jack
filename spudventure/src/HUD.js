@@ -30,6 +30,11 @@ export class HUD {
     this.rageEl = el('div', { id: 'rage-overlay' });
     this.root.appendChild(this.rageEl);
 
+    // door status (oven-interior level only)
+    this.doorEl = el('div', { id: 'door-status' });
+    this.doorEl.style.display = 'none';
+    this.root.appendChild(this.doorEl);
+
     // controls hint
     this.hint = el('div', { id: 'controls-hint' });
     this.hint.innerHTML = 'WASD / ARROWS MOVE &middot; SPACE JUMP &middot; SHIFT ROLL<br>' +
@@ -39,7 +44,7 @@ export class HUD {
 
     // build marker so it's easy to tell which version is loaded
     const ver = el('div', { id: 'ver' });
-    ver.textContent = 'V8';
+    ver.textContent = 'V9';
     this.root.appendChild(ver);
 
     // always-available reset to level 1
@@ -284,6 +289,17 @@ export class HUD {
   }
 
   setRage(on) { this.rageEl.classList.toggle('active', on); }
+
+  /** phase: 'shut' | 'soon' | 'open' | null (hide). */
+  setDoorStatus(phase) {
+    if (!phase) { this.doorEl.style.display = 'none'; return; }
+    this.doorEl.style.display = 'block';
+    this.doorEl.classList.remove('shut', 'soon', 'open');
+    this.doorEl.classList.add(phase);
+    if (phase === 'shut') this.doorEl.innerHTML = '‏הדלת סגורה · DOOR SHUT';
+    else if (phase === 'soon') this.doorEl.innerHTML = '‏מתכוננים… · GET READY';
+    else this.doorEl.innerHTML = '‏רוץ לדלת! · GO!';
+  }
 
   /** elapsed: level seconds — hands tick (discrete seconds), no smooth sweep. */
   updateClock(elapsed) {
