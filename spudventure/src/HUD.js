@@ -39,14 +39,54 @@ export class HUD {
 
     // build marker so it's easy to tell which version is loaded
     const ver = el('div', { id: 'ver' });
-    ver.textContent = 'V7';
+    ver.textContent = 'V8';
     this.root.appendChild(ver);
+
+    // always-available reset to level 1
+    this.resetBtn = el('button', { id: 'reset-btn', type: 'button', title: 'Restart from level 1' });
+    this.resetBtn.textContent = '↺';
+    this.root.appendChild(this.resetBtn);
 
     this._buildClock();
 
     // end screen
     this.endEl = el('div', { id: 'endscreen' });
     this.root.appendChild(this.endEl);
+
+    // start screen
+    this.startEl = el('div', { id: 'startscreen' });
+    this.root.appendChild(this.startEl);
+  }
+
+  /** Reset-to-level-1 button. */
+  onReset(fn) {
+    this.resetBtn.addEventListener('click', fn);
+  }
+
+  /** Opening menu with a clear "press to play" + controls. resolves on press. */
+  showStart(touch, onStart) {
+    this.startEl.innerHTML = '';
+    const title = el('div', { id: 'start-title' });
+    title.textContent = 'SPUDVENTURE';
+    const tagline = el('div', { id: 'start-tag' });
+    tagline.innerHTML = 'בריחת תפוח אדמה &middot; A potato on the run';
+    const controls = el('div', { id: 'start-controls' });
+    controls.innerHTML = touch
+      ? 'גרור בצד שמאל לזוז &middot; כפתורי JUMP / ROLL מימין<br>' +
+        'מצא את היציאה הזוהרת כשהיא נפתחת'
+      : 'WASD / חצים — לזוז &middot; רווח — קפיצה &middot; SHIFT — גלגול / ריצה<br>' +
+        'מצא את היציאה הזוהרת כשהיא נפתחת';
+    const btn = el('button', { id: 'start-btn', type: 'button' });
+    btn.innerHTML = 'התחל / START';
+    const start = () => {
+      this.startEl.classList.remove('shown');
+      setTimeout(() => { this.startEl.style.display = 'none'; }, 600);
+      onStart();
+    };
+    btn.addEventListener('click', start);
+    this.startEl.append(title, tagline, controls, btn);
+    this.startEl.style.display = 'flex';
+    requestAnimationFrame(() => this.startEl.classList.add('shown'));
   }
 
   /**

@@ -12,19 +12,27 @@ npm run dev
 
 ## Controls
 
-| Key | Action |
-| --- | --- |
-| WASD | Move |
-| SPACE | Jump (coyote time + input buffering) |
-| SHIFT (tap) | Roll |
-| SHIFT (hold) | Run |
+| Desktop | Touch | Action |
+| --- | --- | --- |
+| WASD / Arrows | Drag left half of screen | Move |
+| SPACE | JUMP button | Jump (coyote time + input buffering) |
+| SHIFT (tap) | ROLL button | Roll |
+| SHIFT (hold) | hold ROLL | Run |
 
-## The kitchen
+The exit stays hidden and dark until a survival timer opens it, in a different
+spot each level. Find it, then run. Failing restarts the level you died on;
+the ↺ button restarts the whole run from level 1.
 
-- The oven sits dormant for 4 seconds. Then it doesn't.
-- It gets faster every 30 seconds, up to 95% of your speed.
-- On your last sliver of skin it goes white-hot and rages.
-- Butter is slippery. Steam vents slow you down. Pots do not move.
-- The cutting board glows green. That's the way out. Probably.
+## The six levels
+
+1. **Kitchen** — the oven comes alive and chases you.
+2. **Oil Slick** — the whole counter is olive oil; spice shakers rain down.
+3. **Kids Party** — three hungry party kids chase you between balloons.
+4. **Dinner Table** — the edges are cliffs; a giant fork sweeps like a zamboni.
+   Roll into olives to fire them and stun the fork.
+5. **The Fridge** — cold, slippery, with tupperware that tries to vacuum you in.
+   The exit is the veg drawer at the bottom: you win by *falling in*.
+6. **Inside the Oven** — the floor heats up and invisible heat waves sweep the
+   room. The door opens for 1.2 s every 8 s. One window. Don't miss it.
 
 Built with Three.js, GSAP and the `postprocessing` library on Vite.

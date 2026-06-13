@@ -13,8 +13,8 @@ const ROLL_DURATION = 0.45;
 const ROLL_COOLDOWN = 0.9;
 
 export class Physics {
-  constructor(kitchen) {
-    this.kitchen = kitchen;
+  constructor(env) {
+    this.env = env; // active arena: kitchen, table, fridge or oven interior
     this.position = new THREE.Vector3(0, 0, 4.5);
     this.velocity = new THREE.Vector3();
     this.radius = 0.5;
@@ -24,8 +24,9 @@ export class Physics {
     this.running = false;
     this.panic = false;
     this.enabled = false; // off during intro / endgame
-    this.gravityScale = 1;     // ~0.15 in the zero-g level
-    this.oilEverywhere = false; // level 2: the whole floor is olive oil
+    this.gravityScale = 1;
+    this.oilEverywhere = false; // slick levels: oil / fridge frost
+    this.externalForce = new THREE.Vector3(); // suction etc., set per frame
 
     this._coyote = 0;
     this._jumpBuffer = 0;
@@ -92,12 +93,12 @@ export class Physics {
 
   inButter() {
     if (this.oilEverywhere) return true;
-    const b = this.kitchen.butterZone;
+    const b = this.env.butterZone;
     return Math.abs(this.position.x - b.x) < b.half && Math.abs(this.position.z - b.z) < b.half;
   }
 
   inActiveSteam() {
-    for (const v of this.kitchen.steamVents) {
+    for (const v of this.env.steamVents) {
       if (v.active && this.position.distanceTo(v.pos) < v.radius) return true;
     }
     return false;
@@ -155,14 +156,19 @@ export class Physics {
       this.justJumped = false;
     }
 
+    // ── external forces (tupperware suction etc.) ──
+    this.velocity.addScaledVector(this.externalForce, dt);
+    this.externalForce.set(0, 0, 0);
+
     // ── gravity ──
     this.velocity.y += GRAVITY * this.gravityScale * dt;
     this.position.addScaledVector(this.velocity, dt);
 
-    // ground plane
-    if (this.position.y <= 0) {
+    // ground plane — only where the arena actually has floor; elsewhere you fall
+    const overFloor = this.env.isOverFloor(this.position.x, this.position.z);
+    if (overFloor && this.position.y <= 0 && this.velocity.y <= 0) {
       this.position.y = 0;
-      if (this.velocity.y < 0) this.velocity.y = 0;
+      this.velocity.y = 0;
       this.grounded = true;
     } else {
       this.grounded = false;
@@ -173,13 +179,15 @@ export class Physics {
 
   _resolveCollisions() {
     const p = this.position;
-    // walls
-    const b = this.kitchen.bounds;
-    p.x = THREE.MathUtils.clamp(p.x, b.minX, b.maxX);
-    p.z = THREE.MathUtils.clamp(p.z, b.minZ, b.maxZ);
+    // walls — unless this arena lets you fall off the edge
+    if (!this.env.fallOffEdges) {
+      const b = this.env.bounds;
+      p.x = THREE.MathUtils.clamp(p.x, b.minX, b.maxX);
+      p.z = THREE.MathUtils.clamp(p.z, b.minZ, b.maxZ);
+    }
 
     // obstacle push-out (skip low ones we've jumped over)
-    for (const o of this.kitchen.obstacles) {
+    for (const o of this.env.obstacles) {
       if (p.y > o.h - 0.05) continue;
       const dx = p.x - o.x;
       const dz = p.z - o.z;
