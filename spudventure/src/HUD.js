@@ -44,13 +44,17 @@ export class HUD {
 
     // build marker so it's easy to tell which version is loaded
     const ver = el('div', { id: 'ver' });
-    ver.textContent = 'V9';
+    ver.textContent = 'V10';
     this.root.appendChild(ver);
 
-    // always-available reset to level 1
-    this.resetBtn = el('button', { id: 'reset-btn', type: 'button', title: 'Restart from level 1' });
-    this.resetBtn.textContent = '↺';
-    this.root.appendChild(this.resetBtn);
+    // level indicator (top-left corner, under the clock)
+    this.levelEl = el('div', { id: 'level-indicator' });
+    this.root.appendChild(this.levelEl);
+
+    // pause button — opens the pause menu (ESC also works on desktop)
+    this.pauseBtn = el('button', { id: 'pause-btn', type: 'button', title: 'Pause' });
+    this.pauseBtn.textContent = '❚❚';
+    this.root.appendChild(this.pauseBtn);
 
     this._buildClock();
 
@@ -58,38 +62,95 @@ export class HUD {
     this.endEl = el('div', { id: 'endscreen' });
     this.root.appendChild(this.endEl);
 
+    // pause menu
+    this.pauseEl = el('div', { id: 'pausescreen' });
+    this.root.appendChild(this.pauseEl);
+
     // start screen
     this.startEl = el('div', { id: 'startscreen' });
     this.root.appendChild(this.startEl);
   }
 
-  /** Reset-to-level-1 button. */
-  onReset(fn) {
-    this.resetBtn.addEventListener('click', fn);
+  /** Show/update the corner "LEVEL X" indicator (null hides it). */
+  setLevelIndicator(n) {
+    if (!n) { this.levelEl.classList.remove('shown'); return; }
+    this.levelEl.textContent = `LEVEL ${n}`;
+    this.levelEl.classList.add('shown');
   }
 
-  /** Opening menu with a clear "press to play" + controls. resolves on press. */
+  /** The pause button (top bar). */
+  onPauseButton(fn) {
+    this.pauseBtn.addEventListener('click', fn);
+  }
+  setPauseButtonVisible(v) {
+    this.pauseBtn.classList.toggle('shown', v);
+  }
+
+  /** Pause menu: Resume + Restart from Level 1. */
+  showPause(onResume, onRestart) {
+    this.pauseEl.innerHTML = '';
+    const title = el('div', { id: 'pause-title' });
+    title.textContent = 'PAUSED';
+    const resume = el('button', { class: 'menu-btn primary', type: 'button' });
+    resume.textContent = 'RESUME';
+    resume.addEventListener('click', onResume);
+    const restart = el('button', { class: 'menu-btn secondary', type: 'button' });
+    restart.textContent = 'RESTART FROM LEVEL 1';
+    restart.addEventListener('click', onRestart);
+    this.pauseEl.append(title, resume, restart);
+    this.pauseEl.classList.add('shown');
+  }
+  hidePause() {
+    this.pauseEl.classList.remove('shown');
+  }
+
+  /**
+   * Opening menu: title, one-line premise, controls (auto desktop/mobile),
+   * how-to-win, and a PLAY button. Fully responsive via clamp() in the CSS.
+   */
   showStart(touch, onStart) {
     this.startEl.innerHTML = '';
+    const card = el('div', { id: 'start-card' });
+
     const title = el('div', { id: 'start-title' });
     title.textContent = 'SPUDVENTURE';
-    const tagline = el('div', { id: 'start-tag' });
-    tagline.innerHTML = 'בריחת תפוח אדמה &middot; A potato on the run';
+
+    const premise = el('div', { id: 'start-premise' });
+    premise.textContent = 'You are a potato. The kitchen wants to cook you. Survive.';
+
     const controls = el('div', { id: 'start-controls' });
-    controls.innerHTML = touch
-      ? 'גרור בצד שמאל לזוז &middot; כפתורי JUMP / ROLL מימין<br>' +
-        'מצא את היציאה הזוהרת כשהיא נפתחת'
-      : 'WASD / חצים — לזוז &middot; רווח — קפיצה &middot; SHIFT — גלגול / ריצה<br>' +
-        'מצא את היציאה הזוהרת כשהיא נפתחת';
+    const head = el('div', { class: 'ctrl-head' });
+    head.textContent = touch ? 'TOUCH CONTROLS' : 'CONTROLS';
+    controls.appendChild(head);
+    const rows = touch
+      ? [['Move', ['Joystick · left']], ['Jump', ['JUMP · right']], ['Roll', ['ROLL · right']]]
+      : [['Move', ['WASD', 'Arrows']], ['Jump', ['SPACE']], ['Roll', ['SHIFT']]];
+    for (const [label, keys] of rows) {
+      const row = el('div', { class: 'ctrl-row' });
+      const l = el('span', {}); l.textContent = label;
+      const k = el('span', { class: 'keys' });
+      keys.forEach((key, i) => {
+        if (i > 0) { const or = el('span', {}); or.textContent = 'or'; or.style.opacity = '.5'; k.appendChild(or); }
+        const kb = el('span', { class: 'key' }); kb.textContent = key; k.appendChild(kb);
+      });
+      row.append(l, k);
+      controls.appendChild(row);
+    }
+
+    const howto = el('div', { id: 'start-howto' });
+    howto.textContent = 'Reach the glowing exit to clear each level.';
+
     const btn = el('button', { id: 'start-btn', type: 'button' });
-    btn.innerHTML = 'התחל / START';
+    btn.textContent = 'PLAY';
     const start = () => {
       this.startEl.classList.remove('shown');
-      setTimeout(() => { this.startEl.style.display = 'none'; }, 600);
+      setTimeout(() => { this.startEl.style.display = 'none'; }, 500);
       onStart();
     };
     btn.addEventListener('click', start);
-    this.startEl.append(title, tagline, controls, btn);
+
+    card.append(title, premise, controls, howto, btn);
+    this.startEl.appendChild(card);
     this.startEl.style.display = 'flex';
     requestAnimationFrame(() => this.startEl.classList.add('shown'));
   }
@@ -319,11 +380,8 @@ export class HUD {
       const s = Math.floor(totalSeconds % 60).toString().padStart(2, '0');
       sub.textContent = `For good. (${m}:${s})`;
       const btn = el('button', { id: 'restart-btn' });
-      btn.textContent = 'RUN AGAIN';
-      btn.addEventListener('click', () => {
-        localStorage.removeItem('spud.level'); // a full fresh run
-        location.reload();
-      });
+      btn.textContent = 'PLAY AGAIN';
+      btn.addEventListener('click', () => location.reload()); // clean start screen
       this.endEl.append(title, sub, btn);
       setTimeout(() => btn.classList.add('shown'), 2000);
     } else {
@@ -333,7 +391,7 @@ export class HUD {
     requestAnimationFrame(() => this.endEl.classList.add('shown'));
   }
 
-  /** onRestart retries the same level — no starting over from scratch. */
+  /** Death/fail screen — the button always restarts the whole run at Level 1. */
   showLose(elapsedSeconds, level = 1, onRestart = () => location.reload()) {
     this.endEl.innerHTML = '';
     const title = el('div', { class: 'end-title' });
@@ -341,9 +399,9 @@ export class HUD {
     const m = Math.floor(elapsedSeconds / 60);
     const s = Math.floor(elapsedSeconds % 60).toString().padStart(2, '0');
     const sub = el('div', { class: 'end-sub' });
-    sub.textContent = level > 1 ? `(${m}:${s} · LEVEL ${level})` : `(${m}:${s})`;
+    sub.textContent = level > 1 ? `(${m}:${s} · REACHED LEVEL ${level})` : `(${m}:${s})`;
     const btn = el('button', { id: 'restart-btn' });
-    btn.textContent = level > 1 ? `RETRY LEVEL ${level}` : 'RUN AGAIN';
+    btn.textContent = 'RESTART FROM LEVEL 1';
     btn.addEventListener('click', onRestart);
     this.endEl.append(title, sub, btn);
     requestAnimationFrame(() => this.endEl.classList.add('shown'));

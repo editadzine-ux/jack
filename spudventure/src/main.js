@@ -173,7 +173,8 @@ function startLevel(n) {
 
   state = 'playing';
   physics.enabled = true;
-  localStorage.setItem('spud.level', String(n));
+  hud.setLevelIndicator(n);
+  hud.setPauseButtonVisible(true);
   hud.showLevelBanner(n, cfg.name);
   if (cfg.cyclicExit) {
     // tell the player exactly what to do in the oven
@@ -181,28 +182,49 @@ function startLevel(n) {
   }
 }
 
-// retry the level you died on, fresh skin
-function retryLevel() {
+// ── pause + restart system (level tracked in memory only) ──
+let paused = false;
+
+function togglePause() {
+  if (state !== 'playing') return; // only while actually in a level
+  paused = !paused;
+  if (paused) {
+    timeScale = 0;
+    hud.showPause(resumeGame, restartFromLevel1);
+  } else {
+    timeScale = 1;
+    hud.hidePause();
+  }
+}
+function resumeGame() {
+  paused = false;
   timeScale = 1;
-  health = 2; // startLevel tops it back up to 3
-  startLevel(level);
+  hud.hidePause();
 }
-
-// full reset to level 1
-function resetToStart() {
-  localStorage.removeItem('spud.level');
-  location.reload();
+// "Restart" ALWAYS returns to Level 1 with a full state reset
+function restartFromLevel1() {
+  paused = false;
+  hud.hidePause();
+  gsap.killTweensOf(potato.group.position);
+  gsap.killTweensOf(potato.group.scale);
+  gsap.killTweensOf(potato.group.rotation);
+  timeScale = 1;
+  health = 2;        // startLevel tops it back up to 3
+  lastExitSpot = -1; // forget previous exit placement
+  startLevel(1);
 }
-hud.onReset(resetToStart);
+hud.onPauseButton(togglePause);
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Escape') { togglePause(); e.preventDefault(); }
+});
 
-// ── boot: menu → cinematic intro → play ──
+// ── boot: fresh page load always starts clean at the start screen ──
 potato.group.position.copy(physics.position);
-const savedLevel = Math.min(FINAL_LEVEL, Math.max(1, parseInt(localStorage.getItem('spud.level') || '1', 10) || 1));
 function beginRun() {
   state = 'intro';
   gameCam.playIntro(physics.position, () => {
-    health = 2; // startLevel tops it back up to 3
-    startLevel(savedLevel);
+    health = 2;        // startLevel tops it back up to 3
+    startLevel(1);     // every run begins at Level 1
   });
 }
 hud.showStart(IS_TOUCH, beginRun);
@@ -244,6 +266,7 @@ function startWin(byFall = false) {
   hud.setPanic(false, 0);
   hud.setDangerArrow(0, 99);
   hud.setDoorStatus(null);
+  hud.setPauseButtonVisible(false);
 
   const final = level >= FINAL_LEVEL;
   if (byFall) {
@@ -275,6 +298,7 @@ function startLose(cause = 'squash') {
   hud.setPanic(false, 0);
   hud.setDangerArrow(0, 99);
   hud.setDoorStatus(null);
+  hud.setPauseButtonVisible(false);
 
   timeScale = 0.3;
   const tl = gsap.timeline();
@@ -301,7 +325,7 @@ function startLose(cause = 'squash') {
   }
   tl.call(() => {
     timeScale = 1;
-    hud.showLose(levelTime, level, retryLevel);
+    hud.showLose(levelTime, level, restartFromLevel1);
   });
 }
 
@@ -333,6 +357,10 @@ function tick() {
   const now = performance.now();
   const rawDt = Math.min((now - lastT) / 1000, 0.05);
   lastT = now;
+
+  // paused: hold the frozen frame, run no simulation
+  if (paused) { postfx.render(rawDt); return; }
+
   const dt = rawDt * timeScale;
   elapsed += dt;
   if (state === 'playing') { levelTime += rawDt; levelClock += rawDt; }
