@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מהגליל — חופשות בגליל העליון והגולן</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --forest:#1B4332;
+  --green:#2D6A4F;
+  --sage:#52B788;
+  --mint:#95D5B2;
+  --pale:#D8F3DC;
+  --bg:#F7F8F4;
+  --surface:#FFFFFF;
+  --text:#1A2E1A;
+  --muted:#6B8C71;
+  --border:#E0EBE2;
+  --terra:#E76F51;
+  --gold:#F4A261;
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow:0 2px 16px rgba(27,67,50,.10);
+  --shadow-lg:0 8px 40px rgba(27,67,50,.15);
+}
+
+html{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);scroll-behavior:smooth}
+body{overflow-x:hidden;min-height:100vh}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;animation:fade-in .3s ease}
+.screen.active{display:block}
+@keyframes fade-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── NAV ── */
+.nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(247,248,244,.94);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 5vw;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-dark{background:rgba(27,67,50,.92);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav-logo{font-size:1.25rem;font-weight:900;color:var(--forest);text-decoration:none;letter-spacing:-.02em;cursor:pointer}
+.nav-dark .nav-logo{color:#fff}
+.nav-logo em{color:var(--sage);font-style:normal}
+.nav-links{display:flex;flex-direction:row-reverse;gap:1.75rem;list-style:none;align-items:center}
+.nav-links a{font-size:.9rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s;cursor:pointer}
+.nav-dark .nav-links a{color:rgba(255,255,255,.7)}
+.nav-links a:hover{color:var(--green)}
+.nav-dark .nav-links a:hover{color:#fff}
+.nav-cta{background:var(--green);color:#fff;border:none;padding:.5rem 1.2rem;border-radius:100px;font-family:'Heebo',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:background .2s,transform .15s}
+.nav-cta:hover{background:var(--forest);transform:translateY(-1px)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:.5rem;border:none;border-radius:100px;font-family:'Heebo',sans-serif;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--green);color:#fff;padding:.85rem 2rem;font-size:1rem}
+.btn-primary:hover{background:var(--forest);transform:translateY(-2px);box-shadow:0 8px 24px rgba(45,106,79,.35)}
+.btn-primary:active{transform:translateY(0)}
+.btn-terra{background:var(--terra);color:#fff;padding:.85rem 2rem;font-size:1rem}
+.btn-terra:hover{background:#c85a3c;transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--green);border:2px solid var(--border);padding:.75rem 1.75rem;font-size:.95rem}
+.btn-outline:hover{border-color:var(--sage);background:var(--pale)}
+.btn-ghost-white{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:.5rem 1.1rem;font-size:.85rem;backdrop-filter:blur(8px)}
+.btn-ghost-white:hover{background:rgba(255,255,255,.25)}
+.btn-whatsapp{background:#25D366;color:#fff;padding:.85rem 2rem;font-size:1rem}
+.btn-whatsapp:hover{background:#1db954;transform:translateY(-2px)}
+.btn-sm{padding:.5rem 1.2rem;font-size:.85rem}
+
+/* ── FORM ELEMENTS ── */
+.fg{display:flex;flex-direction:column;gap:.35rem}
+.fg label,.form-label{font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.fg input,.fg select,.form-input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.8rem 1rem;font-family:'Heebo',sans-serif;font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none}
+.fg input:focus,.fg select:focus,.form-input:focus{border-color:var(--sage);background:#fff}
+
+/* range slider */
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:linear-gradient(to left,var(--sage) 0%,var(--sage) var(--pct,50%),var(--border) var(--pct,50%));border-radius:100px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--green);border:3px solid #fff;box-shadow:0 2px 8px rgba(45,106,79,.4)}
+
+/* tags */
+.tag-check{display:none}
+.tag-label{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .9rem;border-radius:100px;border:1.5px solid var(--border);background:#fff;font-size:.85rem;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;user-select:none}
+.tag-check:checked+.tag-label{border-color:var(--green);background:var(--pale);color:var(--forest);font-weight:600}
+
+/* ── SECTION ── */
+.section{padding:4rem 5vw}
+.section-label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--sage);margin-bottom:.5rem}
+.section-title{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:var(--forest);letter-spacing:-.025em;line-height:1.2}
+.section-sub{font-size:1rem;color:var(--muted);margin-top:.4rem;line-height:1.75}
+
+/* ══════════════════════════════════════
+   SCREEN 1 — HOME
+══════════════════════════════════════ */
+
+/* Hero */
+.hero{
+  position:relative;overflow:hidden;
+  min-height:72vh;
+  background:linear-gradient(155deg,#1B4332 0%,#2D6A4F 40%,#52B788 80%,#95D5B2 100%);
+  display:flex;align-items:center;
+  padding:5rem 5vw 8rem;
+}
+.hero-content{max-width:560px;position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(8px);padding:.35rem .9rem;border-radius:100px;font-size:.78rem;font-weight:600;color:#fff;letter-spacing:.04em;margin-bottom:1.5rem}
+.hero-badge-dot{width:6px;height:6px;background:#95D5B2;border-radius:50%;animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.5)}}
+.hero h1{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.03em;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:#B7E4C7}
+.hero-sub{font-size:1.05rem;font-weight:400;color:rgba(255,255,255,.82);line-height:1.8;margin-bottom:2.5rem}
+.hero-stats{display:flex;gap:2.5rem;flex-direction:row-reverse}
+.hero-stat-val{font-size:1.5rem;font-weight:900;color:#fff}
+.hero-stat-lbl{font-size:.78rem;color:rgba(255,255,255,.65)}
+
+/* Hero decorative SVG */
+.hero-deco{position:absolute;left:0;top:0;bottom:0;width:50%;pointer-events:none;opacity:.4}
+
+/* Builder Card */
+.builder-wrap{padding:0 5vw 4rem;margin-top:-5rem;position:relative;z-index:10}
+.builder-card{background:#fff;border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.13);padding:2rem 2.5rem;max-width:1100px;margin:0 auto}
+.builder-head{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.builder-title{font-size:1.05rem;font-weight:800;color:var(--forest)}
+.builder-tabs{display:flex;flex-direction:row-reverse;gap:.4rem;background:var(--bg);border-radius:100px;padding:.3rem}
+.builder-tab{padding:.5rem 1.1rem;border-radius:100px;background:transparent;border:none;font-family:'Heebo',sans-serif;font-size:.88rem;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s}
+.builder-tab.active{background:#fff;color:var(--forest);font-weight:700;box-shadow:var(--shadow)}
+.builder-row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:1rem;align-items:end;margin-bottom:1.25rem}
+.builder-divider{height:1px;background:var(--border);margin:1.25rem 0}
+.builder-prefs-row{display:flex;flex-direction:row-reverse;align-items:center;gap:1rem;flex-wrap:wrap}
+.builder-prefs-label{font-size:.78rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0}
+.tags-wrap{display:flex;flex-direction:row-reverse;flex-wrap:wrap;gap:.4rem;flex:1}
+.budget-wrap{display:flex;flex-direction:column;gap:.4rem}
+.budget-top{display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:center}
+.budget-val{font-size:1.05rem;font-weight:800;color:var(--forest)}
+.budget-range{font-size:.72rem;color:var(--muted)}
+
+/* How it works */
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.step-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:1.75rem;text-align:right;transition:transform .25s,box-shadow .25s}
+.step-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.step-num{width:42px;height:42px;border-radius:50%;background:var(--pale);border:2px solid var(--mint);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:900;color:var(--green);margin-bottom:1.1rem;margin-right:auto}
+.step-title{font-size:1rem;font-weight:700;color:var(--forest);margin-bottom:.4rem}
+.step-desc{font-size:.85rem;color:var(--muted);line-height:1.75}
+
+/* Categories */
+.cats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem}
+.cat-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:1.5rem 1rem;text-align:center;cursor:pointer;transition:all .25s}
+.cat-card:hover{border-color:var(--sage);transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.cat-icon{font-size:2.2rem;margin-bottom:.6rem;display:block}
+.cat-name{font-size:.85rem;font-weight:700;color:var(--forest);line-height:1.3}
+.cat-count{font-size:.72rem;color:var(--muted);margin-top:.2rem}
+
+/* Trust strip */
+.trust-strip{background:var(--forest);padding:1.5rem 5vw;display:flex;flex-direction:row-reverse;align-items:center;justify-content:center;gap:3rem;flex-wrap:wrap}
+.trust-item{display:flex;flex-direction:row-reverse;align-items:center;gap:.6rem;color:rgba(255,255,255,.8);font-size:.9rem;font-weight:500}
+.trust-icon{font-size:1.1rem}
+
+/* ══════════════════════════════════════
+   SCREEN 2 — RESULTS
+══════════════════════════════════════ */
+.results-header{background:linear-gradient(155deg,#1B4332,#2D6A4F);padding:2rem 5vw 3rem;color:#fff}
+.results-header h2{font-size:1.6rem;font-weight:900;letter-spacing:-.02em}
+.results-meta{font-size:.88rem;color:rgba(255,255,255,.7);margin-top:.3rem}
+.results-chips{display:flex;flex-direction:row-reverse;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
+.results-chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.9);border-radius:100px;padding:.3rem .8rem;font-size:.78rem;font-weight:600}
+
+.results-layout{display:grid;grid-template-columns:260px 1fr;gap:2rem;padding:2rem 5vw}
+
+/* Filters */
+.filters-panel{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;height:fit-content;position:sticky;top:80px}
+.filter-title{font-size:.9rem;font-weight:700;color:var(--forest);margin-bottom:1rem}
+.filter-group{margin-bottom:1.25rem}
+.filter-label{display:block;font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem}
+.filter-check-row{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;padding:.35rem 0;font-size:.88rem;color:var(--text);cursor:pointer}
+.filter-check-row input{accent-color:var(--green);cursor:pointer}
+
+/* Packages */
+.packages-head{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.packages-count{font-size:.9rem;color:var(--muted)}
+.sort-select{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .8rem;font-family:'Heebo',sans-serif;font-size:.85rem;color:var(--text);outline:none;cursor:pointer}
+.packages-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem}
+
+.pkg-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s}
+.pkg-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--mint)}
+.pkg-img{height:170px;position:relative;overflow:hidden}
+.pkg-img svg{width:100%;height:100%}
+.pkg-badge{position:absolute;top:.7rem;right:.7rem;padding:.25rem .65rem;border-radius:100px;font-size:.72rem;font-weight:700;color:#fff;background:rgba(27,67,50,.82);backdrop-filter:blur(6px)}
+.pkg-badge.hot{background:var(--terra)}
+.pkg-price-chip{position:absolute;bottom:.7rem;left:.7rem;background:rgba(255,255,255,.95);border-radius:100px;padding:.3rem .8rem}
+.pkg-price{font-size:.95rem;font-weight:900;color:var(--forest)}
+.pkg-price-per{font-size:.7rem;color:var(--muted)}
+.pkg-body{padding:1.2rem}
+.pkg-name{font-size:1.05rem;font-weight:800;color:var(--forest);margin-bottom:.35rem}
+.pkg-desc{font-size:.83rem;color:var(--muted);line-height:1.65;margin-bottom:.8rem}
+.pkg-tags{display:flex;flex-direction:row-reverse;flex-wrap:wrap;gap:.35rem}
+.pkg-tag{font-size:.72rem;padding:.2rem .55rem;background:var(--pale);color:var(--green);border-radius:100px;font-weight:600}
+.pkg-footer{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;padding:.75rem 1.2rem;border-top:1px solid var(--border);font-size:.82rem;color:var(--muted)}
+.pkg-rating em{color:#F4A261;font-style:normal}
+
+/* ══════════════════════════════════════
+   SCREEN 3 — DETAIL
+══════════════════════════════════════ */
+.detail-hero{height:320px;background:linear-gradient(155deg,#1B4332,#2D6A4F 55%,#52B788);position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:2rem 5vw}
+.detail-hero-content{color:#fff;position:relative;z-index:2}
+.detail-badge{background:rgba(255,255,255,.2);border-radius:100px;padding:.28rem .75rem;font-size:.75rem;font-weight:700;display:inline-block;margin-bottom:.6rem}
+.detail-title{font-size:2.1rem;font-weight:900;letter-spacing:-.025em}
+.detail-sub{font-size:.95rem;color:rgba(255,255,255,.78);margin-top:.3rem}
+.detail-hero-stars{margin-top:.5rem;font-size:.88rem;color:rgba(255,255,255,.8)}
+.detail-hero-stars em{color:#F4A261;font-style:normal}
+
+.detail-layout{display:grid;grid-template-columns:1fr 360px;gap:2.5rem;padding:2.5rem 5vw}
+
+/* Itinerary */
+.itinerary-title{font-size:1.1rem;font-weight:800;color:var(--forest);margin-bottom:1.5rem}
+.itin-item{display:flex;flex-direction:row-reverse;gap:1.25rem;margin-bottom:1.5rem;position:relative}
+.itin-item:not(:last-child)::before{content:'';position:absolute;right:21px;top:44px;width:2px;height:calc(100% + .25rem);background:var(--border)}
+.itin-icon{width:44px;height:44px;border-radius:50%;background:var(--pale);border:2px solid var(--mint);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;z-index:1}
+.itin-body{flex:1}
+.itin-time{font-size:.7rem;font-weight:700;color:var(--sage);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem}
+.itin-name{font-size:1rem;font-weight:700;color:var(--forest)}
+.itin-place{font-size:.83rem;color:var(--muted);margin:.15rem 0}
+.itin-price{font-size:.88rem;font-weight:700;color:var(--green)}
+
+/* Included */
+.included-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0}
+.included-item{background:var(--pale);border-radius:var(--radius-sm);padding:.85rem 1rem;text-align:right;font-size:.85rem;font-weight:600;color:var(--forest)}
+.included-item-icon{font-size:1.2rem;display:block;margin-bottom:.3rem}
+
+/* Booking sidebar */
+.booking-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:1.75rem;box-shadow:var(--shadow-lg);position:sticky;top:80px}
+.booking-price{font-size:2rem;font-weight:900;color:var(--forest);letter-spacing:-.02em}
+.booking-per{font-size:.88rem;color:var(--muted);margin-bottom:1.25rem}
+.breakdown{margin-bottom:1.25rem}
+.b-row{display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.b-row:last-child{border-bottom:none}
+.b-label{color:var(--muted)}
+.b-val{font-weight:600;color:var(--text)}
+.b-total{font-size:1rem;font-weight:900 !important;color:var(--forest) !important}
+.whatsapp-note{display:flex;flex-direction:row-reverse;align-items:flex-start;gap:.6rem;background:#E8F5E9;border-radius:var(--radius-sm);padding:.75rem 1rem;margin:1rem 0;font-size:.8rem;color:var(--forest);line-height:1.6}
+.commission-note{background:var(--bg);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-top:.75rem;font-size:.78rem;color:var(--muted);text-align:right}
+.commission-note strong{color:var(--green)}
+
+/* ══════════════════════════════════════
+   SCREEN 4 — CHECKOUT
+══════════════════════════════════════ */
+.checkout-header{background:var(--bg);border-bottom:1px solid var(--border);padding:1.5rem 5vw;display:flex;flex-direction:row-reverse;align-items:center;gap:1rem}
+.checkout-step{display:flex;align-items:center;gap:.4rem;font-size:.85rem;font-weight:600}
+.checkout-step-num{width:26px;height:26px;border-radius:50%;background:var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
+.checkout-step.done .checkout-step-num{background:var(--green);color:#fff}
+.checkout-step.active .checkout-step-num{background:var(--forest);color:#fff}
+.checkout-step-sep{width:32px;height:1px;background:var(--border)}
+
+.checkout-layout{display:grid;grid-template-columns:1fr 380px;gap:3rem;padding:2.5rem 5vw;max-width:1060px;margin:0 auto}
+.form-section-title{font-size:1.1rem;font-weight:800;color:var(--forest);margin-bottom:1.5rem;display:flex;flex-direction:row-reverse;align-items:center;gap:.6rem}
+.form-section-title span{width:28px;height:28px;border-radius:50%;background:var(--pale);border:2px solid var(--mint);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;color:var(--green);flex-shrink:0}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.form-row-1{margin-bottom:1rem}
+.pay-methods{display:flex;flex-direction:row-reverse;gap:.75rem;margin-bottom:1.5rem}
+.pay-method{flex:1;padding:.85rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);display:flex;flex-direction:row-reverse;align-items:center;gap:.6rem;cursor:pointer;transition:all .2s;font-size:.88rem;font-weight:500;color:var(--muted)}
+.pay-method.active{border-color:var(--sage);background:var(--pale);color:var(--forest)}
+.pay-method input{accent-color:var(--green)}
+
+.order-summary{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:1.75rem;position:sticky;top:80px}
+.os-title{font-size:1rem;font-weight:800;color:var(--forest);margin-bottom:1.25rem}
+.os-pkg-name{font-size:.98rem;font-weight:700;color:var(--forest)}
+.os-pkg-includes{font-size:.82rem;color:var(--muted);margin-top:.4rem;line-height:1.75}
+.os-divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
+.os-row{display:flex;flex-direction:row-reverse;justify-content:space-between;margin-bottom:.55rem;font-size:.88rem;color:var(--muted)}
+.os-row strong{color:var(--text);font-weight:600}
+.os-total{display:flex;flex-direction:row-reverse;justify-content:space-between;font-size:1.1rem;font-weight:900;color:var(--forest);border-top:2px solid var(--border);padding-top:.85rem;margin-top:.5rem}
+.trust-row{display:flex;flex-direction:row-reverse;gap:.75rem;margin-top:1.25rem}
+.trust-item-small{display:flex;align-items:center;gap:.25rem;font-size:.72rem;color:var(--muted)}
+
+/* ══════════════════════════════════════
+   SCREEN 5 — CONFIRMATION
+══════════════════════════════════════ */
+.confirm-wrap{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 5vw;text-align:center;background:linear-gradient(160deg,#F7F8F4,#D8F3DC)}
+.confirm-icon{width:80px;height:80px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.5rem;animation:pop-in .6s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes pop-in{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.confirm-title{font-size:2rem;font-weight:900;color:var(--forest);margin-bottom:.4rem}
+.confirm-sub{font-size:1rem;color:var(--muted);margin-bottom:2rem;max-width:400px}
+.confirm-card{background:#fff;border-radius:24px;border:1.5px solid var(--border);padding:2rem;max-width:500px;width:100%;text-align:right;box-shadow:var(--shadow-lg);margin-bottom:1.75rem}
+.confirm-book-id{font-size:.7rem;font-weight:700;color:var(--sage);letter-spacing:.12em;margin-bottom:1rem;display:block}
+.cd-row{display:flex;flex-direction:row-reverse;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.9rem}
+.cd-row:last-child{border-bottom:none}
+.cd-key{color:var(--muted)}
+.cd-val{font-weight:700;color:var(--forest)}
+.biz-notifs{display:flex;flex-direction:column;gap:.5rem;max-width:380px;width:100%;margin-top:1.5rem}
+.biz-notif{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;display:flex;flex-direction:row-reverse;align-items:center;gap:.75rem;font-size:.82rem;color:var(--forest);text-align:right;opacity:0}
+.biz-notif.show{animation:slide-in .4s ease forwards}
+@keyframes slide-in{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.biz-notif-icon{width:32px;height:32px;border-radius:50%;background:var(--pale);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.biz-notif-name{font-weight:700}
+.biz-notif-amt{color:var(--green);font-weight:700;font-size:.8rem}
+
+/* ══════════════════════════════════════
+   SCREEN 6 — BUSINESS DASHBOARD
+══════════════════════════════════════ */
+.dash-header{background:linear-gradient(155deg,#1B4332,#2D6A4F);padding:1.75rem 5vw;color:#fff}
+.dash-header-top{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.dash-biz{text-align:right}
+.dash-biz-name{font-size:1.3rem;font-weight:900}
+.dash-biz-type{font-size:.85rem;color:rgba(255,255,255,.7);margin-top:.1rem}
+.dash-status-pill{display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:.4rem 1rem;border-radius:100px;font-size:.82rem;font-weight:600;color:rgba(255,255,255,.9)}
+.dash-status-dot{width:7px;height:7px;background:#95D5B2;border-radius:50%;animation:pulse-dot 2s infinite}
+.dash-quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;padding:1.5rem 0 0}
+.dq-stat{text-align:right}
+.dq-val{font-size:1.6rem;font-weight:900}
+.dq-lbl{font-size:.78rem;color:rgba(255,255,255,.65);margin-top:.1rem}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;padding:1.5rem 5vw}
+.kpi-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+.kpi-lbl{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
+.kpi-val{font-size:2rem;font-weight:900;color:var(--forest);letter-spacing:-.02em}
+.kpi-change{font-size:.78rem;margin-top:.25rem;display:flex;flex-direction:row-reverse;align-items:center;gap:.25rem}
+.kpi-change.up{color:var(--green)}
+.kpi-change.neutral{color:var(--muted)}
+
+.dash-layout{display:grid;grid-template-columns:1fr 320px;gap:1.5rem;padding:0 5vw 3rem}
+.dash-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
+.dash-card-title{font-size:.95rem;font-weight:700;color:var(--forest);margin-bottom:1.25rem;display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between}
+.dash-card-title a{font-size:.78rem;font-weight:600;color:var(--sage);text-decoration:none;cursor:pointer}
+
+.bk-table{width:100%;border-collapse:collapse}
+.bk-table th{font-size:.7rem;font-weight:700;color:var(--muted);text-align:right;padding:0 0 .7rem;letter-spacing:.06em;text-transform:uppercase;border-bottom:1.5px solid var(--border)}
+.bk-table td{font-size:.88rem;color:var(--text);padding:.8rem 0;border-bottom:1px solid var(--border);text-align:right;vertical-align:middle}
+.bk-table tr:last-child td{border-bottom:none}
+.bk-status{display:inline-flex;align-items:center;gap:.25rem;font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:100px}
+.bk-status.confirmed{background:var(--pale);color:var(--green)}
+.bk-status.pending{background:#FFF3E0;color:var(--terra)}
+
+/* Revenue chart */
+.rev-chart{display:flex;flex-direction:row-reverse;align-items:flex-end;gap:6px;height:90px;margin:1rem 0}
+.rev-bar{flex:1;border-radius:4px 4px 0 0;transition:background .2s;cursor:pointer;position:relative}
+.rev-bar:hover::after{content:attr(data-tip);position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:var(--forest);color:#fff;border-radius:6px;padding:.2rem .5rem;font-size:.7rem;white-space:nowrap;pointer-events:none}
+.rev-bar-labels{display:flex;flex-direction:row-reverse;gap:6px;margin-top:.3rem}
+.rev-bar-lbl{flex:1;text-align:center;font-size:.65rem;color:var(--muted)}
+
+/* Payout */
+.payout-row{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;padding:.8rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.payout-row:last-child{border-bottom:none}
+.payout-amt{font-weight:700;color:var(--green)}
+.payout-date{color:var(--muted);font-size:.8rem}
+.payout-status{font-size:.72rem;font-weight:700;padding:.15rem .5rem;border-radius:100px}
+.payout-status.paid{background:var(--pale);color:var(--green)}
+.payout-status.scheduled{background:#FFF3E0;color:var(--terra)}
+
+/* Toggle */
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:100px;transition:background .2s}
+.toggle-slider::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle input:checked+.toggle-slider{background:var(--green)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
+.toggle-row{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.toggle-row:last-child{border-bottom:none}
+.toggle-row-label{color:var(--text);font-weight:500}
+.toggle-row-sub{font-size:.75rem;color:var(--muted)}
+
+/* Availability calendar */
+.avail-legend{display:flex;flex-direction:row-reverse;gap:1rem;margin-bottom:.75rem;font-size:.72rem;color:var(--muted)}
+.avail-legend-item{display:flex;align-items:center;gap:.3rem}
+.avail-dot{width:10px;height:10px;border-radius:3px}
+.avail-day-headers{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.avail-day-hd{font-size:.62rem;font-weight:700;color:var(--muted);text-align:center}
+.avail-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.avail-day{aspect-ratio:1;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .15s}
+.avail-day.av{background:var(--pale);color:var(--green)}
+.avail-day.bk{background:var(--green);color:#fff}
+.avail-day.bl{background:var(--bg);color:var(--border)}
+.avail-day.av:hover{background:var(--mint);color:var(--forest)}
+
+/* ── FOOTER ── */
+.footer{background:var(--forest);color:rgba(255,255,255,.65);padding:3rem 5vw 1.5rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem}
+.footer-brand{font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:.5rem;letter-spacing:-.02em}
+.footer-brand em{color:var(--sage);font-style:normal}
+.footer-tagline{font-size:.85rem;line-height:1.75}
+.footer-col-title{font-size:.72rem;font-weight:700;color:#fff;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.85rem}
+.footer-col a{display:block;font-size:.85rem;color:rgba(255,255,255,.55);text-decoration:none;margin-bottom:.45rem;transition:color .2s;cursor:pointer}
+.footer-col a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;font-size:.75rem;display:flex;flex-direction:row-reverse;justify-content:space-between;color:rgba(255,255,255,.4)}
+.footer-commission{background:rgba(255,255,255,.05);border-radius:var(--radius-sm);padding:.85rem 1rem;margin-bottom:2rem;font-size:.82rem;color:rgba(255,255,255,.7);display:flex;flex-direction:row-reverse;align-items:center;gap:.75rem}
+.footer-commission strong{color:var(--mint)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .builder-row{grid-template-columns:1fr 1fr;gap:.75rem}
+  .steps-grid{grid-template-columns:1fr 1fr}
+  .cats-grid{grid-template-columns:repeat(3,1fr)}
+  .results-layout{grid-template-columns:1fr}
+  .packages-grid{grid-template-columns:1fr}
+  .detail-layout{grid-template-columns:1fr}
+  .checkout-layout{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .dash-layout{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr;gap:2rem}
+  .trust-strip{gap:1.5rem}
+  .dash-quick-stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .steps-grid{grid-template-columns:1fr}
+  .cats-grid{grid-template-columns:repeat(2,1fr)}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .footer-top{grid-template-columns:1fr}
+  .hero h1{font-size:2rem}
+  .nav-links li.hide-mobile{display:none}
+  .builder-card{padding:1.5rem}
+  .builder-row{grid-template-columns:1fr}
+  .form-row-2{grid-template-columns:1fr}
+  .confirm-title{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 — HOME
+══════════════════════════════════════ -->
+<div id="screen-home" class="screen active">
+
+<nav class="nav">
+  <span class="nav-logo" onclick="showScreen('screen-home')">מה<em>גליל</em></span>
+  <ul class="nav-links">
+    <li><a onclick="scrollToSection('how-it-works')">כיצד זה עובד</a></li>
+    <li><a onclick="scrollToSection('categories')">עסקים מקומיים</a></li>
+    <li class="hide-mobile"><a onclick="showScreen('screen-dashboard')">כניסה לעסקים</a></li>
+  </ul>
+  <button class="nav-cta btn" onclick="document.getElementById('builder-card').scrollIntoView({behavior:'smooth'})">בנה חבילה</button>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge"><span class="hero-badge-dot"></span> גליל עליון & גולן</div>
+    <h1>הגליל, כמו שלא<br>ראית אותו <em>אף פעם</em></h1>
+    <p class="hero-sub">חבר עסקים מקומיים נבחרים לחבילת חופשה מושלמת — צימר, מסעדה, יקב, סדנה — ושלם פעם אחת לכולם.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-val">85%</div>
+        <div class="hero-stat-lbl">מכל עסקה הולכת לעסק</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">120+</div>
+        <div class="hero-stat-lbl">עסקים מקומיים</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">תשלום 1</div>
+        <div class="hero-stat-lbl">לכל החבילה</div>
+      </div>
+    </div>
+  </div>
+  <!-- Mountain SVG decoration -->
+  <div class="hero-deco">
+    <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+      <path d="M500 500 L500 280 L420 200 L340 280 L280 160 L200 260 L140 200 L60 300 L0 260 L0 500 Z" fill="rgba(255,255,255,0.06)"/>
+      <path d="M500 500 L500 340 L440 280 L380 330 L320 240 L260 310 L200 260 L120 340 L60 300 L0 330 L0 500 Z" fill="rgba(255,255,255,0.05)"/>
+      <path d="M500 500 L500 400 L450 360 L400 390 L350 350 L300 380 L250 340 L180 380 L120 360 L60 400 L0 380 L0 500 Z" fill="rgba(255,255,255,0.07)"/>
+      <circle cx="370" cy="100" r="60" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <circle cx="370" cy="100" r="40" fill="rgba(255,255,255,0.04)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- Builder Card -->
+<div class="builder-wrap">
+  <div class="builder-card" id="builder-card">
+    <div class="builder-head">
+      <div class="builder-title">🔍 מצא את החבילה המושלמת שלך</div>
+      <div class="builder-tabs">
+        <button class="builder-tab active" onclick="setTab(this)">סוף שבוע</button>
+        <button class="builder-tab" onclick="setTab(this)">יום כיף</button>
+        <button class="builder-tab" onclick="setTab(this)">אירוע / גיבוש</button>
+      </div>
+    </div>
+    <div class="builder-row">
+      <div class="fg">
+        <label>מתי?</label>
+        <input type="date" id="trip-date" value="2025-08-15">
+      </div>
+      <div class="fg">
+        <label>קבוצה</label>
+        <select id="group-type">
+          <option>זוג</option>
+          <option>משפחה</option>
+          <option>חברים</option>
+          <option>גיבוש חברה</option>
+          <option>ועד עובדים</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>כמה אנשים?</label>
+        <select id="group-size">
+          <option>2</option><option>3</option><option>4</option>
+          <option>5-8</option><option>9-15</option><option>15+</option>
+        </select>
+      </div>
+      <div class="fg budget-wrap">
+        <label>תקציב לאדם</label>
+        <div class="budget-top">
+          <span class="budget-val" id="budget-display">₪800</span>
+          <span class="budget-range">₪300–₪2,000</span>
+        </div>
+        <input type="range" id="budget-slider" min="300" max="2000" step="50" value="800">
+      </div>
+      <button class="btn btn-primary" onclick="findPackages()" style="white-space:nowrap;padding:.8rem 1.8rem">מצא חבילות ←</button>
+    </div>
+    <div class="builder-divider"></div>
+    <div class="builder-prefs-row">
+      <span class="builder-prefs-label">מה אוהבים?</span>
+      <div class="tags-wrap">
+        <input type="checkbox" class="tag-check" id="pref-zimmer" checked><label class="tag-label" for="pref-zimmer">🏠 צימרים</label>
+        <input type="checkbox" class="tag-check" id="pref-food" checked><label class="tag-label" for="pref-food">🍽️ אוכל</label>
+        <input type="checkbox" class="tag-check" id="pref-wine"><label class="tag-label" for="pref-wine">🍷 יקבים</label>
+        <input type="checkbox" class="tag-check" id="pref-workshop"><label class="tag-label" for="pref-workshop">🎨 סדנאות</label>
+        <input type="checkbox" class="tag-check" id="pref-guide"><label class="tag-label" for="pref-guide">🧭 מדריך</label>
+        <input type="checkbox" class="tag-check" id="pref-druze"><label class="tag-label" for="pref-druze">🫙 אירוח דרוזי</label>
+        <input type="checkbox" class="tag-check" id="pref-olive"><label class="tag-label" for="pref-olive">🫒 בתי בד</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- How It Works -->
+<div class="section" id="how-it-works" style="padding-top:0">
+  <div style="margin-bottom:2.5rem">
+    <span class="section-label">כיצד זה עובד</span>
+    <h2 class="section-title">ארבעה צעדים. חופשה אחת מושלמת.</h2>
+    <p class="section-sub">אתם בוחרים, אנחנו מחברים — ועסקים מקומיים מרוויחים.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">הגדירו תאריך ותקציב</div>
+      <p class="step-desc">הכניסו תאריכים, גודל קבוצה וטווח תקציב. מחפש זוג, משפחה או גיבוש — אנחנו מסתדרים עם הכל.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">גלו עסקים מקומיים</div>
+      <p class="step-desc">ראו מגוון עסקים מהגליל והגולן — צימרים, מסעדות, יקבים, סדנאות ומדריכים עם תאריכי זמינות אמיתיים.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-title">בנו חבילה או בחרו מוכנה</div>
+      <p class="step-desc">הרכיבו חבילה מותאמת אישית, או בחרו מתוך חבילות מוכנות ונבחרות שכבר קשרנו עבורכם.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-title">שלמו פעם אחת — לכולם</div>
+      <p class="step-desc">תשלום אחד. אישור בוואטסאפ. כל העסקים מקבלים את חלקם אוטומטית — ואתם יוצאים לחופשה.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Categories -->
+<div class="section" id="categories" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div style="margin-bottom:2rem">
+    <span class="section-label">עסקים מקומיים</span>
+    <h2 class="section-title">120+ עסקים מהגליל העליון והגולן</h2>
+    <p class="section-sub">כל עסק נבדק ומאושר. אתם תמיד יודעים למי הולך הכסף.</p>
+  </div>
+  <div class="cats-grid">
+    <div class="cat-card" onclick="showScreen('screen-results')">
+      <span class="cat-icon">🏠</span>
+      <div class="cat-name">צימרים ומלונות</div>
+      <div class="cat-count">38 נכסים</div>
+    </div>
+    <div class="cat-card" onclick="showScreen('screen-results')">
+      <span class="cat-icon">🍽️</span>
+      <div class="cat-name">מסעדות ובתי קפה</div>
+      <div class="cat-count">24 מקומות</div>
+    </div>
+    <div class="cat-card" onclick="showScreen('screen-results')">
+      <span class="cat-icon">🍷</span>
+      <div class="cat-name">יקבים ובתי בד</div>
+      <div class="cat-count">19 יקבים</div>
+    </div>
+    <div class="cat-card" onclick="showScreen('screen-results')">
+      <span class="cat-icon">🎨</span>
+      <div class="cat-name">סדנאות ואמנים</div>
+      <div class="cat-count">16 סדנאות</div>
+    </div>
+    <div class="cat-card" onclick="showScreen('screen-results')">
+      <span class="cat-icon">🧭</span>
+      <div class="cat-name">מדריכי טיולים</div>
+      <div class="cat-count">14 מדריכים</div>
+    </div>
+    <div class="cat-card" onclick="showScreen('screen-results')">
+      <span class="cat-icon">🫙</span>
+      <div class="cat-name">אירוח דרוזי</div>
+      <div class="cat-count">9 חוויות</div>
+    </div>
+  </div>
+</div>
+
+<!-- Trust Strip -->
+<div class="trust-strip">
+  <div class="trust-item"><span class="trust-icon">✅</span> 85% מהעסקה לעסק המקומי</div>
+  <div class="trust-item"><span class="trust-icon">💳</span> תשלום מאובטח · ביט / כרטיס</div>
+  <div class="trust-item"><span class="trust-icon">📱</span> אישור מיידי בוואטסאפ</div>
+  <div class="trust-item"><span class="trust-icon">🔄</span> ביטול חינם עד 48 שעות</div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-commission">
+    <span>💡</span>
+    <span>עסק מקומי? <strong>הצטרף בחינם</strong> — ושלם רק 15% עמלה כשמגיעה הזמנה.</span>
+    <button class="btn btn-outline btn-sm" onclick="showScreen('screen-dashboard')" style="margin-right:auto;white-space:nowrap;background:transparent;color:#95D5B2;border-color:rgba(149,213,178,.4)">הירשם לעסקים ←</button>
+  </div>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">מה<em>גליל</em></div>
+      <div class="footer-tagline">פלטפורמת תיירות נישה לגליל העליון והגולן. מחברים תיירים לעסקים מקומיים אמיתיים — בלי אמצעים מיותרים.</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">תיירים</div>
+      <a>מצא חבילות</a>
+      <a>חבילות מוכנות</a>
+      <a>בנה בעצמך</a>
+      <a>ביקורות</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">עסקים</div>
+      <a onclick="showScreen('screen-dashboard')">כניסה לדשבורד</a>
+      <a>הרשמה חינם</a>
+      <a>מודל העמלות</a>
+      <a>מרכז עזרה</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">צור קשר</div>
+      <a>info@mehagalil.co.il</a>
+      <a>ועדת הפיתוח</a>
+      <a>תנאי שימוש</a>
+      <a>פרטיות</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 מהגליל</span>
+    <span>עשוי באהבה בגליל 🌿</span>
+  </div>
+</footer>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 — RESULTS
+══════════════════════════════════════ -->
+<div id="screen-results" class="screen">
+<nav class="nav nav-dark">
+  <span class="nav-logo" onclick="showScreen('screen-home')">מה<em>גליל</em></span>
+  <ul class="nav-links">
+    <li><a onclick="showScreen('screen-home')">← חזרה לחיפוש</a></li>
+    <li class="hide-mobile"><a onclick="showScreen('screen-dashboard')">כניסה לעסקים</a></li>
+  </ul>
+  <button class="nav-cta btn" onclick="showScreen('screen-home')">חיפוש חדש</button>
+</nav>
+
+<div class="results-header">
+  <div style="display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between">
+    <h2>מצאנו 8 חבילות מתאימות</h2>
+    <button class="btn btn-ghost-white btn-sm" onclick="showScreen('screen-home')">ערוך חיפוש</button>
+  </div>
+  <div class="results-meta">שישי-שבת · זוג · תקציב ₪800 לאדם</div>
+  <div class="results-chips">
+    <span class="results-chip">🏠 צימרים</span>
+    <span class="results-chip">🍽️ אוכל</span>
+    <span class="results-chip">🍷 יקבים</span>
+    <span class="results-chip">🎨 סדנאות</span>
+  </div>
+</div>
+
+<div class="results-layout">
+  <!-- Filters -->
+  <div class="filters-panel">
+    <div class="filter-title">סנן תוצאות</div>
+    <div class="filter-group">
+      <span class="filter-label">תקציב</span>
+      <input type="range" min="300" max="2000" value="800" style="width:100%">
+      <div style="display:flex;flex-direction:row-reverse;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-top:.3rem"><span>₪2,000</span><span>₪300</span></div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">קטגוריה</span>
+      <label class="filter-check-row"><span>🏠 צימרים</span><input type="checkbox" checked></label>
+      <label class="filter-check-row"><span>🍽️ מסעדות</span><input type="checkbox" checked></label>
+      <label class="filter-check-row"><span>🍷 יקבים</span><input type="checkbox" checked></label>
+      <label class="filter-check-row"><span>🎨 סדנאות</span><input type="checkbox"></label>
+      <label class="filter-check-row"><span>🧭 מדריכים</span><input type="checkbox"></label>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">אזור</span>
+      <label class="filter-check-row"><span>גליל עליון</span><input type="checkbox" checked></label>
+      <label class="filter-check-row"><span>רמת הגולן</span><input type="checkbox" checked></label>
+      <label class="filter-check-row"><span>מטולה וסביבותיה</span><input type="checkbox"></label>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center">החל סינון</button>
+  </div>
+
+  <!-- Packages -->
+  <div>
+    <div class="packages-head">
+      <span class="packages-count">8 חבילות · ממויין לפי: הכי מתאים</span>
+      <select class="sort-select">
+        <option>הכי מתאים</option>
+        <option>מחיר עולה</option>
+        <option>מחיר יורד</option>
+        <option>דירוג גבוה</option>
+      </select>
+    </div>
+    <div class="packages-grid">
+
+      <!-- Package 1 — Featured -->
+      <div class="pkg-card" onclick="showScreen('screen-detail')">
+        <div class="pkg-img" style="background:linear-gradient(135deg,#1B4332 0%,#2D6A4F 50%,#52B788 100%)">
+          <svg viewBox="0 0 400 170" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+            <path d="M0 170 L0 100 L60 60 L120 90 L180 30 L240 70 L300 40 L360 80 L400 50 L400 170 Z" fill="rgba(255,255,255,0.08)"/>
+            <path d="M0 170 L0 120 L80 90 L160 110 L240 75 L320 100 L400 80 L400 170 Z" fill="rgba(255,255,255,0.06)"/>
+            <circle cx="340" cy="35" r="20" fill="rgba(255,255,255,0.12)"/>
+          </svg>
+          <span class="pkg-badge hot">🔥 הכי פופולרי</span>
+          <div class="pkg-price-chip"><span class="pkg-price">₪1,240</span><span class="pkg-price-per"> לזוג</span></div>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-name">סוף שבוע רומנטי בגולן</div>
+          <div class="pkg-desc">צימר בקיבוץ מרום גולן, טעימות יין ביקב יונתן, ארוחת צהריים דרוזית וסדנת קדרות — הכל כלול.</div>
+          <div class="pkg-tags">
+            <span class="pkg-tag">🏠 צימר</span>
+            <span class="pkg-tag">🍷 יקב</span>
+            <span class="pkg-tag">🍽️ ארוחה</span>
+            <span class="pkg-tag">🎨 סדנה</span>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-rating"><em>★★★★★</em> 4.9 (63 ביקורות)</span>
+          <span style="font-size:.8rem;color:var(--green);font-weight:700">צפה בחבילה ←</span>
+        </div>
+      </div>
+
+      <!-- Package 2 -->
+      <div class="pkg-card" onclick="showScreen('screen-detail')">
+        <div class="pkg-img" style="background:linear-gradient(135deg,#40916C 0%,#74C69D 60%,#B7E4C7 100%)">
+          <svg viewBox="0 0 400 170" fill="none" style="position:absolute;inset:0;width:100%;height:100%">
+            <path d="M0 170 L0 110 L50 85 L110 105 L170 70 L230 90 L290 55 L350 75 L400 55 L400 170 Z" fill="rgba(255,255,255,0.09)"/>
+            <circle cx="60" cy="50" r="25" fill="rgba(255,255,255,0.1)"/>
+            <circle cx="60" cy="50" r="15" fill="rgba(255,255,255,0.08)"/>
+          </svg>
+          <span class="pkg-badge">🌿 טבע וטעמים</span>
+          <div class="pkg-price-chip"><span class="pkg-price">₪960</span><span class="pkg-price-per"> לזוג</span></div>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-name">יום כיף בגליל העליון</div>
+          <div class="pkg-desc">טיול עם מדריך בגליל, ביקור בבית הבד של משפחת כחלון, וארוחה מסורתית בחצר.</div>
+          <div class="pkg-tags">
+            <span class="pkg-tag">🧭 מדריך</span>
+            <span class="pkg-tag">🫒 בית בד</span>
+            <span class="pkg-tag">🍽️ ארוחה</span>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-rating"><em>★★★★★</em> 4.7 (41 ביקורות)</span>
+          <span style="font-size:.8rem;color:var(--green);font-weight:700">צפה בחבילה ←</span>
+        </div>
+      </div>
+
+      <!-- Package 3 -->
+      <div class="pkg-card" onclick="showScreen('screen-detail')">
+        <div class="pkg-img" style="background:linear-gradient(135deg,#1e3a5f 0%,#2d6a8f 50%,#52a8b8 100%)">
+          <svg viewBox="0 0 400 170" fill="none" style="position:absolute;inset:0;width:100%;height:100%">
+            <path d="M0 170 L0 130 L400 80 L400 170 Z" fill="rgba(255,255,255,0.06)"/>
+            <path d="M0 170 L0 140 L400 110 L400 170 Z" fill="rgba(255,255,255,0.05)"/>
+            <ellipse cx="200" cy="50" rx="120" ry="20" fill="rgba(255,255,255,0.06)"/>
+          </svg>
+          <span class="pkg-badge">👥 לחברים</span>
+          <div class="pkg-price-chip"><span class="pkg-price">₪450</span><span class="pkg-price-per"> לאדם</span></div>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-name">סוף שבוע של חברים</div>
+          <div class="pkg-desc">שתי לילות צימר גדול, ארוחת ערב באווירה, טיול ג'יפים בגולן ותחנת יין — ל-6 חברים ומעלה.</div>
+          <div class="pkg-tags">
+            <span class="pkg-tag">🏠 צימר</span>
+            <span class="pkg-tag">🍷 יין</span>
+            <span class="pkg-tag">🚙 ג'יפים</span>
+            <span class="pkg-tag">🍽️ ארוחה</span>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-rating"><em>★★★★</em> 4.5 (28 ביקורות)</span>
+          <span style="font-size:.8rem;color:var(--green);font-weight:700">צפה בחבילה ←</span>
+        </div>
+      </div>
+
+      <!-- Package 4 -->
+      <div class="pkg-card" onclick="showScreen('screen-detail')">
+        <div class="pkg-img" style="background:linear-gradient(135deg,#4a2010 0%,#a05020 50%,#f4a261 100%)">
+          <svg viewBox="0 0 400 170" fill="none" style="position:absolute;inset:0;width:100%;height:100%">
+            <path d="M0 170 L0 90 L70 50 L140 80 L210 40 L280 65 L350 35 L400 55 L400 170 Z" fill="rgba(255,255,255,0.08)"/>
+            <circle cx="350" cy="30" r="25" fill="rgba(255,255,255,0.15)"/>
+          </svg>
+          <span class="pkg-badge">🏢 גיבוש</span>
+          <div class="pkg-price-chip"><span class="pkg-price">₪480</span><span class="pkg-price-per"> לאדם</span></div>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-name">גיבוש חברה בגליל</div>
+          <div class="pkg-desc">יום פעילות מלא — סדנת בישול מסורתי, טיול שטח, ארוחת ערב בשדה ולילה בצימר קבוצתי.</div>
+          <div class="pkg-tags">
+            <span class="pkg-tag">👥 גיבוש</span>
+            <span class="pkg-tag">🍳 בישול</span>
+            <span class="pkg-tag">🏕️ שטח</span>
+            <span class="pkg-tag">🏠 לינה</span>
+          </div>
+        </div>
+        <div class="pkg-footer">
+          <span class="pkg-rating"><em>★★★★★</em> 4.8 (19 ביקורות)</span>
+          <span style="font-size:.8rem;color:var(--green);font-weight:700">צפה בחבילה ←</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 — PACKAGE DETAIL
+══════════════════════════════════════ -->
+<div id="screen-detail" class="screen">
+<nav class="nav nav-dark">
+  <span class="nav-logo" onclick="showScreen('screen-home')">מה<em>גליל</em></span>
+  <ul class="nav-links">
+    <li><a onclick="showScreen('screen-results')">← חזרה לתוצאות</a></li>
+  </ul>
+  <button class="nav-cta btn" onclick="showScreen('screen-checkout')">הזמן עכשיו</button>
+</nav>
+
+<div class="detail-hero">
+  <svg viewBox="0 0 800 320" fill="none" style="position:absolute;inset:0;width:100%;height:100%">
+    <path d="M0 320 L0 180 L80 130 L160 165 L240 100 L320 145 L400 80 L480 125 L560 70 L640 110 L720 60 L800 90 L800 320 Z" fill="rgba(255,255,255,0.06)"/>
+    <path d="M0 320 L0 220 L100 180 L200 210 L320 170 L440 195 L560 155 L680 180 L800 150 L800 320 Z" fill="rgba(255,255,255,0.05)"/>
+    <circle cx="680" cy="60" r="50" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+  </svg>
+  <div class="detail-hero-content">
+    <span class="detail-badge">🔥 הכי פופולרי</span>
+    <h1 class="detail-title">סוף שבוע רומנטי בגולן</h1>
+    <div class="detail-sub">קיבוץ מרום גולן · שישי–שבת · לזוג</div>
+    <div class="detail-hero-stars"><em>★★★★★</em> 4.9 מתוך 5 (63 ביקורות)</div>
+  </div>
+</div>
+
+<div class="detail-layout">
+  <!-- Itinerary -->
+  <div>
+    <div class="itinerary-title">לוח הזמנים</div>
+
+    <div style="font-size:.78rem;font-weight:700;color:var(--sage);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem">שישי</div>
+
+    <div class="itin-item">
+      <div class="itin-icon">🏠</div>
+      <div class="itin-body">
+        <div class="itin-time">16:00 — צ'ק-אין</div>
+        <div class="itin-name">צימרמן גולן — חדר דלוקס</div>
+        <div class="itin-place">קיבוץ מרום גולן · עם נוף לחרמון</div>
+        <div class="itin-price">₪680 ללילה לזוג</div>
+      </div>
+    </div>
+
+    <div class="itin-item">
+      <div class="itin-icon">🍷</div>
+      <div class="itin-body">
+        <div class="itin-time">18:00 — טעימות ערב</div>
+        <div class="itin-name">יקב יונתן — טעימות מודרכות</div>
+        <div class="itin-place">מרום גולן · 500 מטר מהצימר</div>
+        <div class="itin-price">₪160 לזוג · 5 יינות + מנות</div>
+      </div>
+    </div>
+
+    <div style="font-size:.78rem;font-weight:700;color:var(--sage);letter-spacing:.1em;text-transform:uppercase;margin:1.5rem 0 1rem">שבת</div>
+
+    <div class="itin-item">
+      <div class="itin-icon">🫙</div>
+      <div class="itin-body">
+        <div class="itin-time">12:00 — ארוחת צהריים</div>
+        <div class="itin-name">בית משפחת שיח'לי — אירוח דרוזי</div>
+        <div class="itin-place">מג'דל שמס · כ-20 דקות נסיעה</div>
+        <div class="itin-price">₪220 לזוג · ארוחה מסורתית מלאה</div>
+      </div>
+    </div>
+
+    <div class="itin-item">
+      <div class="itin-icon">🎨</div>
+      <div class="itin-body">
+        <div class="itin-time">15:00 — סדנה</div>
+        <div class="itin-name">סדנת קדרות של מרים לוין</div>
+        <div class="itin-place">קצרין · כ-30 דקות נסיעה</div>
+        <div class="itin-price">₪180 לזוג · 2 שעות · כולל לקיחת יצירה</div>
+      </div>
+    </div>
+
+    <div class="itin-item" style="margin-bottom:0">
+      <div class="itin-icon">🍽️</div>
+      <div class="itin-body">
+        <div class="itin-time">19:00 — ארוחת ערב</div>
+        <div class="itin-name">מסעדת השדה — בסר ואש</div>
+        <div class="itin-place">קצרין · על הנוף</div>
+        <div class="itin-price">₪280 לזוג (כולל שתייה)</div>
+      </div>
+    </div>
+
+    <!-- Included -->
+    <div style="margin-top:2.5rem">
+      <div class="itinerary-title">מה כלול בחבילה</div>
+      <div class="included-grid">
+        <div class="included-item"><span class="included-item-icon">🏠</span>לינה לילה אחד</div>
+        <div class="included-item"><span class="included-item-icon">🍷</span>טעימות יין</div>
+        <div class="included-item"><span class="included-item-icon">🍽️</span>שתי ארוחות</div>
+        <div class="included-item"><span class="included-item-icon">🎨</span>סדנת קדרות</div>
+        <div class="included-item"><span class="included-item-icon">📱</span>אישור וואטסאפ</div>
+        <div class="included-item"><span class="included-item-icon">🔄</span>ביטול חינם 48ש'</div>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div style="margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border)">
+      <div class="itinerary-title" style="margin-bottom:1rem">ביקורות</div>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:1.25rem;margin-bottom:.75rem">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;color:var(--forest)">מיכל ויאיר מתל אביב</div>
+        <div style="color:#F4A261;font-size:.85rem;margin-bottom:.4rem">★★★★★</div>
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.7">הכל היה מושלם — מהצימר עם הנוף עד הסדנה. שילמנו פעם אחת וכל השאר הסתדר בקסם. נחזור!</p>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:1.25rem">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;color:var(--forest)">דנה ואמיר מחיפה</div>
+        <div style="color:#F4A261;font-size:.85rem;margin-bottom:.4rem">★★★★★</div>
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.7">ה-concept של תשלום אחד לכל הסיור שינה לנו את ה-experience. אהבנו שהכסף הולך ישירות לעסקים המקומיים.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Sidebar -->
+  <div>
+    <div class="booking-card">
+      <div class="booking-price">₪1,520</div>
+      <div class="booking-per">לזוג · כל החבילה</div>
+      <div class="breakdown" style="margin-top:1.25rem">
+        <div class="b-row"><span class="b-label">🏠 צימרמן גולן</span><span class="b-val">₪680</span></div>
+        <div class="b-row"><span class="b-label">🍷 יקב יונתן</span><span class="b-val">₪160</span></div>
+        <div class="b-row"><span class="b-label">🫙 אירוח דרוזי</span><span class="b-val">₪220</span></div>
+        <div class="b-row"><span class="b-label">🎨 סדנת קדרות</span><span class="b-val">₪180</span></div>
+        <div class="b-row"><span class="b-label">🍽️ ארוחת ערב</span><span class="b-val">₪280</span></div>
+        <div class="b-row" style="border-bottom:none;padding-top:.75rem;border-top:2px solid var(--border)">
+          <span class="b-label b-total">סה"כ</span><span class="b-val b-total">₪1,520</span>
+        </div>
+      </div>
+      <button class="btn btn-terra" style="width:100%;justify-content:center;font-size:1.05rem" onclick="showScreen('screen-checkout')">🔒 הזמן עכשיו</button>
+      <div class="whatsapp-note">
+        <span>📱</span>
+        <span>תקבלו אישור מיידי בוואטסאפ לכל עסק בנפרד — עם כתובת ופרטי הגעה.</span>
+      </div>
+      <div class="commission-note">
+        <strong>₪1,292 (85%)</strong> הולכים ישירות לעסקים המקומיים. הפלטפורמה לוקחת <strong>₪228 (15%)</strong> בלבד.
+      </div>
+    </div>
+
+    <!-- Similar packages -->
+    <div style="margin-top:1.25rem;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:1.25rem">
+      <div style="font-size:.88rem;font-weight:700;color:var(--forest);margin-bottom:.75rem">חבילות דומות</div>
+      <div style="font-size:.83rem;color:var(--muted);cursor:pointer;padding:.5rem 0;border-bottom:1px solid var(--border)" onclick="showScreen('screen-detail')">🌿 יום כיף בגליל העליון — ₪960 לזוג</div>
+      <div style="font-size:.83rem;color:var(--muted);cursor:pointer;padding:.5rem 0" onclick="showScreen('screen-detail')">🍷 סיור יקבים מורחב — ₪880 לזוג</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 4 — CHECKOUT
+══════════════════════════════════════ -->
+<div id="screen-checkout" class="screen">
+<nav class="nav">
+  <span class="nav-logo" onclick="showScreen('screen-home')">מה<em>גליל</em></span>
+  <ul class="nav-links">
+    <li><a onclick="showScreen('screen-detail')">← חזרה לחבילה</a></li>
+  </ul>
+</nav>
+
+<div class="checkout-header">
+  <div class="checkout-step done">
+    <div class="checkout-step-num">✓</div>
+    <span style="color:var(--green);font-weight:600">בחירת חבילה</span>
+  </div>
+  <div class="checkout-step-sep"></div>
+  <div class="checkout-step active">
+    <div class="checkout-step-num">2</div>
+    <span>פרטים ותשלום</span>
+  </div>
+  <div class="checkout-step-sep"></div>
+  <div class="checkout-step">
+    <div class="checkout-step-num">3</div>
+    <span style="color:var(--muted)">אישור</span>
+  </div>
+</div>
+
+<div class="checkout-layout">
+  <!-- Form -->
+  <div>
+    <div class="form-section-title">
+      <span>1</span>
+      פרטי הזמנה
+    </div>
+    <div class="form-row-2">
+      <div>
+        <label class="form-label">שם פרטי</label>
+        <input class="form-input" type="text" placeholder="מיכל" value="מיכל">
+      </div>
+      <div>
+        <label class="form-label">שם משפחה</label>
+        <input class="form-input" type="text" placeholder="לוי" value="לוי">
+      </div>
+    </div>
+    <div class="form-row-2">
+      <div>
+        <label class="form-label">מספר נייד (לוואטסאפ)</label>
+        <input class="form-input" type="tel" placeholder="05X-XXX-XXXX" value="054-123-4567" dir="ltr">
+      </div>
+      <div>
+        <label class="form-label">מייל</label>
+        <input class="form-input" type="email" placeholder="you@example.com" dir="ltr" value="michal@example.com">
+      </div>
+    </div>
+    <div class="form-row-1">
+      <label class="form-label">הערות לעסקים (אופציונלי)</label>
+      <textarea class="form-input" rows="3" placeholder="אלרגיות, בקשות מיוחדות, זמן הגעה משוער..."></textarea>
+    </div>
+
+    <div class="form-section-title" style="margin-top:2rem">
+      <span>2</span>
+      אמצעי תשלום
+    </div>
+    <div class="pay-methods">
+      <label class="pay-method active" onclick="selectPay(this)">
+        <input type="radio" name="pay" checked>
+        💳 כרטיס אשראי
+      </label>
+      <label class="pay-method" onclick="selectPay(this)">
+        <input type="radio" name="pay">
+        📲 ביט
+      </label>
+      <label class="pay-method" onclick="selectPay(this)">
+        <input type="radio" name="pay">
+        🍏 Apple Pay
+      </label>
+    </div>
+    <div id="card-fields">
+      <div class="form-row-1" style="margin-bottom:1rem">
+        <label class="form-label">מספר כרטיס</label>
+        <input class="form-input" type="text" placeholder="•••• •••• •••• ••••" dir="ltr" maxlength="19">
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label class="form-label">תוקף</label>
+          <input class="form-input" type="text" placeholder="MM/YY" dir="ltr">
+        </div>
+        <div>
+          <label class="form-label">CVV</label>
+          <input class="form-input" type="text" placeholder="•••" dir="ltr">
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-terra" style="width:100%;justify-content:center;font-size:1.05rem;margin-top:1.5rem" onclick="showScreen('screen-confirm')">
+      🔒 אשר תשלום — ₪1,520
+    </button>
+    <div class="trust-row" style="justify-content:center;margin-top:1rem">
+      <div class="trust-item-small">🔒 SSL מוצפן</div>
+      <div class="trust-item-small">✅ ביטול חינם עד 48 שעות</div>
+      <div class="trust-item-small">📱 אישור מיידי</div>
+    </div>
+  </div>
+
+  <!-- Order Summary -->
+  <div>
+    <div class="order-summary">
+      <div class="os-title">סיכום הזמנה</div>
+      <div class="os-pkg-name">סוף שבוע רומנטי בגולן</div>
+      <div class="os-pkg-includes">🏠 צימר · 🍷 יקב · 🫙 אירוח דרוזי · 🎨 סדנה · 🍽️ ארוחת ערב</div>
+      <hr class="os-divider">
+      <div class="os-row"><span>תאריך</span><strong>שישי 15.8, צ'ק-אין 16:00</strong></div>
+      <div class="os-row"><span>נוסעים</span><strong>זוג</strong></div>
+      <div class="os-row"><span>🏠 צימרמן גולן</span><strong>₪680</strong></div>
+      <div class="os-row"><span>🍷 יקב יונתן</span><strong>₪160</strong></div>
+      <div class="os-row"><span>🫙 אירוח דרוזי</span><strong>₪220</strong></div>
+      <div class="os-row"><span>🎨 סדנת קדרות</span><strong>₪180</strong></div>
+      <div class="os-row"><span>🍽️ ארוחת ערב</span><strong>₪280</strong></div>
+      <div class="os-total"><span>סה"כ לתשלום</span><span>₪1,520</span></div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:.75rem;text-align:right;line-height:1.6">
+        85% (₪1,292) מועבר ישירות לעסקים המקומיים. עמלת פלטפורמה: ₪228.
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 5 — CONFIRMATION
+══════════════════════════════════════ -->
+<div id="screen-confirm" class="screen">
+<nav class="nav">
+  <span class="nav-logo" onclick="showScreen('screen-home')">מה<em>גליל</em></span>
+</nav>
+
+<div class="confirm-wrap">
+  <div class="confirm-icon">✓</div>
+  <h1 class="confirm-title">ההזמנה אושרה!</h1>
+  <p class="confirm-sub">תודה מיכל — כל הפרטים נשלחו אליך לוואטסאפ ולמייל. נסיעה טובה!</p>
+
+  <div class="confirm-card">
+    <span class="confirm-book-id"># הזמנה GL-2025-4812</span>
+    <div class="cd-row"><span class="cd-key">חבילה</span><span class="cd-val">סוף שבוע רומנטי בגולן</span></div>
+    <div class="cd-row"><span class="cd-key">תאריך</span><span class="cd-val">שישי 15.8.2025</span></div>
+    <div class="cd-row"><span class="cd-key">נוסעים</span><span class="cd-val">זוג</span></div>
+    <div class="cd-row"><span class="cd-key">סה"כ שולם</span><span class="cd-val" style="color:var(--green)">₪1,520</span></div>
+    <div class="cd-row"><span class="cd-key">אישור לוואטסאפ</span><span class="cd-val">054-123-4567</span></div>
+    <div class="cd-row"><span class="cd-key">ביטול בחינם עד</span><span class="cd-val">13.8.2025</span></div>
+  </div>
+
+  <button class="btn btn-whatsapp">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.7 11.822 11.822 0 0012.05 0z"/></svg>
+    פתח שיחת וואטסאפ
+  </button>
+
+  <!-- Business notifications -->
+  <div class="biz-notifs" id="biz-notifs">
+    <div style="font-size:.78rem;font-weight:700;color:var(--muted);text-align:right;margin-bottom:.25rem;letter-spacing:.06em">📲 כל העסקים קיבלו הודעה אוטומטית</div>
+    <div class="biz-notif" id="notif-1">
+      <div class="biz-notif-icon">🏠</div>
+      <div>
+        <div class="biz-notif-name">צימרמן גולן</div>
+        <div class="biz-notif-amt">קיבל ₪578 (85%) ✓</div>
+      </div>
+    </div>
+    <div class="biz-notif" id="notif-2">
+      <div class="biz-notif-icon">🍷</div>
+      <div>
+        <div class="biz-notif-name">יקב יונתן</div>
+        <div class="biz-notif-amt">קיבל ₪136 (85%) ✓</div>
+      </div>
+    </div>
+    <div class="biz-notif" id="notif-3">
+      <div class="biz-notif-icon">🫙</div>
+      <div>
+        <div class="biz-notif-name">משפחת שיח'לי</div>
+        <div class="biz-notif-amt">קיבל ₪187 (85%) ✓</div>
+      </div>
+    </div>
+    <div class="biz-notif" id="notif-4">
+      <div class="biz-notif-icon">🎨</div>
+      <div>
+        <div class="biz-notif-name">סדנת מרים לוין</div>
+        <div class="biz-notif-amt">קיבל ₪153 (85%) ✓</div>
+      </div>
+    </div>
+    <div class="biz-notif" id="notif-5">
+      <div class="biz-notif-icon">🍽️</div>
+      <div>
+        <div class="biz-notif-name">מסעדת השדה</div>
+        <div class="biz-notif-amt">קיבל ₪238 (85%) ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-outline" style="margin-top:2rem" onclick="showScreen('screen-home')">
+    חזרה לדף הבית
+  </button>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 6 — BUSINESS DASHBOARD
+══════════════════════════════════════ -->
+<div id="screen-dashboard" class="screen">
+<nav class="nav nav-dark">
+  <span class="nav-logo" onclick="showScreen('screen-home')">מה<em>גליל</em></span>
+  <ul class="nav-links">
+    <li><a onclick="showScreen('screen-home')">חזרה לפלטפורמה</a></li>
+    <li class="hide-mobile"><a>הגדרות</a></li>
+  </ul>
+  <button class="nav-cta btn">שתף פרופיל</button>
+</nav>
+
+<div class="dash-header">
+  <div class="dash-header-top">
+    <div class="dash-biz">
+      <div class="dash-biz-name">צימרמן גולן</div>
+      <div class="dash-biz-type">🏠 צימרים ומלונות · קיבוץ מרום גולן</div>
+    </div>
+    <div class="dash-status-pill">
+      <span class="dash-status-dot"></span>
+      פעיל ומקבל הזמנות
+    </div>
+  </div>
+  <div class="dash-quick-stats">
+    <div class="dq-stat">
+      <div class="dq-val" id="kpi-bookings">12</div>
+      <div class="dq-lbl">הזמנות החודש</div>
+    </div>
+    <div class="dq-stat">
+      <div class="dq-val" id="kpi-revenue">₪8,160</div>
+      <div class="dq-lbl">הכנסות (85%)</div>
+    </div>
+    <div class="dq-stat">
+      <div class="dq-val" id="kpi-rating">4.9</div>
+      <div class="dq-lbl">דירוג ממוצע</div>
+    </div>
+  </div>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-lbl">הזמנות החודש</div>
+    <div class="kpi-val">12</div>
+    <div class="kpi-change up">↑ +3 מחודש שעבר</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-lbl">הכנסות נטו (85%)</div>
+    <div class="kpi-val">₪8,160</div>
+    <div class="kpi-change up">↑ +18% מחודש שעבר</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-lbl">עמלת פלטפורמה (15%)</div>
+    <div class="kpi-val">₪1,440</div>
+    <div class="kpi-change neutral">= 15% מהמחזור הכולל</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-lbl">לקוחות חדשים</div>
+    <div class="kpi-val">9</div>
+    <div class="kpi-change up">↑ 75% מהזמנות</div>
+  </div>
+</div>
+
+<div class="dash-layout">
+  <!-- Left column -->
+  <div>
+    <!-- Recent bookings -->
+    <div class="dash-card">
+      <div class="dash-card-title">
+        הזמנות אחרונות
+        <a>כל ההזמנות</a>
+      </div>
+      <table class="bk-table">
+        <thead>
+          <tr>
+            <th>אורחים</th>
+            <th>תאריך</th>
+            <th>חבילה</th>
+            <th>סכום (85%)</th>
+            <th>סטטוס</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>מיכל ויאיר לוי</td>
+            <td>15.8.2025</td>
+            <td>סוף שבוע רומנטי</td>
+            <td style="color:var(--green);font-weight:700">₪578</td>
+            <td><span class="bk-status confirmed">✓ אושר</span></td>
+          </tr>
+          <tr>
+            <td>משפחת כהן (4)</td>
+            <td>22.8.2025</td>
+            <td>יום משפחתי</td>
+            <td style="color:var(--green);font-weight:700">₪1,020</td>
+            <td><span class="bk-status confirmed">✓ אושר</span></td>
+          </tr>
+          <tr>
+            <td>גיבוש StartupXYZ</td>
+            <td>5.9.2025</td>
+            <td>גיבוש חברה</td>
+            <td style="color:var(--green);font-weight:700">₪2,040</td>
+            <td><span class="bk-status pending">⏳ ממתין</span></td>
+          </tr>
+          <tr>
+            <td>ענת ואיתן שמיר</td>
+            <td>12.9.2025</td>
+            <td>סוף שבוע רומנטי</td>
+            <td style="color:var(--green);font-weight:700">₪578</td>
+            <td><span class="bk-status confirmed">✓ אושר</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Revenue chart -->
+    <div class="dash-card">
+      <div class="dash-card-title">הכנסות חודשיות (6 חודשים אחרונים)</div>
+      <div class="rev-chart">
+        <div class="rev-bar" style="height:35%;background:var(--pale)" data-tip="מרץ: ₪2,800"></div>
+        <div class="rev-bar" style="height:45%;background:var(--pale)" data-tip="אפריל: ₪3,600"></div>
+        <div class="rev-bar" style="height:60%;background:var(--pale)" data-tip="מאי: ₪4,800"></div>
+        <div class="rev-bar" style="height:50%;background:var(--pale)" data-tip="יוני: ₪4,000"></div>
+        <div class="rev-bar" style="height:75%;background:var(--pale)" data-tip="יולי: ₪6,000"></div>
+        <div class="rev-bar current" style="height:100%" data-tip="אוגוסט: ₪8,160"></div>
+      </div>
+      <div class="rev-bar-labels">
+        <span class="rev-bar-lbl">מרץ</span>
+        <span class="rev-bar-lbl">אפריל</span>
+        <span class="rev-bar-lbl">מאי</span>
+        <span class="rev-bar-lbl">יוני</span>
+        <span class="rev-bar-lbl">יולי</span>
+        <span class="rev-bar-lbl" style="color:var(--green);font-weight:700">אוגוסט</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div>
+    <!-- Payout schedule -->
+    <div class="dash-card">
+      <div class="dash-card-title">לוח תשלומים</div>
+      <div class="payout-row">
+        <div>
+          <div style="font-weight:700;font-size:.88rem">₪578 — מיכל ויאיר לוי</div>
+          <div class="payout-date">15.8.2025 · סוף שבוע רומנטי</div>
+        </div>
+        <span class="payout-status paid">שולם ✓</span>
+      </div>
+      <div class="payout-row">
+        <div>
+          <div style="font-weight:700;font-size:.88rem">₪1,020 — משפחת כהן</div>
+          <div class="payout-date">22.8.2025 · יום משפחתי</div>
+        </div>
+        <span class="payout-status scheduled">מתוזמן</span>
+      </div>
+      <div class="payout-row">
+        <div>
+          <div style="font-weight:700;font-size:.88rem">₪2,040 — StartupXYZ</div>
+          <div class="payout-date">5.9.2025 · גיבוש חברה</div>
+        </div>
+        <span class="payout-status scheduled">ממתין אישור</span>
+      </div>
+    </div>
+
+    <!-- Availability calendar -->
+    <div class="dash-card">
+      <div class="dash-card-title">
+        זמינות — אוגוסט 2025
+        <a>ערוך</a>
+      </div>
+      <div class="avail-legend">
+        <span class="avail-legend-item"><span class="avail-dot" style="background:var(--green)"></span> מוזמן</span>
+        <span class="avail-legend-item"><span class="avail-dot" style="background:var(--pale)"></span> פנוי</span>
+        <span class="avail-legend-item"><span class="avail-dot" style="background:var(--bg);border:1px solid var(--border)"></span> חסום</span>
+      </div>
+      <div class="avail-day-headers">
+        <div class="avail-day-hd">א</div><div class="avail-day-hd">ב</div><div class="avail-day-hd">ג</div>
+        <div class="avail-day-hd">ד</div><div class="avail-day-hd">ה</div><div class="avail-day-hd">ו</div><div class="avail-day-hd">ש</div>
+      </div>
+      <div class="avail-grid" id="avail-grid">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <!-- Settings toggles -->
+    <div class="dash-card">
+      <div class="dash-card-title">הגדרות עסק</div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-row-label">מקבל הזמנות חדשות</div>
+          <div class="toggle-row-sub">הפסקה זמנית תסיר אותך מהחיפוש</div>
+        </div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-row-label">התראות וואטסאפ</div>
+          <div class="toggle-row-sub">הזמנה חדשה = הודעה מיידית</div>
+        </div>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-row-label">אישור אוטומטי</div>
+          <div class="toggle-row-sub">הזמנות מאושרות ללא בדיקה ידנית</div>
+        </div>
+        <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+(function(){
+'use strict';
+
+/* ── Screen management ── */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id);
+  if(el){el.classList.add('active');window.scrollTo({top:0,behavior:'instant'});}
+  if(id==='screen-confirm') triggerNotifs();
+  if(id==='screen-dashboard') buildCalendar();
+}
+window.showScreen=showScreen;
+
+/* ── Builder tabs ── */
+window.setTab=function(btn){
+  btn.closest('.builder-tabs').querySelectorAll('.builder-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+};
+
+/* ── Budget slider ── */
+const slider=document.getElementById('budget-slider');
+const display=document.getElementById('budget-display');
+function updateSlider(){
+  if(!slider||!display)return;
+  const v=+slider.value,mn=+slider.min,mx=+slider.max;
+  const pct=((v-mn)/(mx-mn)*100)+'%';
+  slider.style.setProperty('--pct',pct);
+  display.textContent='₪'+v.toLocaleString('he-IL');
+}
+if(slider){slider.addEventListener('input',updateSlider);updateSlider();}
+
+/* ── Find packages ── */
+window.findPackages=function(){
+  const btn=document.querySelector('[onclick="findPackages()"]');
+  if(btn){btn.textContent='⏳ מחפש...';btn.disabled=true;}
+  setTimeout(()=>{
+    if(btn){btn.textContent='מצא חבילות ←';btn.disabled=false;}
+    showScreen('screen-results');
+  },600);
+};
+
+/* ── Checkout payment method ── */
+window.selectPay=function(el){
+  document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('active'));
+  el.classList.add('active');
+};
+
+/* ── Confirmation notifications ── */
+function triggerNotifs(){
+  const ids=['notif-1','notif-2','notif-3','notif-4','notif-5'];
+  ids.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.classList.remove('show');
+    setTimeout(()=>el.classList.add('show'),(i+1)*400);
+  });
+}
+
+/* ── Availability calendar ── */
+function buildCalendar(){
+  const grid=document.getElementById('avail-grid');
+  if(!grid||grid.children.length>0)return;
+  // August 2025 starts on Friday (index 5 in Sun-Sat)
+  const startDay=5,days=31;
+  const booked=[1,2,8,9,14,15,16,22,23];
+  const blocked=[27,28];
+  // Empty cells before the 1st
+  for(let i=0;i<startDay;i++){
+    const d=document.createElement('div');
+    d.className='avail-day bl';
+    grid.appendChild(d);
+  }
+  for(let d=1;d<=days;d++){
+    const el=document.createElement('div');
+    if(booked.includes(d)) el.className='avail-day bk';
+    else if(blocked.includes(d)) el.className='avail-day bl';
+    else el.className='avail-day av';
+    el.textContent=d;
+    el.onclick=()=>{
+      if(el.classList.contains('bk'))return;
+      el.classList.toggle('av');
+      el.classList.toggle('bl');
+    };
+    grid.appendChild(el);
+  }
+}
+
+/* ── Scroll to section on home ── */
+window.scrollToSection=function(id){
+  showScreen('screen-home');
+  setTimeout(()=>{
+    const el=document.getElementById(id);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+};
+
+/* ── Card format input ── */
+const cardInput=document.querySelector('input[maxlength="19"]');
+if(cardInput){
+  cardInput.addEventListener('input',function(){
+    let v=this.value.replace(/\D/g,'').substring(0,16);
+    this.value=v.replace(/(.{4})/g,'$1 ').trim();
+  });
+}
+
+})();
+</script>
+</body>
+</html>
