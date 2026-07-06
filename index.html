@@ -691,6 +691,409 @@ section { position: relative; z-index: 10; background: transparent; }
 }
 .wrev.on > b { transform: translateY(0); }
 
+/* ════════════════════════════════════
+   TESTIMONIALS — 3-D coverflow carousel
+   ════════════════════════════════════ */
+#testimonials { padding: 3rem 0 0; }
+.tst-panel { padding: 4rem 0 5rem; position: relative; overflow: hidden; }
+
+.tst-hd {
+  padding: 0 8vw 3.5rem;
+  position: relative; z-index: 1;
+}
+.tst-title {
+  font-size: clamp(2.5rem,5vw,4.5rem);
+  font-weight: 800; color: var(--text);
+  letter-spacing: -.03em;
+  direction: ltr; text-align: left;
+}
+.tst-sub {
+  font-size: 1rem; font-weight: 300;
+  color: var(--muted); margin-top: .5rem;
+  direction: rtl; text-align: right;
+}
+
+/* stage — 3D perspective container */
+.tst-stage {
+  perspective: 1100px;
+  perspective-origin: 50% 38%;
+  position: relative;
+  z-index: 1;
+}
+.tst-viewport {
+  position: relative;
+  height: 400px;
+  margin: 0 auto;
+}
+
+/* each card */
+.tst-card {
+  position: absolute;
+  width: min(440px, 86vw);
+  left: 50%;
+  top: 0;
+  margin-left: min(-220px, -43vw);
+  background: rgba(14,11,26,.72);
+  backdrop-filter: blur(32px) saturate(1.4);
+  -webkit-backdrop-filter: blur(32px) saturate(1.4);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 24px;
+  padding: 2.8rem 2.6rem 2.2rem;
+  direction: rtl;
+  cursor: pointer;
+  will-change: transform, opacity;
+  transition: transform .7s cubic-bezier(.23,1,.32,1),
+              opacity   .7s cubic-bezier(.23,1,.32,1),
+              box-shadow .7s ease;
+  /* hidden by default */
+  opacity: 0; pointer-events: none;
+  transform: perspective(1100px) translateZ(-200px) rotateY(45deg);
+}
+
+/* active card glow */
+.tst-card.tst-active {
+  box-shadow:
+    0 0 0 1px rgba(245,200,66,.18),
+    0 20px 80px rgba(0,0,0,.65),
+    0 0 60px rgba(224,96,64,.1),
+    inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+/* decorative giant quote */
+.tst-quote {
+  display: block;
+  font-size: 5.5rem; line-height: .7;
+  color: var(--gold); opacity: .22;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  direction: ltr;
+  user-select: none;
+  font-style: normal;
+}
+
+.tst-text {
+  font-size: clamp(.9rem,1.4vw,1.05rem);
+  font-weight: 300;
+  color: rgba(240,237,232,.82);
+  line-height: 2;
+  direction: rtl; text-align: right;
+  margin-bottom: 1.8rem;
+  min-height: 120px;
+}
+
+/* divider */
+.tst-sep {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent);
+  margin-bottom: 1.4rem;
+}
+
+/* client row */
+.tst-client {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+.tst-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem; font-weight: 800;
+  color: #080610; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,.15);
+}
+.tst-info { text-align: right; }
+.tst-name { font-size: .95rem; font-weight: 700; color: var(--text); display: block; }
+.tst-role { font-size: .75rem; font-weight: 300; color: var(--muted); margin-top: .15rem; }
+
+/* stars */
+.tst-stars {
+  display: flex; gap: 3px; flex-shrink: 0;
+  align-self: center;
+}
+.tst-star { font-size: .85rem; }
+.tst-star.lit  { color: var(--gold); filter: drop-shadow(0 0 4px rgba(245,200,66,.6)); }
+.tst-star.dim  { color: rgba(245,200,66,.2); }
+
+/* navigation arrows */
+.tst-arrow {
+  position: absolute; top: 50%; z-index: 5;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(12px);
+  color: var(--text);
+  font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .3s, transform .2s, border-color .3s;
+  transform: translateY(-50%);
+}
+.tst-arrow:hover {
+  background: rgba(224,96,64,.25);
+  border-color: rgba(224,96,64,.4);
+  transform: translateY(-50%) scale(1.08);
+}
+.tst-prev { left: 4vw; }
+.tst-next { right: 4vw; }
+
+/* dot indicators */
+.tst-dots {
+  display: flex; justify-content: center; gap: 8px;
+  margin-top: 2.8rem; position: relative; z-index: 1;
+}
+.tst-dot {
+  width: 6px; height: 6px; border-radius: 3px;
+  background: rgba(255,255,255,.18);
+  cursor: pointer;
+  transition: background .4s, width .4s, box-shadow .4s;
+}
+.tst-dot.active {
+  width: 24px;
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(245,200,66,.5);
+}
+
+/* background shimmer on active card position */
+.tst-glow {
+  position: absolute;
+  width: 600px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(224,96,64,.1) 0%, transparent 70%);
+  left: 50%; top: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none; z-index: 0;
+  filter: blur(40px);
+  transition: opacity .5s;
+}
+
+/* mobile: flat swipe */
+@media (max-width: 768px) {
+  .tst-viewport { overflow: visible; }
+  .tst-arrow { display: none; }
+  .tst-panel  { padding: 2.5rem 0 3.5rem; }
+  .tst-hd     { padding: 0 5vw 2.5rem; }
+  .tst-card   {
+    width: calc(100vw - 6vw);
+    margin-left: calc(-50vw + 3vw);
+    padding: 2rem 1.6rem;
+    border-radius: 18px;
+  }
+  .tst-quote  { font-size: 4rem; }
+  .tst-viewport { height: 430px; }
+}
+
+/* ════════════════════════════════════
+   CASE STUDIES — portfolio grid + modal
+   ════════════════════════════════════ */
+#portfolio { padding: 3rem 0 0; }
+.cs-scope {
+  padding: 4rem 8vw 0;
+  position: relative; z-index: 1;
+}
+.cs-eyebrow {
+  display: flex; align-items: center; gap: 14px;
+  font-size: .62rem; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--slate); margin-bottom: 1.4rem;
+}
+.cs-eyebrow::before { content: attr(data-no); color: var(--gold); }
+.cs-eyebrow span { height: 1px; flex: 0 0 36px; background: rgba(255,255,255,.2); }
+.cs-title {
+  font-size: clamp(2.5rem,5vw,4.5rem);
+  font-weight: 800; color: var(--text);
+  letter-spacing: -.03em; line-height: 1.05;
+  direction: ltr; text-align: left; margin: 0 0 .5rem;
+}
+.cs-sub { color: var(--muted); font-size: 1rem; font-weight: 300; max-width: 42ch; margin: 0 0 3rem; direction: rtl; text-align: right; }
+
+/* card grid */
+.cs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px,1fr));
+  gap: 2px;
+  background: rgba(255,255,255,.06);
+}
+.cs-card {
+  position: relative; background: var(--deep);
+  border: none; aspect-ratio: 4/3; overflow: hidden;
+  cursor: pointer; text-align: right; color: inherit; padding: 0;
+  font-family: inherit;
+}
+.cs-card__media {
+  position: absolute; inset: 0;
+  background: #0f0d1a center/cover no-repeat;
+  filter: grayscale(.3) brightness(.7);
+  transition: filter .6s ease, transform .8s cubic-bezier(.2,.7,.2,1);
+}
+.cs-card:hover .cs-card__media { filter: grayscale(0) brightness(.85); transform: scale(1.04); }
+.cs-card__grad { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(10,8,18,.1) 30%,rgba(10,8,18,.92) 100%); }
+.cs-card__body { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 22px; }
+.cs-card__no { font-size: 1.1rem; font-weight: 800; color: var(--text); opacity: .7; direction: ltr; }
+.cs-card__meta { display: flex; flex-direction: column; gap: 8px; }
+.cs-card__tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.cs-card__tag {
+  font-size: .6rem; letter-spacing: .08em; color: var(--text);
+  border: 1px solid rgba(255,255,255,.22); border-radius: 99px;
+  padding: 4px 11px; backdrop-filter: blur(4px);
+}
+.cs-card__name { font-size: 1.3rem; font-weight: 800; line-height: 1.05; margin: 0; direction: ltr; }
+.cs-card__cue {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gold); opacity: 0; transform: translateY(6px);
+  transition: opacity .4s ease, transform .4s ease;
+}
+.cs-card:hover .cs-card__cue { opacity: 1; transform: none; }
+
+/* card overlay (generated by JS) */
+.cs-card__over {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,rgba(10,8,18,.05) 30%,rgba(10,8,18,.92) 100%);
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 22px; opacity: 0; transition: opacity .4s ease;
+}
+.cs-card:hover .cs-card__over, .cs-card.on .cs-card__over { opacity: 1; }
+.cs-card__foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.cs-tag {
+  font-size: .6rem; letter-spacing: .08em; color: var(--text);
+  border: 1px solid rgba(255,255,255,.22); border-radius: 99px;
+  padding: 4px 11px; backdrop-filter: blur(4px);
+}
+.cs-scope { padding: 5rem 6vw 2rem; }
+.cs-eyebrow {
+  display: flex; align-items: center; gap: 14px;
+  font-size: .6rem; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 26px;
+}
+.cs-eyebrow::before { content: attr(data-no); color: var(--gold); font-variant-numeric: tabular-nums; }
+.cs-eyebrow span { height: 1px; flex: 0 0 40px; background: rgba(255,255,255,.28); }
+.cs-title {
+  font-size: clamp(2.4rem,5vw,5rem); font-weight: 800; letter-spacing: -.04em;
+  line-height: .98; margin: 0 0 14px; direction: ltr; text-align: left;
+}
+.cs-sub { color: var(--muted); font-size: clamp(.95rem,1.5vw,1.1rem); max-width: 42ch; margin: 0 0 3rem; }
+
+/* modal */
+.cs-modal { position: fixed; inset: 0; z-index: 1100; display: none; padding: 5vh 5vw; }
+.cs-modal[data-open] { display: block; }
+.cs-modal__scrim {
+  position: absolute; inset: 0;
+  background: rgba(6,4,14,.9); backdrop-filter: blur(8px);
+  opacity: 0; transition: opacity .4s ease;
+}
+.cs-modal[data-open] .cs-modal__scrim { opacity: 1; }
+.cs-modal__panel {
+  position: relative; max-width: 1040px; margin: 0 auto;
+  background: var(--deep); border: 1px solid rgba(255,255,255,.08);
+  max-height: 90vh; overflow: auto;
+  transform: translateY(24px) scale(.99); opacity: 0;
+  transition: transform .5s cubic-bezier(.2,.7,.2,1), opacity .5s ease;
+  border-radius: 16px;
+}
+.cs-modal[data-open] .cs-modal__panel { transform: none; opacity: 1; }
+.cs-modal__close {
+  position: sticky; top: 0; float: left; margin: 16px; z-index: 2;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(10,8,18,.7); color: var(--text);
+  font-size: 16px; cursor: pointer; line-height: 1;
+  transition: border-color .3s, color .3s;
+}
+.cs-modal__close:hover { border-color: var(--terra); color: var(--terra); }
+.cs-hero { position: relative; height: min(44vh,360px); background: #0f0d1a center/cover no-repeat; border-radius: 16px 16px 0 0; overflow: hidden; }
+.cs-hero__grad { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(15,13,26,.1),rgba(15,13,26,.95)); }
+.cs-hero__cap { position: absolute; bottom: 0; padding: 32px 40px; }
+.cs-hero__eyebrow { font-size: .6rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+.cs-hero__name { font-size: clamp(1.8rem,4vw,3.2rem); font-weight: 800; line-height: 1; margin: 0; direction: ltr; }
+.cs-hero__client { color: var(--muted); margin-top: 8px; font-size: .95rem; }
+.cs-content { padding: 40px; }
+.cs-facts { display: flex; flex-wrap: wrap; gap: 0; border: 1px solid rgba(255,255,255,.07); margin-bottom: 36px; border-radius: 8px; overflow: hidden; }
+.cs-fact { flex: 1 1 150px; padding: 18px 22px; border-inline-start: 1px solid rgba(255,255,255,.07); }
+.cs-fact:first-child { border-inline-start: none; }
+.cs-fact__k { font-size: .6rem; letter-spacing: .18em; text-transform: uppercase; color: var(--slate); margin-bottom: 6px; }
+.cs-fact__v { font-size: 1rem; font-weight: 600; color: var(--text); }
+.cs-block { margin-bottom: 32px; max-width: 64ch; }
+.cs-block__k {
+  display: flex; align-items: center; gap: 10px;
+  font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.cs-block__k::before { content: ""; width: 20px; height: 1px; background: var(--gold); }
+.cs-block__t { font-size: clamp(1rem,1.6vw,1.1rem); line-height: 1.85; color: rgba(240,237,232,.82); margin: 0; }
+.cs-shots { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 36px 0; background: rgba(255,255,255,.05); border-radius: 6px; overflow: hidden; }
+.cs-shots img { width: 100%; height: 100%; object-fit: cover; display: block; background: #0f0d1a; aspect-ratio: 16/10; }
+.cs-shots img:only-child { grid-column: 1/-1; aspect-ratio: 16/8; }
+.cs-cta { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; border-top: 1px solid rgba(255,255,255,.07); padding-top: 28px; margin-top: 4px; }
+.cs-cta__live {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--text); color: #080610; font-weight: 700; font-size: .9rem;
+  padding: 13px 24px; border-radius: 8px; text-decoration: none; transition: background .25s ease;
+}
+.cs-cta__live:hover { background: var(--gold); }
+.cs-cta__note { color: var(--muted); font-size: .82rem; }
+
+/* ── CTA BAND ── */
+.cta-band {
+  position: relative; z-index: 10;
+  background: rgba(10,8,18,.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(245,200,66,.12);
+  border-bottom: 1px solid rgba(245,200,66,.08);
+  text-align: center; padding: 5rem 6vw;
+}
+.cta-band__eyebrow { font-size: .6rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); margin: 0 0 1.2rem; }
+.cta-band__title {
+  font-size: clamp(1.8rem,4vw,3.2rem); font-weight: 800;
+  color: var(--text); letter-spacing: -.03em; line-height: 1.05;
+  margin: 0 0 .8rem;
+}
+.cta-band__sub { color: var(--muted); font-size: clamp(.95rem,1.5vw,1.1rem); margin: 0 0 2.2rem; }
+.cta-band__row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.cta-band__btn {
+  background: var(--terra); color: var(--text); font-weight: 700;
+  padding: 14px 28px; border-radius: 10px; text-decoration: none;
+  transition: background .25s, transform .2s;
+  font-family: 'Open Sans', sans-serif;
+}
+.cta-band__btn:hover { background: #c04020; transform: translateY(-2px); }
+.cta-band__ghost {
+  display: inline-flex; align-items: center; padding: 14px 24px;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 10px;
+  color: var(--text); text-decoration: none; transition: border-color .3s, color .3s;
+  font-family: 'Open Sans', sans-serif;
+}
+.cta-band__ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── WHATSAPP FAB ── */
+.wa-fab {
+  position: fixed; inset-inline-start: 22px; bottom: 22px; z-index: 900;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 20px; border-radius: 99px; text-decoration: none;
+  font-family: 'Open Sans', sans-serif; font-weight: 700; font-size: .9rem;
+  color: var(--text);
+  background: rgba(10,8,18,.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(245,200,66,.35);
+  box-shadow: 0 10px 40px rgba(0,0,0,.5), 0 0 20px rgba(245,200,66,.08);
+  transition: background .25s, transform .2s, border-color .3s;
+}
+.wa-fab:hover { background: var(--gold); color: #080610; transform: translateY(-2px); border-color: var(--gold); }
+.wa-fab svg { flex: 0 0 auto; }
+@media (max-width:600px) { .wa-fab span { display: none; } .wa-fab { padding: 14px; } }
+
+/* case-studies responsive */
+@media (max-width:768px) {
+  .cs-grid { grid-template-columns: 1fr; }
+  .cs-content, .cs-hero__cap { padding: 22px; }
+  .cs-shots { grid-template-columns: 1fr; }
+  .cs-modal { padding: 0; }
+  .cs-modal__panel { border-radius: 0; max-height: 100vh; }
+}
+
 /* ─ FOOTER ─ */
 footer {
   position: relative; z-index: 10;
@@ -861,6 +1264,7 @@ footer {
   <a href="#" class="nav-logo">Studio <span class="logo-star">✦</span></a>
   <ul class="nav-links">
     <li><a href="#contact">צור קשר</a></li>
+    <li><a href="#testimonials">המלצות</a></li>
     <li><a href="#about">אודות</a></li>
     <li><a href="#portfolio">פורטפוליו</a></li>
     <li><a href="#services">שירותים</a></li>
@@ -1037,72 +1441,53 @@ footer {
   </div>
 </section>
 
-<section id="portfolio" aria-label="פורטפוליו">
-  <div class="pf-panel gp">
-    <div class="rv" style="padding:3rem 0 0">
-      <span class="s-lbl">03 — PORTFOLIO</span>
-      <h2 class="pf-title">Selected Work</h2>
-      <p class="pf-sub">עבודות נבחרות — מיתוג, דיגיטל, חוויה.</p>
-    </div>
-  </div>
-  <div class="pf-grid" id="pf-grid">
-
-    <div class="pf-cell" data-row="0" data-col="0">
-      <span class="pf-num">01</span>
-      <video src="https://static.cdn-luma.com/files/981e483f71aa764b/Company%20Thing%20Exported.mp4" loop muted playsinline preload="none"></video>
-      <div class="pf-info"><span class="pf-tag">Brand</span><span class="pf-name">Corporate Identity</span></div>
-    </div>
-
-    <div class="pf-cell" data-row="0" data-col="1">
-      <span class="pf-num">02</span>
-      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/WebGL%20Exported%20(1).mp4" loop muted playsinline preload="none"></video>
-      <div class="pf-info"><span class="pf-tag">Digital</span><span class="pf-name">WebGL Experience</span></div>
-    </div>
-
-    <div class="pf-cell" data-row="0" data-col="2">
-      <span class="pf-num">03</span>
-      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Jitter%20Exported%20Poster.mp4" loop muted playsinline preload="none"></video>
-      <div class="pf-info"><span class="pf-tag">Motion</span><span class="pf-name">Motion Design</span></div>
-    </div>
-
-    <div class="pf-cell" data-row="1" data-col="0">
-      <span class="pf-num">04</span>
-      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Exported%20Web%20Video.mp4" loop muted playsinline preload="none"></video>
-      <div class="pf-info"><span class="pf-tag">Campaign</span><span class="pf-name">Web Campaign</span></div>
-    </div>
-
-    <div class="pf-cell" data-row="1" data-col="1">
-      <span class="pf-num">05</span>
-      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Logo%20Exported.mp4" loop muted playsinline preload="none"></video>
-      <div class="pf-info"><span class="pf-tag">Identity</span><span class="pf-name">Logo System</span></div>
-    </div>
-
-    <div class="pf-cell" data-row="1" data-col="2">
-      <span class="pf-num">06</span>
-      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Animation%20Exported%20(4).mp4" loop muted playsinline preload="none"></video>
-      <div class="pf-info"><span class="pf-tag">UI/UX</span><span class="pf-name">UI Animation</span></div>
-    </div>
-
-    <div class="pf-cell" data-row="2" data-col="0">
-      <span class="pf-num">07</span>
-      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Illustration%20Exported%20(1).mp4" loop muted playsinline preload="none"></video>
-      <div class="pf-info"><span class="pf-tag">Illustration</span><span class="pf-name">Visual Language</span></div>
-    </div>
-
-    <div class="pf-cell" data-row="2" data-col="1">
-      <span class="pf-num">08</span>
-      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Art%20Direction%20Exported.mp4" loop muted playsinline preload="none"></video>
-      <div class="pf-info"><span class="pf-tag">Editorial</span><span class="pf-name">Art Direction</span></div>
-    </div>
-
-    <div class="pf-cell" data-row="2" data-col="2">
-      <span class="pf-num">09</span>
-      <video src="https://static.cdn-luma.com/files/58ab7363888153e3/Product%20Video.mp4" loop muted playsinline preload="none"></video>
-      <div class="pf-info"><span class="pf-tag">Video</span><span class="pf-name">Product Film</span></div>
-    </div>
-
+<!-- ═══ CTA Band ═══ -->
+<section class="cta-band">
+  <p class="cta-band__eyebrow">Let's talk</p>
+  <h2 class="cta-band__title">יש לכם פרויקט? בואו נדבר.</h2>
+  <p class="cta-band__sub">שיחת היכרות קצרה, בלי התחייבות — נבין יחד מה נכון לכם.</p>
+  <div class="cta-band__row">
+    <a class="cta-band__btn" href="#contact">קביעת שיחת היכרות</a>
+    <a class="cta-band__ghost" href="https://wa.me/972509073730" target="_blank" rel="noopener">וואטסאפ ←</a>
   </div>
 </section>
+
+<section id="portfolio" aria-label="פורטפוליו">
+  <div class="cs-scope gp" style="padding-bottom:0">
+    <div class="rv">
+      <div class="deco-line"></div>
+      <div class="cs-eyebrow" data-no="03">Portfolio <span></span></div>
+      <h2 class="cs-title">Selected Work</h2>
+      <p class="cs-sub">עבודות נבחרות — מיתוג, דיגיטל, חוויה. לחצו לצפייה במקרה בוחן מלא.</p>
+    </div>
+  </div>
+  <div class="cs-grid" id="cs-grid"></div>
+</section>
+
+<!-- ═══ Case Study Modal ═══ -->
+<div class="cs-modal" id="cs-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cs-modal-name">
+  <div class="cs-modal__scrim" data-close></div>
+  <div class="cs-modal__panel">
+    <button class="cs-modal__close" data-close aria-label="סגירה">✕</button>
+    <div class="cs-hero" id="cs-hero">
+      <div class="cs-hero__grad"></div>
+      <div class="cs-hero__cap">
+        <div class="cs-hero__eyebrow">Case Study</div>
+        <h3 class="cs-hero__name" id="cs-modal-name"></h3>
+        <p class="cs-hero__client" id="cs-modal-client"></p>
+      </div>
+    </div>
+    <div class="cs-content">
+      <div class="cs-facts" id="cs-facts"></div>
+      <div id="cs-blocks"></div>
+      <div class="cs-shots" id="cs-shots"></div>
+      <div class="cs-cta">
+        <a class="cs-cta__live" id="cs-live" href="#" target="_blank" rel="noopener">לצפייה באתר החי ↗</a>
+        <span class="cs-cta__note" id="cs-note"></span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section id="about" aria-label="אודות">
   <div class="abt-panel gp" style="position:relative;overflow:hidden;">
@@ -1172,7 +1557,7 @@ footer {
     <div class="amb-orb" style="width:350px;height:350px;background:radial-gradient(circle,rgba(79,85,128,.2),transparent 70%);top:-80px;left:-60px;"></div>
     <div class="rv" style="position:relative;z-index:1;">
       <div class="deco-line"></div>
-      <span class="s-lbl">05 — PROCESS</span>
+      <span class="s-lbl">06 — PROCESS</span>
       <h2 class="prc-title">The Climb</h2>
       <p class="prc-sub">ארבעה שלבים. תוצאה אחת.</p>
     </div>
@@ -1201,12 +1586,138 @@ footer {
   </div>
 </section>
 
+<section id="testimonials" aria-label="המלצות">
+  <div class="tst-panel gp">
+
+    <div class="amb-orb" style="width:550px;height:350px;background:radial-gradient(ellipse,rgba(245,200,66,.07),transparent 70%);top:-60px;left:50%;transform:translateX(-50%);"></div>
+    <div class="amb-orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(224,96,64,.09),transparent 70%);bottom:0;right:5%;"></div>
+    <span class="sec-ghost" style="top:-1rem;left:6vw;">06</span>
+
+    <div class="tst-hd rv">
+      <div class="deco-line"></div>
+      <span class="s-lbl">06 — TESTIMONIALS</span>
+      <h2 class="tst-title">What They Say</h2>
+      <p class="tst-sub">לקוחות מספרים בעצמם</p>
+    </div>
+
+    <div class="tst-stage">
+      <div class="tst-glow"></div>
+
+      <button class="tst-arrow tst-prev" aria-label="הקודם">&#8592;</button>
+      <button class="tst-arrow tst-next" aria-label="הבא">&#8594;</button>
+
+      <div class="tst-viewport" id="tst-viewport">
+
+        <div class="tst-card" data-i="0">
+          <span class="tst-quote">"</span>
+          <p class="tst-text">עבדתי עם מעצבות רבות לאורך השנים — אבל אף אחת לא הבינה את המותג שלי כמוה. היא לקחה רעיון מעורפל והפכה אותו לזהות ויזואלית שגורמת לאנשים לזכור אותנו.</p>
+          <div class="tst-sep"></div>
+          <div class="tst-client">
+            <div class="tst-avatar" style="background:linear-gradient(135deg,#E06040,#c04020);">רכ</div>
+            <div class="tst-info">
+              <span class="tst-name">רחל כהן</span>
+              <span class="tst-role">מנכ"ל · Studio Brand</span>
+            </div>
+            <div class="tst-stars">
+              <span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tst-card" data-i="1">
+          <span class="tst-quote">"</span>
+          <p class="tst-text">חשבתי שעיצוב הוא הוצאה. היא הוכיחה לי שזאת ההשקעה הכי משתלמת שעשיתי. האתר החדש הכפיל את הפניות תוך חודש וחצי — מספרים שלא הייתי מאמין לפני כן.</p>
+          <div class="tst-sep"></div>
+          <div class="tst-client">
+            <div class="tst-avatar" style="background:linear-gradient(135deg,#F5C842,#d4a820);">דל</div>
+            <div class="tst-info">
+              <span class="tst-name">דניאל לוי</span>
+              <span class="tst-role">בעל עסק · The Deli Bar</span>
+            </div>
+            <div class="tst-stars">
+              <span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tst-card" data-i="2">
+          <span class="tst-quote">"</span>
+          <p class="tst-text">הרמה המקצועית לא רגילה. כל פרט מחושב, כל צבע נבחר בכוונה. היא לא רק מעצבת — היא אסטרטגית שמדברת בשפת עסקים ויודעת מה מניע לקוחות לפעולה.</p>
+          <div class="tst-sep"></div>
+          <div class="tst-client">
+            <div class="tst-avatar" style="background:linear-gradient(135deg,#4F5580,#353a60);">מב</div>
+            <div class="tst-info">
+              <span class="tst-name">מיכל ברכה</span>
+              <span class="tst-role">סמנכ"לית שיווק · TechCo IL</span>
+            </div>
+            <div class="tst-stars">
+              <span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tst-card" data-i="3">
+          <span class="tst-quote">"</span>
+          <p class="tst-text">מהפגישה הראשונה הבנתי שהיא מבינה את הוויזיה שלנו יותר טוב ממני. הפתרון שהגישה היה מדויק, יפה ופרקטי — ובזמן שסיכמנו מראש, בלי הפתעות.</p>
+          <div class="tst-sep"></div>
+          <div class="tst-client">
+            <div class="tst-avatar" style="background:linear-gradient(135deg,#60a8e0,#3070b0);">אש</div>
+            <div class="tst-info">
+              <span class="tst-name">אבי שפירא</span>
+              <span class="tst-role">יזם · PropTech Ventures</span>
+            </div>
+            <div class="tst-stars">
+              <span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tst-card" data-i="4">
+          <span class="tst-quote">"</span>
+          <p class="tst-text">בנתה לנו עולם שלם — מהלוגו ועד התפריט ועד האתר. הלקוחות שלנו מרגישים את זה מהרגע שהם נכנסים לאתר. כמה אנשים אמרו לי שהאתר הוא הסיבה שהם הגיעו.</p>
+          <div class="tst-sep"></div>
+          <div class="tst-client">
+            <div class="tst-avatar" style="background:linear-gradient(135deg,#e0a060,#b07030);">נא</div>
+            <div class="tst-info">
+              <span class="tst-name">נועה אלון</span>
+              <span class="tst-role">מנהלת · Noa's Fine Dining</span>
+            </div>
+            <div class="tst-stars">
+              <span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tst-card" data-i="5">
+          <span class="tst-quote">"</span>
+          <p class="tst-text">שלחתי אליה את הפרויקט הכי מסובך שהיה לי — מותג שצריך לדבר גם לעסקים וגם לצרכנים. היא פשטה אותו, הפכה אותו ליפה ופונקציונלי. פשוט מדהים.</p>
+          <div class="tst-sep"></div>
+          <div class="tst-client">
+            <div class="tst-avatar" style="background:linear-gradient(135deg,#80e0a0,#30a060);">יב</div>
+            <div class="tst-info">
+              <span class="tst-name">יואב בן-דוד</span>
+              <span class="tst-role">מייסד · Digital Forward Agency</span>
+            </div>
+            <div class="tst-stars">
+              <span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span><span class="tst-star lit">★</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tst-viewport -->
+    </div><!-- /tst-stage -->
+
+    <div class="tst-dots" id="tst-dots"></div>
+
+  </div>
+</section>
+
 <section id="contact" aria-label="צור קשר">
   <div class="cnt-panel gp" style="position:relative;overflow:hidden;">
     <div class="amb-orb" style="width:450px;height:450px;background:radial-gradient(circle,rgba(224,96,64,.1),transparent 70%);top:-100px;left:50%;transform:translateX(-50%);"></div>
     <div class="cnt-inner rv" style="position:relative;z-index:1;">
       <div class="deco-line"></div>
-      <span class="s-lbl">06 — CONTACT</span>
+      <span class="s-lbl">07 — CONTACT</span>
       <h2 class="cnt-title">Start The Climb.</h2>
       <form onsubmit="return false;" novalidate>
         <div class="fg"><label for="fn">שם</label><input type="text" id="fn" placeholder="מה שמכם?"></div>
@@ -1570,6 +2081,237 @@ footer {
   const _origTick = tick;
   window.__sparkUpdate = updateSpark;
 
+  /* ═══════════════════════════════════════
+     3D TESTIMONIALS CAROUSEL
+     ═══════════════════════════════════════ */
+  (function(){
+    const viewport = document.getElementById('tst-viewport');
+    if (!viewport) return;
+
+    const cards  = Array.from(viewport.querySelectorAll('.tst-card'));
+    const dotsEl = document.getElementById('tst-dots');
+    const prev   = document.querySelector('.tst-prev');
+    const next   = document.querySelector('.tst-next');
+    const glow   = document.querySelector('.tst-glow');
+    const N      = cards.length;
+    let   active = 0;
+    let   timer  = null;
+    const isMob  = () => window.innerWidth <= 768;
+
+    /* ── 3D transform config per offset from active ── */
+    const CFG = {
+      0: { ry:  0,  tz:  80, tx:   0, sc: 1,    op: 1,    pe: 'auto'  },
+      1: { ry: 30,  tz: -40, tx:  19, sc: .84,  op: .58,  pe: 'none'  },
+      2: { ry: 55,  tz:-120, tx:  36, sc: .65,  op: .2,   pe: 'none'  },
+    };
+
+    function applyTransforms() {
+      cards.forEach((card, i) => {
+        let off = i - active;
+        /* wrap around for infinite feel */
+        if (off >  N/2) off -= N;
+        if (off < -N/2) off += N;
+
+        const abs = Math.abs(off);
+        if (abs > 2) {
+          card.style.opacity = '0';
+          card.style.pointerEvents = 'none';
+          card.style.zIndex = '0';
+          return;
+        }
+
+        const c   = CFG[abs];
+        const dir = off < 0 ? -1 : 1;
+
+        card.style.opacity       = c.op;
+        card.style.pointerEvents = c.pe;
+        card.style.zIndex        = String(10 - abs);
+        card.classList.toggle('tst-active', abs === 0);
+
+        if (isMob()) {
+          /* flat on mobile */
+          card.style.transform = `translateX(${dir * abs * 105}%) scale(${c.sc})`;
+        } else {
+          card.style.transform =
+            `perspective(1100px) ` +
+            `rotateY(${dir * c.ry}deg) ` +
+            `translateZ(${c.tz}px) ` +
+            `translateX(${dir * c.tx}%) ` +
+            `scale(${c.sc})`;
+        }
+      });
+
+      /* dots */
+      dotsEl.querySelectorAll('.tst-dot').forEach((d,i) => d.classList.toggle('active', i === active));
+    }
+
+    function goTo(idx) {
+      active = ((idx % N) + N) % N;
+      applyTransforms();
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => goTo(active + 1), 4800);
+    }
+
+    /* build dots */
+    cards.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'tst-dot';
+      d.setAttribute('aria-label', `המלצה ${i+1}`);
+      d.addEventListener('click', () => { goTo(i); startTimer(); });
+      dotsEl.appendChild(d);
+    });
+
+    /* arrows */
+    prev && prev.addEventListener('click', () => { goTo(active - 1); startTimer(); });
+    next && next.addEventListener('click', () => { goTo(active + 1); startTimer(); });
+
+    /* click side cards to focus */
+    cards.forEach((card, i) => {
+      card.addEventListener('click', () => {
+        if (i !== active) { goTo(i); startTimer(); }
+      });
+    });
+
+    /* touch swipe */
+    let touchX = 0;
+    viewport.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive:true });
+    viewport.addEventListener('touchend',   e => {
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) { goTo(active + (dx < 0 ? 1 : -1)); startTimer(); }
+    }, { passive:true });
+
+    /* reveal when in view */
+    const tstObs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        applyTransforms();
+        startTimer();
+        tstObs.disconnect();
+        if (glow) glow.style.opacity = '1';
+      }
+    }, { threshold: .15 });
+    tstObs.observe(viewport);
+
+    /* pause on hover */
+    viewport.addEventListener('mouseenter', () => clearInterval(timer));
+    viewport.addEventListener('mouseleave', startTimer);
+  })();
+
+  /* ── CASE STUDIES ── */
+  (function(){
+    const PROJECTS = [
+      {
+        no:"01", name:"IOCEA", client:"איגוד המהנדסים והאדריכלים",
+        tags:["מיתוג","זהות ויזואלית","WordPress"],
+        poster:"./shots/iocea-hero.png",
+        live:"https://www.iocea.org.il/",
+        facts:[{k:"שנה",v:"2023"},{k:"מדיום",v:"דיגיטל"},{k:"לקוח",v:"ארגון מקצועי"}],
+        blocks:[{k:"אתגר",t:"מיתוג מחדש לארגון מקצועי ותיק עם צורך לשדר סמכות ומודרניות בו-זמנית."},{k:"פתרון",t:"זהות ויזואלית חדשה עם שפה גרפית ניקיונית ואתר WordPress מעוצב ומהיר."}],
+        shots:["./shots/iocea-2.png"],
+        note:""
+      },
+      {
+        no:"02", name:"Rivera", client:"נדל\"ן, פיליון",
+        tags:["מיתוג","UX/UI","נדל\"ן"],
+        poster:"./shots/rivera-hero.png",
+        live:"https://rivera-gr.com/",
+        facts:[{k:"שנה",v:"2023"},{k:"מדיום",v:"דיגיטל + דפוס"},{k:"לקוח",v:"נדל\"ן"}],
+        blocks:[{k:"אתגר",t:"בניית מותג יוקרתי לפרויקט נדל\"ן עם קהל יעד אנגלופוני בינלאומי."},{k:"פתרון",t:"זהות ויזואלית אלגנטית, סט חומרי שיווק ואתר תדמית מעוצב."}],
+        shots:["./shots/rivera-2.png"],
+        note:""
+      },
+      {
+        no:"03", name:"Palmo Group", client:"השקעות נדל\"ן",
+        tags:["מיתוג","WordPress","CRO"],
+        poster:"./shots/palmo-hero.png",
+        live:"https://palmo-group.com/",
+        facts:[{k:"שנה",v:"2022"},{k:"מדיום",v:"דיגיטל"},{k:"לקוח",v:"קבוצת השקעות"}],
+        blocks:[{k:"אתגר",t:"יצירת נוכחות דיגיטלית מוסדית לקבוצת השקעות נדל\"ן עם 400+ לקוחות."},{k:"פתרון",t:"מיתוג מלא, אתר WordPress עם מערך CRO ועמודי נחיתה ממירים."}],
+        shots:["./shots/palmo-2.png"],
+        note:""
+      },
+      {
+        no:"04", name:"Bikta Belavan", client:"אדריכלות ועיצוב פנים",
+        tags:["מיתוג","WordPress","פורטפוליו"],
+        poster:"./shots/bikta-hero.png",
+        live:"https://biktabelavan.com/",
+        facts:[{k:"שנה",v:"2023"},{k:"מדיום",v:"דיגיטל"},{k:"לקוח",v:"אדריכלות"}],
+        blocks:[{k:"אתגר",t:"בניית פורטפוליו מקצועי שמציג פרויקטים בצורה ויזואלית ומרשימה."},{k:"פתרון",t:"עיצוב מינימליסטי המדגיש את עבודות האדריכלות דרך תמונות גדולות ונרטיב ברור."}],
+        shots:["./shots/bikta-2.png"],
+        note:""
+      },
+      {
+        no:"05", name:"Jerusalem Chimes", client:"מוזיקה ותרבות",
+        tags:["מיתוג","WordPress","תרבות"],
+        poster:"./shots/chimes-hero.png",
+        live:"https://jerusalemchimes.co.il/",
+        facts:[{k:"שנה",v:"2024"},{k:"מדיום",v:"דיגיטל"},{k:"לקוח",v:"מוזיקה"}],
+        blocks:[{k:"אתגר",t:"עיצוב זהות ואתר לפרויקט מוזיקלי ייחודי המשלב מסורת וחדשנות."},{k:"פתרון",t:"מיתוג בעל אופי ירושלמי עם אלמנטים מוזיקליים, ואתר WordPress מותאם."}],
+        shots:["./shots/chimes-2.png"],
+        note:""
+      }
+    ];
+
+    const grid = document.getElementById('cs-grid');
+    if (!grid) return;
+
+    grid.innerHTML = PROJECTS.map((p,i) => `
+      <div class="cs-card rv" onclick="openCase(${i})" role="button" tabindex="0" aria-label="${p.name}">
+        <div class="cs-card__media" style="background-image:url('${p.poster}')"></div>
+        <div class="cs-card__over">
+          <div class="cs-card__tags">${p.tags.map(t=>`<span class="cs-tag">${t}</span>`).join('')}</div>
+          <div class="cs-card__foot">
+            <span class="cs-card__no">${p.no}</span>
+            <span class="cs-card__name">${p.name}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    /* keyboard */
+    grid.querySelectorAll('.cs-card').forEach((card,i) => {
+      card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') openCase(i); });
+    });
+
+    window.openCase = function(i){
+      const p = PROJECTS[i];
+      const modal = document.getElementById('cs-modal');
+      const hero  = document.getElementById('cs-hero');
+      hero.style.backgroundImage = `url('${p.poster}')`;
+      document.getElementById('cs-modal-name').textContent   = p.name;
+      document.getElementById('cs-modal-client').textContent = p.client;
+      document.getElementById('cs-facts').innerHTML = p.facts.map(f=>`<div class="cs-fact"><span class="cs-fact__k">${f.k}</span><span class="cs-fact__v">${f.v}</span></div>`).join('');
+      document.getElementById('cs-blocks').innerHTML = p.blocks.map(b=>`<div class="cs-block"><h4 class="cs-block__k">${b.k}</h4><p class="cs-block__t">${b.t}</p></div>`).join('');
+      document.getElementById('cs-shots').innerHTML = p.shots.map(s=>`<img src="${s}" alt="${p.name} screenshot" loading="lazy">`).join('');
+      document.getElementById('cs-live').href = p.live;
+      document.getElementById('cs-note').textContent = p.note || '';
+      modal.setAttribute('data-open','');
+      modal.removeAttribute('aria-hidden');
+      document.body.style.overflow='hidden';
+    };
+
+    window.closeCase = function(){
+      const modal = document.getElementById('cs-modal');
+      modal.removeAttribute('data-open');
+      modal.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+    };
+
+    /* close on scrim/button */
+    document.getElementById('cs-modal').addEventListener('click', e => {
+      if (e.target.dataset.close !== undefined || e.target.closest('[data-close]')) closeCase();
+    });
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeCase(); });
+
+    /* rv observer for cards */
+    const csObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('on'); csObs.unobserve(e.target); }});
+    }, {threshold:.1});
+    grid.querySelectorAll('.cs-card').forEach(c => csObs.observe(c));
+  })();
+
   /* ── PORTFOLIO dynamic grid ── */
   (function(){
     const pfGrid = document.getElementById('pf-grid');
@@ -1616,5 +2358,15 @@ footer {
 
 })();
 </script>
+
+<!-- ═══ WhatsApp FAB ═══ -->
+<a class="wa-fab"
+   href="https://wa.me/972509073730?text=%D7%94%D7%99%D7%99%2C%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D"
+   target="_blank" rel="noopener" aria-label="שליחת הודעה בוואטסאפ">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.5 14.4c-.3-.15-1.75-.86-2-.96-.27-.1-.47-.15-.66.15-.2.3-.76.96-.93 1.15-.17.2-.34.22-.63.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.34.44-.5.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.66-1.6-.9-2.18-.24-.57-.48-.5-.66-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.2 1.87.12.57-.08 1.75-.72 2-1.4.24-.7.24-1.28.17-1.4-.07-.13-.27-.2-.57-.35zM12 2a10 10 0 0 0-8.6 15.05L2 22l5.08-1.33A10 10 0 1 0 12 2z"/>
+  </svg>
+  <span>דברו איתי</span>
+</a>
 </body>
 </html>
