@@ -2255,6 +2255,36 @@ footer {
         blocks:[{k:"אתגר",t:"עיצוב זהות ואתר לפרויקט מוזיקלי ייחודי המשלב מסורת וחדשנות."},{k:"פתרון",t:"מיתוג בעל אופי ירושלמי עם אלמנטים מוזיקליים, ואתר WordPress מותאם."}],
         shots:["./shots/chimes-2.png"],
         note:""
+      },
+      {
+        no:"06", name:"EasyGo", client:"איזיגו · תוכנת תיירות",
+        tags:["מיתוג","UX/UI","דיגיטל"],
+        poster:"./shots/easygo-hero.png",
+        live:"",
+        facts:[{k:"שנה",v:"2024"},{k:"מדיום",v:"מוצר דיגיטלי"},{k:"לקוח",v:"תיירות"}],
+        blocks:[{k:"אתגר",t:"עיצוב מותג וממשק לתוכנת תיירות שצריכה להיות פשוטה, מהירה וידידותית למשתמש."},{k:"פתרון",t:"זהות ויזואלית נקייה ומערכת UX/UI שהופכת תכנון נסיעות לחוויה קלה."}],
+        shots:[],
+        note:""
+      },
+      {
+        no:"07", name:"Dan Asher", client:"דן אשר",
+        tags:["מיתוג","זהות ויזואלית","טכנולוגיה"],
+        poster:"./shots/danasher-hero.png",
+        live:"",
+        facts:[{k:"שנה",v:"2024"},{k:"מדיום",v:"מיתוג"},{k:"לקוח",v:"טכנולוגיה"}],
+        blocks:[{k:"אתגר",t:"בניית זהות מותג חדה וטכנולוגית שמשדרת ראייה, דיוק וחדשנות."},{k:"פתרון",t:"סמל עין מינימליסטי ושפה ויזואלית כהה עם נגיעות ניאון."}],
+        shots:[],
+        note:""
+      },
+      {
+        no:"08", name:"FIN>PLACE", client:"פינפלייס · פיננסים",
+        tags:["מיתוג","קמפיין","פינטק"],
+        poster:"./shots/finplace-hero.png",
+        live:"",
+        facts:[{k:"שנה",v:"2024"},{k:"מדיום",v:"מיתוג + קמפיין"},{k:"לקוח",v:"פינטק"}],
+        blocks:[{k:"אתגר",t:"מיתוג פלטפורמה פיננסית שצריכה לשדר אמון ונגישות בו-זמנית."},{k:"פתרון",t:"שפה כחולה-לבנה נקייה, לוגו טיפוגרפי בולט וקמפיין ויזואלי אנרגטי."}],
+        shots:[],
+        note:""
       }
     ];
 
@@ -2288,8 +2318,12 @@ footer {
       document.getElementById('cs-modal-client').textContent = p.client;
       document.getElementById('cs-facts').innerHTML = p.facts.map(f=>`<div class="cs-fact"><span class="cs-fact__k">${f.k}</span><span class="cs-fact__v">${f.v}</span></div>`).join('');
       document.getElementById('cs-blocks').innerHTML = p.blocks.map(b=>`<div class="cs-block"><h4 class="cs-block__k">${b.k}</h4><p class="cs-block__t">${b.t}</p></div>`).join('');
-      document.getElementById('cs-shots').innerHTML = p.shots.map(s=>`<img src="${s}" alt="${p.name} screenshot" loading="lazy">`).join('');
-      document.getElementById('cs-live').href = p.live;
+      const shotsEl = document.getElementById('cs-shots');
+      shotsEl.innerHTML = p.shots.map(s=>`<img src="${s}" alt="${p.name} screenshot" loading="lazy">`).join('');
+      shotsEl.style.display = p.shots.length ? '' : 'none';
+      const liveEl = document.getElementById('cs-live');
+      liveEl.href = p.live || '#';
+      liveEl.style.display = p.live ? '' : 'none';
       document.getElementById('cs-note').textContent = p.note || '';
       modal.setAttribute('data-open','');
       modal.removeAttribute('aria-hidden');
