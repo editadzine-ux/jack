@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIVERA GROUP — Case Study | Studio</title>
+<meta name="description" content="RIVERA GROUP — מיתוג, UX/UI, עיצוב ופיתוח אתר נדל&quot;ן יוקרתי ביוון. מקרה בוחן מלא.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:   #F3F1EC;
+  --deep:   #EFEAE3;
+  --accent: #FF5F1F;
+  --text:   #1A1A1A;
+  --muted:  rgba(26,26,26,0.55);
+  --line:   rgba(26,26,26,0.1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: 'Open Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.7;
+}
+::selection { background: var(--accent); color:#fff; }
+
+/* ─ NAV ─ */
+nav {
+  position: fixed; inset-inline: 0; top: 0; z-index: 100;
+  height: 72px; padding: 0 5vw;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(243,241,236,.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-logo { font-size:1.05rem; font-weight:800; color:var(--text); text-decoration:none; letter-spacing:-.02em; }
+.nav-back {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:.85rem; font-weight:600; color:var(--muted); text-decoration:none;
+  transition: color .3s, gap .3s;
+}
+.nav-back:hover { color: var(--accent); gap:12px; }
+
+/* ─ HERO ─ */
+header {
+  padding: 150px 6vw 0;
+  max-width: 1280px; margin: 0 auto;
+}
+.crumb {
+  font-size:.62rem; font-weight:600; letter-spacing:.28em; text-transform:uppercase;
+  color: var(--accent); margin-bottom: 1.6rem;
+  display:flex; align-items:center; gap:14px;
+  direction:ltr; text-align:left;
+}
+.crumb::after { content:""; height:1px; width:44px; background: var(--accent); opacity:.5; }
+.title-row {
+  display:flex; flex-wrap:wrap; align-items:flex-end; gap:18px 26px;
+  margin-bottom: 1.4rem;
+}
+h1 {
+  font-size: clamp(3rem, 8vw, 6.4rem);
+  font-weight: 800; letter-spacing: -.045em; line-height: .95;
+  direction: ltr; text-align: left;
+}
+.badges { display:flex; gap:10px; padding-bottom: .9rem; }
+.badge {
+  display:inline-flex; align-items:center; gap:7px;
+  font-size:.68rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  padding: 7px 15px; border-radius:99px;
+  border: 1.5px solid var(--text);
+  color: var(--text);
+  transition: background .3s, color .3s, border-color .3s, transform .25s;
+  cursor: default;
+}
+.badge:hover { background: var(--text); color: var(--void); transform: translateY(-2px); }
+.badge--accent { border-color: var(--accent); color: var(--accent); }
+.badge--accent:hover { background: var(--accent); color:#fff; }
+.badge .dot { width:6px; height:6px; border-radius:50%; background: currentColor; }
+.sub {
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem); font-weight: 300;
+  color: var(--muted); max-width: 34ch;
+}
+
+/* ─ HERO IMAGE ─ */
+.hero-img {
+  position: relative;
+  margin: 3.4rem auto 0;
+  max-width: 1280px;
+  padding: 0 6vw;
+}
+.hero-img .frame {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+  box-shadow: 0 30px 80px rgba(0,0,0,.16);
+}
+.hero-img img {
+  width: 100%; height: 100%; object-fit: cover; display:block;
+  transform: scale(1.001);
+  transition: transform 1.2s cubic-bezier(.2,.7,.2,1);
+}
+.hero-img .frame:hover img { transform: scale(1.035); }
+.hero-img .frame::after {
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(180deg, transparent 62%, rgba(12,10,8,.28) 100%);
+  pointer-events:none;
+}
+.hero-cap {
+  position:absolute; bottom:26px; inset-inline-start: calc(6vw + 30px);
+  color:#F7F4EF; font-size:.75rem; letter-spacing:.2em; text-transform:uppercase; font-weight:600;
+  text-shadow: 0 1px 12px rgba(0,0,0,.6);
+  direction:ltr;
+}
+
+/* ─ META STRIP ─ */
+.meta {
+  max-width: 1280px; margin: 4.5rem auto 0; padding: 0 6vw;
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+  border-block: 1px solid var(--line);
+}
+.meta > div { padding: 1.6rem 1.4rem; border-inline-start: 1px solid var(--line); }
+.meta > div:first-child { border-inline-start: none; }
+.meta dt {
+  font-size:.6rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase;
+  color: var(--muted); margin-bottom:.5rem;
+}
+.meta dd { font-size:1.02rem; font-weight:600; }
+
+/* ─ BODY ─ */
+main { max-width: 1280px; margin: 0 auto; padding: 5.5rem 6vw 2rem; }
+.grid {
+  display:grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.6fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+.sec-k {
+  position: sticky; top: 110px;
+}
+.sec-k .k-lbl {
+  display:flex; align-items:center; gap:12px;
+  font-size:.62rem; font-weight:700; letter-spacing:.26em; text-transform:uppercase;
+  color: var(--accent); margin-bottom: 1.1rem;
+}
+.sec-k .k-lbl::before { content:""; width:26px; height:1.5px; background: var(--accent); }
+.sec-k h2 {
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+  font-weight:800; letter-spacing:-.03em; line-height:1.12;
+}
+.copy { max-width: 62ch; }
+.copy p {
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+  color: rgba(26,26,26,.82);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+.copy p strong { font-weight: 700; color: var(--text); }
+.copy .lede {
+  font-size: clamp(1.15rem, 1.9vw, 1.4rem);
+  font-weight: 300; line-height: 1.65;
+  color: var(--text);
+}
+
+/* ─ WORK TAGS ─ */
+.work { margin-top: 4.5rem; padding-top: 3rem; border-top: 1px solid var(--line); }
+.work-tags { display:flex; flex-wrap:wrap; gap:12px; margin-top:1.6rem; }
+.pill {
+  position: relative;
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:.88rem; font-weight:600;
+  padding: 13px 26px; border-radius: 99px;
+  background: var(--deep);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  transition: color .35s, border-color .35s, transform .3s;
+  cursor: default;
+}
+.pill::before {
+  content:""; position:absolute; inset:0;
+  background: var(--accent);
+  transform: translateY(102%);
+  transition: transform .38s cubic-bezier(.2,.7,.2,1);
+  border-radius: inherit;
+}
+.pill span { position:relative; z-index:1; }
+.pill i {
+  position:relative; z-index:1;
+  width:7px; height:7px; border-radius:50%; background: var(--accent);
+  transition: background .35s;
+}
+.pill:hover { color:#fff; border-color: var(--accent); transform: translateY(-3px); }
+.pill:hover::before { transform: none; }
+.pill:hover i { background:#fff; }
+
+/* ─ SECOND IMAGE ─ */
+.img-block { margin: 5.5rem 0 0; }
+.img-block .frame {
+  border-radius: 14px; overflow:hidden;
+  box-shadow: 0 22px 60px rgba(0,0,0,.13);
+}
+.img-block img { width:100%; display:block; transition: transform 1s cubic-bezier(.2,.7,.2,1); }
+.img-block .frame:hover img { transform: scale(1.025); }
+.img-cap {
+  margin-top: .9rem; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
+  color: var(--muted); font-weight:600; direction:ltr; text-align:left;
+}
+
+/* ─ CTA ─ */
+.cta {
+  margin: 6rem auto 0; max-width: 1280px; padding: 4.5rem 6vw 5rem;
+  border-top: 1px solid var(--line);
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1.8rem;
+}
+.cta h3 { font-size: clamp(1.5rem,3vw,2.3rem); font-weight:800; letter-spacing:-.03em; }
+.cta-row { display:flex; gap:14px; flex-wrap:wrap; }
+.btn {
+  display:inline-flex; align-items:center; gap:10px;
+  padding: 15px 30px; border-radius: 10px; text-decoration:none;
+  font-weight:700; font-size:.95rem;
+  transition: background .3s, color .3s, transform .25s, border-color .3s;
+}
+.btn--solid { background: var(--accent); color:#fff; }
+.btn--solid:hover { background:#E04E10; transform: translateY(-2px); }
+.btn--ghost { border:1.5px solid var(--line); color: var(--text); }
+.btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+footer {
+  padding: 2rem 6vw 2.4rem; text-align:center;
+  font-size:.78rem; color:var(--muted);
+  border-top: 1px solid var(--line);
+}
+
+/* ─ REVEAL ─ */
+.rv { opacity:0; transform: translateY(36px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+.rv.on { opacity:1; transform:none; }
+
+@media (max-width: 860px) {
+  .grid { grid-template-columns: 1fr; gap: 2rem; }
+  .sec-k { position: static; }
+  .meta > div { border-inline-start: none; border-top: 1px solid var(--line); }
+  .meta > div:first-child { border-top: none; }
+  header { padding-top: 120px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="./index.html">Studio ✦</a>
+  <a class="nav-back" href="./index.html#portfolio">→ חזרה לתיק העבודות</a>
+</nav>
+
+<header>
+  <div class="crumb rv">Case Study — 02</div>
+  <div class="title-row rv">
+    <h1>RIVERA<br>GROUP</h1>
+    <div class="badges">
+      <span class="badge"><span class="dot"></span>Real Estate</span>
+      <span class="badge"><span class="dot"></span>WordPress</span>
+      <span class="badge badge--accent"><span class="dot"></span>2026</span>
+    </div>
+  </div>
+  <p class="sub rv">נדל"ן יווני. מבט אל העתיד — מותג דיגיטלי לקבוצת השקעות נדל"ן בוולוס ובחצי האי פיליון.</p>
+</header>
+
+<div class="hero-img rv">
+  <div class="frame">
+    <img src="./shots/rivera-hero.png" alt="RIVERA GROUP — עמוד הבית של האתר על רקע חוף יווני">
+  </div>
+  <div class="hero-cap">Rivera Group — Brand & Website</div>
+</div>
+
+<dl class="meta rv">
+  <div><dt>Client</dt><dd>Rivera Group</dd></div>
+  <div><dt>Site Type</dt><dd>Real Estate</dd></div>
+  <div><dt>System</dt><dd>WordPress</dd></div>
+  <div><dt>Year</dt><dd>2026</dd></div>
+  <div><dt>Scope</dt><dd>Brand → Live Site</dd></div>
+</dl>
+
+<main>
+  <div class="grid">
+    <div class="sec-k rv">
+      <div class="k-lbl">The Project</div>
+      <h2>מותג נדל"ן שמרגישים בו את הים עוד לפני הביקור</h2>
+    </div>
+    <div class="copy rv">
+      <p class="lede">RIVERA GROUP מתמחה בבניית מלונות, בנייני סטודנטים ונכסי יוקרה בעיר וולוס ובחצי האי פיליון לחופו של המפרץ — בלב הטבע הפראי היווני.</p>
+      <p>האתגר: לבנות מותג שפונה לקהל משקיעים ישראלי ובינלאומי, ומצליח לשדר בו-זמנית <strong>יוקרה, אמינות ותחושת מקום</strong> — הים, האור והאבן של יוון. המותג נדרש לתמוך במסע השקעה מלא: מהיכרות ראשונה, דרך תוכנית Golden Visa, ועד סגירת עסקה.</p>
+      <p>הפתרון: זהות ויזואלית שנשענת על סמל ה-A הגלי — שילוב של אות, גל וקו חוף — לצד פלטת גוונים ימית-חמה וטיפוגרפיה מרווחת. האתר נבנה ב-WordPress בהתאמה אישית מלאה: עמודי פרויקטים עשירים, מערך תוכן דו-לשוני, וטפסי לידים שמחוברים ישירות למערך המכירות.</p>
+      <p>התוצאה — נוכחות דיגיטלית שמרגישה כמו ביקור בנכס: רגועה, בהירה, ומזמינה לפעולה.</p>
+    </div>
+  </div>
+
+  <section class="work rv">
+    <div class="sec-k" style="position:static">
+      <div class="k-lbl">Work Performed</div>
+      <h2>מה נעשה בפרויקט</h2>
+    </div>
+    <div class="work-tags">
+      <span class="pill"><i></i><span>Branding</span></span>
+      <span class="pill"><i></i><span>UX</span></span>
+      <span class="pill"><i></i><span>UI</span></span>
+      <span class="pill"><i></i><span>Design</span></span>
+      <span class="pill"><i></i><span>Development</span></span>
+    </div>
+  </section>
+
+  <div class="img-block rv">
+    <div class="frame">
+      <img src="./shots/rivera-2.png" alt="RIVERA GROUP — מסך פנימי מהאתר" loading="lazy">
+    </div>
+    <div class="img-cap">Homepage — Hero Section</div>
+  </div>
+</main>
+
+<div class="cta">
+  <h3 class="rv">יש לכם פרויקט דומה בראש?</h3>
+  <div class="cta-row rv">
+    <a class="btn btn--solid" href="https://rivera-gr.com/" target="_blank" rel="noopener">לצפייה באתר החי ↗</a>
+    <a class="btn btn--ghost" href="./index.html#contact">בואו נדבר</a>
+  </div>
+</div>
+
+<footer>© 2026 — Studio · מעצבת בכירה, מטולה</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); } });
+}, { threshold: .12 });
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
