@@ -2220,6 +2220,7 @@ footer {
         no:"02", name:"Rivera", client:"נדל\"ן, פיליון",
         tags:["מיתוג","UX/UI","נדל\"ן"],
         poster:"./shots/rivera-hero.png",
+        page:"./rivera.html",
         live:"https://rivera-gr.com/",
         facts:[{k:"שנה",v:"2023"},{k:"מדיום",v:"דיגיטל + דפוס"},{k:"לקוח",v:"נדל\"ן"}],
         blocks:[{k:"אתגר",t:"בניית מותג יוקרתי לפרויקט נדל\"ן עם קהל יעד אנגלופוני בינלאומי."},{k:"פתרון",t:"זהות ויזואלית אלגנטית, סט חומרי שיווק ואתר תדמית מעוצב."}],
@@ -2331,6 +2332,7 @@ footer {
 
     window.openCase = function(i){
       const p = PROJECTS[i];
+      if (p.page) { window.location.href = p.page; return; }
       const modal = document.getElementById('cs-modal');
       const hero  = document.getElementById('cs-hero');
       hero.style.backgroundImage = `url('${p.poster}')`;
