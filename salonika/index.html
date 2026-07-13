@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>המרכז למורשת יהדות שאלוניקי ויוון ע״ש ליאון רקנאטי</title>
+<meta name="description" content="המרכז למורשת יהדות שאלוניקי ויוון ע״ש ליאון רקנאטי. שימור מורשת בת אלפי שנים, פעילות חינוכית, אירועים, גלריות, מתכונים וספרייה.">
+
+<!-- Google Fonts: Frank Ruhl Libre (כותרות) + Assistant (גוף) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   מערכת עיצוב,המרכז למורשת יהדות שאלוניקי ויוון
+   ============================================================ */
+:root{
+  --sea:    #0E4C66;   /* כחול אגאי עמוק,צבע מוביל */
+  --sea-dk: #08303F;
+  --sea-lt: #1C6A8A;
+  --gold:   #C9A24B;   /* זהב עתיק,הדגשה */
+  --gold-lt:#E1C782;
+  --terra:  #B5502F;   /* טרהקוטה,הדגשה חמה */
+  --sand:   #F5EFE3;   /* רקע נייר/פרגמנט */
+  --ivory:  #FBF8F1;
+  --ink:    #22201C;
+  --muted:  rgba(34,32,28,0.62);
+  --line:   rgba(201,162,75,0.35);
+  --shadow: 0 18px 50px -18px rgba(8,48,63,0.35);
+  --hdr-h:  76px;
+  --wrap:   1200px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Assistant',system-ui,-apple-system,sans-serif;
+  color:var(--ink);
+  background:var(--ivory);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4,.serif{font-family:'Frank Ruhl Libre',Georgia,serif;line-height:1.2;font-weight:700}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+ul{list-style:none}
+
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:clamp(18px,5vw,48px)}
+.ltr{direction:ltr;unicode-bidi:isolate}
+
+/* גישה מהמקלדת */
+a:focus-visible,button:focus-visible,input:focus-visible{
+  outline:3px solid var(--gold);outline-offset:3px;border-radius:4px;
+}
+.skip{position:absolute;right:-9999px;top:8px;background:var(--sea);color:#fff;padding:10px 18px;border-radius:8px;z-index:2000}
+.skip:focus{right:12px}
+
+/* קו זהב מעטר */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:12px;
+  font-weight:600;letter-spacing:.14em;font-size:.78rem;
+  color:var(--terra);text-transform:uppercase;margin-bottom:14px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--gold);display:inline-block}
+
+.section{padding:clamp(64px,9vw,120px) 0}
+.section-head{max-width:640px;margin-bottom:clamp(34px,5vw,56px)}
+.section-head h2{font-size:clamp(1.9rem,4.2vw,3rem);color:var(--sea-dk)}
+.section-head p{color:var(--muted);margin-top:14px;font-size:1.08rem}
+
+/* כפתורים */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:13px 28px;border-radius:999px;font-weight:600;font-size:1rem;
+  transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
+  will-change:transform;
+}
+.btn-primary{background:var(--gold);color:var(--sea-dk);box-shadow:0 10px 24px -10px rgba(201,162,75,.8)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 30px -10px rgba(201,162,75,.9);background:var(--gold-lt)}
+.btn-ghost{border:1.5px solid rgba(255,255,255,.55);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.12);transform:translateY(-3px)}
+.btn-outline{border:1.5px solid var(--sea);color:var(--sea)}
+.btn-outline:hover{background:var(--sea);color:#fff;transform:translateY(-3px)}
+.link-more{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--sea);border-bottom:1.5px solid var(--line);padding-bottom:3px;transition:gap .25s,border-color .25s}
+.link-more:hover{gap:14px;border-color:var(--gold)}
+
+/* ============================================================
+   HEADER + ניווט
+   ============================================================ */
+.header{
+  position:relative;z-index:10;height:var(--hdr-h);
+  display:flex;align-items:center;
+  background:var(--sea);
+  border-bottom:1px solid var(--line);
+}
+.header .wrap{display:flex;align-items:center;justify-content:space-between;width:100%;gap:20px}
+
+/* לוגו */
+.brand{display:flex;align-items:center;gap:12px;color:#fff;transition:color .35s}
+.header.scrolled .brand{color:var(--sea-dk)}
+.brand .mono{
+  width:44px;height:44px;flex:0 0 44px;border-radius:50%;
+  display:grid;place-items:center;font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:1.25rem;
+  color:var(--sea-dk);background:var(--gold);box-shadow:0 6px 16px -6px rgba(201,162,75,.9)
+}
+.brand .txt strong{display:block;font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:1.02rem;line-height:1.15;white-space:nowrap}
+.brand .txt span{display:block;font-size:.72rem;opacity:.8;letter-spacing:.02em}
+
+/* ניווט ראשי */
+.nav{display:flex;align-items:center;gap:2px}
+.nav > li{position:relative}
+.nav > li > a,.nav > li > button{
+  display:flex;align-items:center;gap:5px;padding:10px 14px;border-radius:8px;
+  font-weight:600;font-size:.95rem;color:rgba(255,255,255,.92);transition:color .3s,background .3s;white-space:nowrap;
+}
+.header.scrolled .nav > li > a,.header.scrolled .nav > li > button{color:var(--ink)}
+.nav > li > a:hover,.nav > li > button:hover{color:var(--gold)}
+.header.scrolled .nav > li > a:hover,.header.scrolled .nav > li > button:hover{color:var(--terra)}
+.nav .caret{width:8px;height:8px;border-inline-start:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg) translateY(-2px);transition:transform .3s;opacity:.7}
+.nav > li.open .caret{transform:rotate(135deg) translateY(-2px)}
+
+/* תפריטי משנה */
+.dropdown{
+  position:absolute;top:calc(100% + 8px);inset-inline-end:0;min-width:230px;
+  background:var(--ivory);border:1px solid var(--line);border-radius:14px;padding:8px;
+  box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(8px);
+  transition:opacity .25s,transform .25s,visibility .25s;
+}
+.nav > li.open .dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown a{display:block;padding:9px 14px;border-radius:8px;font-size:.92rem;font-weight:500;color:var(--ink);transition:background .2s,color .2s}
+.dropdown a:hover{background:var(--sand);color:var(--sea)}
+
+/* מחליף שפה */
+.lang{position:relative}
+.lang-btn{display:flex;align-items:center;gap:7px;padding:8px 14px;border:1.5px solid rgba(255,255,255,.4);border-radius:999px;font-weight:600;font-size:.85rem;color:#fff;transition:border-color .3s,color .3s}
+.header.scrolled .lang-btn{border-color:var(--line);color:var(--ink)}
+.lang-btn:hover{border-color:var(--gold)}
+.lang-menu{position:absolute;top:calc(100% + 8px);inset-inline-end:0;min-width:150px;background:var(--ivory);border:1px solid var(--line);border-radius:12px;padding:6px;box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(8px);transition:.25s}
+.lang.open .lang-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.lang-menu a{display:flex;justify-content:space-between;padding:8px 12px;border-radius:8px;font-size:.9rem;font-weight:500}
+.lang-menu a:hover{background:var(--sand)}
+.lang-menu a.active{color:var(--sea);font-weight:700}
+.lang-menu a .code{font-size:.75rem;opacity:.5}
+
+.header-tools{display:flex;align-items:center;gap:14px}
+
+/* המבורגר */
+.burger{display:none;width:46px;height:46px;border-radius:10px;flex-direction:column;justify-content:center;align-items:center;gap:5px}
+.burger span{width:24px;height:2px;background:#fff;border-radius:2px;transition:.3s}
+.header.scrolled .burger span{background:var(--ink)}
+
+/* ============================================================
+   מגירת מובייל
+   ============================================================ */
+.drawer-overlay{position:fixed;inset:0;background:rgba(8,48,63,.55);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:.35s;z-index:1100}
+.drawer-overlay.open{opacity:1;visibility:visible}
+.drawer{
+  position:fixed;top:0;inset-inline-start:0;height:100%;width:min(340px,86vw);z-index:1200;
+  background:var(--ivory);box-shadow:var(--shadow);
+  transform:translateX(-105%);transition:transform .38s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;overflow-y:auto;
+}
+[dir=rtl] .drawer{transform:translateX(105%)}
+.drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid var(--line)}
+.drawer-head .mono{width:40px;height:40px;flex:0 0 40px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:var(--sea-dk);font-family:'Frank Ruhl Libre',serif;font-weight:900}
+.drawer-close{font-size:1.6rem;line-height:1;color:var(--muted);padding:6px}
+.drawer-nav{padding:10px 0}
+.drawer-nav > li{border-bottom:1px solid rgba(201,162,75,.15)}
+.drawer-nav > li > a,.acc-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:15px 22px;font-weight:600;font-size:1.02rem;color:var(--ink);text-align:start}
+.acc-trigger .caret{width:9px;height:9px;border-inline-start:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .3s}
+.acc-trigger.open .caret{transform:rotate(45deg)}
+.acc-panel{max-height:0;overflow:hidden;transition:max-height .35s ease;background:var(--sand)}
+.acc-panel a{display:block;padding:11px 34px;font-size:.94rem;color:var(--muted);font-weight:500}
+.acc-panel a:hover{color:var(--sea)}
+.drawer-lang{margin-top:auto;padding:18px 22px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
+.drawer-lang a{padding:7px 14px;border:1.5px solid var(--line);border-radius:999px;font-size:.85rem;font-weight:600}
+.drawer-lang a.active{background:var(--sea);color:#fff;border-color:var(--sea)}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{position:relative;min-height:88vh;display:flex;align-items:center;color:#fff;overflow:hidden}
+/* IMAGE: תמונת רקע לשער, סלון היסטורי עם פנורמת נמל סלוניקי (hero.png) */
+.hero-bg{position:absolute;inset:0;z-index:0;background:var(--sea-dk) url('hero.png') center/cover no-repeat}
+.hero-bg::before{content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(to left, rgba(8,48,63,.78) 0%, rgba(8,48,63,.42) 45%, rgba(8,48,63,.08) 100%),
+    linear-gradient(to top, rgba(8,48,63,.4), transparent 42%);
+}
+.hero-bg svg{position:absolute;bottom:0;inset-inline:0;width:100%;height:auto;opacity:.4}
+.hero-veil{position:absolute;inset:0;background:rgba(8,48,63,.05);z-index:1}
+.hero .wrap{position:relative;z-index:2;width:100%}
+.hero-inner{max-width:660px;padding-block:120px}
+.hero .eyebrow{color:var(--gold-lt)}
+.hero .eyebrow::before{background:var(--gold-lt)}
+.hero h1{font-size:clamp(2.4rem,6vw,4.4rem);font-weight:900;letter-spacing:-.01em}
+.hero h1 .accent{color:var(--gold-lt)}
+.hero p.lead{font-size:clamp(1.05rem,2.2vw,1.35rem);margin:22px 0 34px;max-width:540px;opacity:.92;font-weight:300}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap}
+.scroll-ind{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.8)}
+.scroll-ind .mouse{width:26px;height:42px;border:2px solid rgba(255,255,255,.6);border-radius:14px;position:relative}
+.scroll-ind .mouse::after{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:4px;height:8px;background:var(--gold-lt);border-radius:2px;animation:wheel 1.8s infinite}
+.scroll-ind span{font-size:.72rem;letter-spacing:.15em}
+@keyframes wheel{0%{opacity:0;transform:translate(-50%,0)}40%{opacity:1}100%{opacity:0;transform:translate(-50%,14px)}}
+
+/* ============================================================
+   ווידג'ט נגלל,פס אירועים נע
+   ============================================================ */
+.ticker{background:var(--sea-dk);color:#fff;overflow:hidden;position:relative;border-block:1px solid rgba(201,162,75,.3)}
+.ticker::before,.ticker::after{content:"";position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.ticker::before{inset-inline-start:0;background:linear-gradient(to right,var(--sea-dk),transparent)}
+.ticker::after{inset-inline-end:0;background:linear-gradient(to left,var(--sea-dk),transparent)}
+.ticker-label{position:absolute;inset-inline-start:0;top:0;bottom:0;z-index:3;display:flex;align-items:center;gap:8px;background:var(--gold);color:var(--sea-dk);padding:0 20px;font-weight:700;font-size:.85rem;white-space:nowrap}
+.ticker-track{display:flex;gap:0;width:max-content;animation:scrollx 34s linear infinite;padding-block:14px}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-item{display:flex;align-items:center;gap:12px;padding:0 30px;white-space:nowrap;font-size:.95rem;border-inline-end:1px solid rgba(255,255,255,.12)}
+.ticker-item .date{color:var(--gold-lt);font-weight:700}
+.ticker-item .tag{font-size:.7rem;background:rgba(201,162,75,.2);color:var(--gold-lt);padding:2px 10px;border-radius:999px}
+@keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+[dir=rtl] .ticker-track{animation-name:scrollx-rtl}
+@keyframes scrollx-rtl{from{transform:translateX(0)}to{transform:translateX(50%)}}
+
+/* ============================================================
+   אודות
+   ============================================================ */
+.about{background:var(--sand)}
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(30px,5vw,64px);align-items:center}
+.about-txt h2{font-size:clamp(1.8rem,4vw,2.7rem);color:var(--sea-dk);margin-bottom:18px}
+.about-txt p{color:var(--muted);margin-bottom:16px;font-size:1.05rem}
+.about-img{position:relative;aspect-ratio:4/5;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+/* IMAGE: דיוקן ליאון רקנאטי / תצלום היסטורי של הקהילה */
+.about-img::before{content:"";position:absolute;inset:0;background:linear-gradient(150deg,var(--sea-lt),var(--sea-dk));}
+.about-img .frame{position:absolute;inset:14px;border:1px solid rgba(255,255,255,.35);border-radius:12px;z-index:2}
+.about-img .cap{position:absolute;bottom:20px;inset-inline:20px;z-index:3;color:#fff}
+.about-img .cap b{font-family:'Frank Ruhl Libre',serif;font-size:1.3rem;display:block}
+.about-img .cap small{opacity:.8}
+
+.counters{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:60px}
+.counter{text-align:center;padding:26px 14px;background:var(--ivory);border-radius:16px;border:1px solid var(--line)}
+.counter .num{font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:clamp(2rem,5vw,3rem);color:var(--sea);line-height:1}
+.counter .lbl{color:var(--muted);font-weight:600;margin-top:8px;font-size:.95rem}
+
+/* ============================================================
+   כרטיסים גנריים / רשתות
+   ============================================================ */
+.grid-cards{display:grid;gap:24px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+
+.card{
+  background:var(--ivory);border:1px solid var(--line);border-radius:18px;overflow:hidden;
+  transition:transform .3s ease,box-shadow .3s ease;position:relative;
+}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.card .thumb{aspect-ratio:16/10;position:relative;overflow:hidden}
+.card .thumb .ph{position:absolute;inset:0}
+.card .body{padding:22px}
+.card h3{font-size:1.25rem;color:var(--sea-dk);margin-bottom:8px}
+.card p{color:var(--muted);font-size:.96rem}
+.card .goldline{position:absolute;bottom:0;inset-inline:0;height:3px;background:var(--gold);transform:scaleX(0);transform-origin:inline-start;transition:transform .35s}
+.card:hover .goldline{transform:scaleX(1)}
+
+/* אזורי פעילות,כרטיסים עם אייקון */
+.activity .card .body{display:flex;flex-direction:column;gap:10px}
+.activity .icon{width:54px;height:54px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(140deg,var(--sea),var(--sea-lt));color:var(--gold-lt);font-size:1.5rem;margin-bottom:6px}
+
+/* placeholders ציוריים (מייצגים תמונות שיסופקו) */
+.ph-a{background:linear-gradient(140deg,#1C6A8A,#0E4C66)}
+.ph-b{background:linear-gradient(140deg,#B5502F,#7d3620)}
+.ph-c{background:linear-gradient(140deg,#C9A24B,#8f6f24)}
+.ph-d{background:linear-gradient(140deg,#2b5f52,#123f34)}
+.ph-e{background:linear-gradient(140deg,#4a5a7a,#2a3550)}
+.ph-f{background:linear-gradient(140deg,#8a5a86,#4d2f4a)}
+.ph-dots{background-image:radial-gradient(rgba(255,255,255,.14) 1.4px,transparent 1.4px);background-size:16px 16px}
+
+/* ============================================================
+   לוח אירועים,כרטיסי אירוע
+   ============================================================ */
+.events{background:var(--sand);overflow:hidden}
+.tag-pill{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:999px;background:rgba(181,80,47,.12);color:var(--terra)}
+
+/* סליידר אירועים (פוסטים לפי החדש ביותר) */
+.events-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:34px}
+.slider-nav{display:flex;gap:10px}
+.slider-btn{width:50px;height:50px;border-radius:50%;border:1.5px solid var(--sea);color:var(--sea);display:grid;place-items:center;font-size:1.5rem;line-height:1;transition:background .25s,color .25s,opacity .25s}
+.slider-btn:hover{background:var(--sea);color:#fff}
+.slider-btn:disabled{opacity:.3;cursor:default}
+.slider-btn:disabled:hover{background:none;color:var(--sea)}
+.slider-viewport{overflow:hidden}
+.slider-track{display:flex;gap:24px;transition:transform .55s cubic-bezier(.4,0,.2,1);will-change:transform}
+.post-card{
+  flex:0 0 clamp(280px,82vw,364px);background:var(--ivory);border:1px solid var(--line);
+  border-radius:18px;overflow:hidden;display:flex;flex-direction:column;
+}
+.post-thumb{position:relative;aspect-ratio:16/9}
+.post-thumb .ph{position:absolute;inset:0}
+.post-date{position:absolute;top:14px;inset-inline-end:14px;background:rgba(8,48,63,.9);color:#fff;border-radius:10px;padding:8px 12px;text-align:center;line-height:1}
+.post-date .d{font-family:'Frank Ruhl Libre',serif;font-size:1.4rem;font-weight:900;display:block}
+.post-date .m{font-size:.68rem;opacity:.85}
+.post-body{padding:22px;display:flex;flex-direction:column;gap:10px;flex:1}
+.post-body h3{font-size:1.2rem;color:var(--sea-dk);line-height:1.25}
+.post-body p{color:var(--muted);font-size:.94rem;flex:1}
+.post-meta{color:var(--muted);font-size:.85rem;display:flex;gap:14px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px}
+.post-meta span{display:inline-flex;align-items:center;gap:5px}
+
+/* ============================================================
+   גלריה,קוביות בולטות
+   ============================================================ */
+.gallery-cubes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:22px}
+.cube{
+  position:relative;aspect-ratio:1;border-radius:18px;overflow:hidden;cursor:pointer;isolation:isolate;
+  box-shadow:0 16px 32px -16px rgba(8,48,63,.5);
+  transition:transform .4s cubic-bezier(.4,0,.2,1),box-shadow .4s ease;
+}
+.cube .ph{position:absolute;inset:0;transition:transform .6s ease}
+.cube::after{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,rgba(8,48,63,.94) 0%,rgba(8,48,63,.4) 46%,rgba(8,48,63,.05) 72%);}
+.cube:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 32px 54px -20px rgba(8,48,63,.62)}
+.cube:hover .ph{transform:scale(1.1)}
+.cube .ring{position:absolute;inset:12px;z-index:2;border:1px solid rgba(225,199,130,.6);border-radius:12px;opacity:0;transition:opacity .4s}
+.cube:hover .ring{opacity:1}
+.cube .meta{position:absolute;inset-inline:0;bottom:0;z-index:3;padding:22px;color:#fff}
+.cube .count{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.04em;background:var(--gold);color:var(--sea-dk);padding:3px 11px;border-radius:999px;margin-bottom:12px}
+.cube h3{font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:1.35rem;color:#fff;line-height:1.15}
+.cube .go{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:.86rem;font-weight:600;color:var(--gold-lt);opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+.cube:hover .go{opacity:1;transform:none}
+
+/* ============================================================
+   מתכונים,טיזר תלת-ממד
+   ============================================================ */
+.recipes{background:linear-gradient(150deg,var(--sea-dk),var(--sea));color:#fff;position:relative;overflow:hidden}
+.recipes .ph-dots{position:absolute;inset:0;opacity:.5}
+.recipes-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;position:relative;z-index:2}
+.recipes h2{font-size:clamp(2rem,4.5vw,3rem);color:var(--gold-lt);margin-bottom:16px}
+.recipes p{opacity:.9;margin-bottom:26px;font-size:1.1rem;font-weight:300}
+.book3d{perspective:1400px;display:flex;justify-content:center}
+.book3d .cover{
+  width:min(300px,72vw);aspect-ratio:3/4;border-radius:6px 12px 12px 6px;
+  background:linear-gradient(135deg,var(--terra),#7d3620);
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.6), inset 14px 0 0 rgba(0,0,0,.18);
+  transform:rotateY(-24deg) rotateX(6deg);transition:transform .6s cubic-bezier(.4,0,.2,1);
+  position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;color:var(--gold-lt);text-align:center;padding:28px;
+}
+.book3d:hover .cover{transform:rotateY(-6deg) rotateX(2deg)}
+.book3d .cover::after{content:"";position:absolute;inset:14px;border:1px solid rgba(225,199,130,.5);border-radius:4px}
+.book3d .cover b{font-family:'Frank Ruhl Libre',serif;font-size:1.6rem}
+.book3d .cover span{font-size:.85rem;letter-spacing:.2em;opacity:.8}
+
+/* ============================================================
+   מדיה וספרים,רצועת קישורים
+   ============================================================ */
+.media-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.media-item{text-align:center;padding:26px 12px;border:1px solid var(--line);border-radius:14px;background:var(--ivory);transition:transform .3s,background .3s,color .3s}
+.media-item:hover{transform:translateY(-5px);background:var(--sea);color:#fff}
+.media-item .ic{font-size:1.8rem;margin-bottom:10px}
+.media-item b{font-size:.98rem;font-weight:600}
+
+/* ============================================================
+   קישורים נוספים
+   ============================================================ */
+.morelinks{background:var(--sand)}
+.morelinks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.mlink{
+  display:flex;align-items:center;gap:16px;padding:22px 24px;border-radius:16px;
+  background:var(--ivory);border:1px solid var(--line);transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden;
+}
+.mlink:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.mlink .ic{width:50px;height:50px;flex:0 0 50px;border-radius:12px;display:grid;place-items:center;font-size:1.4rem;background:linear-gradient(140deg,var(--gold),var(--gold-lt));color:var(--sea-dk)}
+.mlink .t b{display:block;font-family:'Frank Ruhl Libre',serif;font-size:1.15rem;color:var(--sea-dk)}
+.mlink .t span{font-size:.86rem;color:var(--muted)}
+.mlink .ext{position:absolute;top:14px;inset-inline-end:14px;font-size:.9rem;color:var(--gold);opacity:.6}
+
+/* ============================================================
+   הוקרה / עדות
+   ============================================================ */
+.tribute{background:var(--sea-dk);color:#fff;position:relative;overflow:hidden;text-align:center}
+.tribute .ph-dots{position:absolute;inset:0;opacity:.4}
+.tribute-inner{position:relative;z-index:2;max-width:820px;margin-inline:auto}
+.tribute .quote-mark{font-family:'Frank Ruhl Libre',serif;font-size:5rem;color:var(--gold);line-height:.6;height:44px}
+.tribute blockquote{font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.4rem,3.4vw,2.2rem);font-weight:500;line-height:1.5}
+.tribute cite{display:block;margin-top:26px;color:var(--gold-lt);font-style:normal;font-weight:600;letter-spacing:.05em}
+
+/* ============================================================
+   ניוזלטר + צור קשר
+   ============================================================ */
+.join-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.newsletter{background:var(--ivory);border:1px solid var(--line);border-radius:20px;padding:clamp(26px,4vw,44px)}
+.newsletter h3{font-size:1.6rem;color:var(--sea-dk);margin-bottom:10px}
+.newsletter p{color:var(--muted);margin-bottom:22px}
+.nl-form{display:flex;gap:10px;flex-wrap:wrap}
+.nl-form input{flex:1 1 220px;padding:14px 18px;border:1.5px solid var(--line);border-radius:999px;font-family:inherit;font-size:1rem;background:var(--sand)}
+.nl-msg{margin-top:14px;font-size:.9rem;font-weight:600;color:var(--sea);min-height:20px}
+.contact-brief h3{font-size:1.6rem;color:var(--sea-dk);margin-bottom:18px}
+.contact-brief li{display:flex;align-items:center;gap:14px;margin-bottom:16px;color:var(--muted)}
+.contact-brief li .ic{width:44px;height:44px;flex:0 0 44px;border-radius:12px;display:grid;place-items:center;background:var(--sand);color:var(--sea);font-size:1.2rem}
+.contact-brief li b{color:var(--ink);display:block}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer{background:var(--sea-dk);color:rgba(255,255,255,.75);padding-top:64px}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:36px;padding-bottom:40px}
+.footer h4{color:#fff;font-size:1.05rem;margin-bottom:16px}
+.footer .brand-f{display:flex;align-items:center;gap:12px;margin-bottom:16px;color:#fff}
+.footer .brand-f .mono{width:44px;height:44px;flex:0 0 44px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:var(--sea-dk);font-family:'Frank Ruhl Libre',serif;font-weight:900}
+.footer .brand-f b{font-family:'Frank Ruhl Libre',serif;font-size:1.05rem;line-height:1.2}
+.footer p{font-size:.92rem;line-height:1.7}
+.footer ul li{margin-bottom:10px}
+.footer ul a{font-size:.92rem;transition:color .25s}
+.footer ul a:hover{color:var(--gold-lt)}
+.socials{display:flex;gap:10px;margin-top:8px}
+.socials a{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(255,255,255,.2);transition:.25s}
+.socials a:hover{background:var(--gold);color:var(--sea-dk);border-color:var(--gold)}
+.ext-row{border-top:1px solid rgba(255,255,255,.12);padding:20px 0;display:flex;gap:10px 22px;flex-wrap:wrap;align-items:center}
+.ext-row .lbl{font-weight:700;color:var(--gold-lt);font-size:.85rem}
+.ext-row a{font-size:.9rem;display:inline-flex;align-items:center;gap:6px}
+.ext-row a:hover{color:var(--gold-lt)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.12);padding:20px 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:.85rem}
+.footer-bottom a:hover{color:var(--gold-lt)}
+
+/* ============================================================
+   reveal on scroll
+   ============================================================ */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.rv.on{opacity:1;transform:none}
+
+/* ============================================================
+   רספונסיביות
+   ============================================================ */
+@media (max-width:1080px){
+  .nav,.header .lang{display:none}
+  .burger{display:flex}
+  .g4,.media-strip{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:860px){
+  .about-grid,.recipes-grid,.join-grid{grid-template-columns:1fr;gap:32px}
+  .about-img{max-width:400px;margin-inline:auto}
+  .g3,.morelinks-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:600px){
+  :root{--hdr-h:66px}
+  .g3,.g4,.media-strip,.morelinks-grid,.footer-grid,.counters{grid-template-columns:1fr}
+  .counters{grid-template-columns:repeat(3,1fr);gap:10px}
+  .counter{padding:18px 6px}
+  .media-strip{grid-template-columns:repeat(2,1fr)}
+  .ticker-label{display:none}
+  .hero-inner{padding-block:90px}
+  .brand .txt strong{font-size:.88rem;white-space:normal}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">דלג לתוכן הראשי</a>
+
+<!-- ============================ HEADER ============================ -->
+<header class="header" id="header">
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="דף הבית, המרכז למורשת יהדות שאלוניקי ויוון">
+      <span class="mono" aria-hidden="true">ש</span>
+      <span class="txt">
+        <strong>מרכז מורשת יהדות שאלוניקי ויוון</strong>
+        <span>ע״ש ליאון רקנאטי</span>
+      </span>
+    </a>
+
+    <nav aria-label="ניווט ראשי">
+      <ul class="nav">
+        <li><a href="#">דף הבית</a></li>
+        <li>
+          <button aria-haspopup="true">אודות <span class="caret" aria-hidden="true"></span></button>
+          <ul class="dropdown">
+            <li><a href="#">אודות המרכז</a></li>
+            <li><a href="#">בעלי תפקידים</a></li>
+            <li><a href="#">דבר המייסד</a></li>
+          </ul>
+        </li>
+        <li>
+          <button aria-haspopup="true">תחומי פעילות ואירועים <span class="caret" aria-hidden="true"></span></button>
+          <ul class="dropdown">
+            <li><a href="#">פעילויות לבתי ספר</a></li>
+            <li><a href="#">ימי עיון לסטודנטים ותלמידי מחקר</a></li>
+            <li><a href="#">פעילות לחיילים</a></li>
+            <li><a href="#">שישי משפחתי</a></li>
+            <li><a href="#">תרבות חגים ומנהגים</a></li>
+            <li><a href="#events">לוח אירועים</a></li>
+          </ul>
+        </li>
+        <li>
+          <button aria-haspopup="true">גלריה <span class="caret" aria-hidden="true"></span></button>
+          <ul class="dropdown">
+            <li><a href="#">חגים ומנהגים</a></li>
+            <li><a href="#">סטודנטים</a></li>
+            <li><a href="#">ביקורים מיוחדים</a></li>
+            <li><a href="#">אנשי עדות</a></li>
+            <li><a href="#">אירועים</a></li>
+          </ul>
+        </li>
+        <li><a href="#recipes">מתכונים וטעמים</a></li>
+        <li>
+          <button aria-haspopup="true">מדיה וספרים <span class="caret" aria-hidden="true"></span></button>
+          <ul class="dropdown">
+            <li><a href="#">ספרים</a></li>
+            <li><a href="#">עיתונים</a></li>
+            <li><a href="#">תקליטורים</a></li>
+            <li><a href="#">עיתונים של פעם</a></li>
+            <li><a href="#">סרטים</a></li>
+            <li><a href="#">מאמרים</a></li>
+          </ul>
+        </li>
+        <li>
+          <button aria-haspopup="true">קישורים נוספים <span class="caret" aria-hidden="true"></span></button>
+          <ul class="dropdown">
+            <li><a href="#morelinks">פרויקט רוסיה</a></li>
+            <li><a href="#morelinks">מילון לדינו-עברי-אנגלי</a></li>
+            <li><a href="#morelinks">ספריית המרכז</a></li>
+            <li><a href="#morelinks">ספריית ד״ר אבנר פרץ</a></li>
+            <li><a href="#morelinks">קטלוג ספרים</a></li>
+            <li><a href="#morelinks">מערכת יעקב</a></li>
+          </ul>
+        </li>
+        <li><a href="#contact">צור קשר</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-tools">
+      <div class="lang">
+        <button class="lang-btn" aria-haspopup="true">עברית ▾</button>
+        <div class="lang-menu">
+          <a href="#" class="active">עברית <span class="code">HE</span></a>
+          <a href="#" class="ltr">English <span class="code">EN</span></a>
+          <a href="#">לדינו <span class="code">LAD</span></a>
+          <a href="#" class="ltr">Français <span class="code">FR</span></a>
+        </div>
+      </div>
+      <button class="burger" id="burger" aria-label="פתיחת תפריט" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================ מגירת מובייל ============================ -->
+<div class="drawer-overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="תפריט נייד">
+  <div class="drawer-head">
+    <div class="brand" style="color:var(--sea-dk)">
+      <span class="mono" aria-hidden="true">ש</span>
+      <span class="txt"><strong style="font-size:.92rem">מרכז מורשת שאלוניקי</strong></span>
+    </div>
+    <button class="drawer-close" id="drawerClose" aria-label="סגירת תפריט">×</button>
+  </div>
+  <ul class="drawer-nav">
+    <li><a href="#">דף הבית</a></li>
+    <li>
+      <button class="acc-trigger">אודות <span class="caret"></span></button>
+      <div class="acc-panel"><a href="#">אודות המרכז</a><a href="#">בעלי תפקידים</a><a href="#">דבר המייסד</a></div>
+    </li>
+    <li>
+      <button class="acc-trigger">תחומי פעילות ואירועים <span class="caret"></span></button>
+      <div class="acc-panel"><a href="#">פעילויות לבתי ספר</a><a href="#">ימי עיון לסטודנטים</a><a href="#">פעילות לחיילים</a><a href="#">שישי משפחתי</a><a href="#">תרבות חגים ומנהגים</a><a href="#events">לוח אירועים</a></div>
+    </li>
+    <li>
+      <button class="acc-trigger">גלריה <span class="caret"></span></button>
+      <div class="acc-panel"><a href="#">חגים ומנהגים</a><a href="#">סטודנטים</a><a href="#">ביקורים מיוחדים</a><a href="#">אנשי עדות</a><a href="#">אירועים</a></div>
+    </li>
+    <li><a href="#recipes">מתכונים וטעמים</a></li>
+    <li>
+      <button class="acc-trigger">מדיה וספרים <span class="caret"></span></button>
+      <div class="acc-panel"><a href="#">ספרים</a><a href="#">עיתונים</a><a href="#">תקליטורים</a><a href="#">עיתונים של פעם</a><a href="#">סרטים</a><a href="#">מאמרים</a></div>
+    </li>
+    <li>
+      <button class="acc-trigger">קישורים נוספים <span class="caret"></span></button>
+      <div class="acc-panel"><a href="#morelinks">פרויקט רוסיה</a><a href="#morelinks">מילון לדינו-עברי-אנגלי</a><a href="#morelinks">ספריית המרכז</a><a href="#morelinks">ספריית ד״ר אבנר פרץ</a><a href="#morelinks">קטלוג ספרים</a><a href="#morelinks">מערכת יעקב</a></div>
+    </li>
+    <li><a href="#contact">צור קשר</a></li>
+  </ul>
+  <div class="drawer-lang">
+    <a href="#" class="active">עברית</a>
+    <a href="#" class="ltr">English</a>
+    <a href="#">לדינו</a>
+    <a href="#" class="ltr">Français</a>
+  </div>
+</aside>
+
+<main id="main">
+<!-- ============================ HERO ============================ -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,120 C240,60 480,180 720,120 C960,60 1200,180 1440,120 L1440,220 L0,220 Z" fill="rgba(201,162,75,.10)"/>
+      <path d="M0,160 C240,110 480,210 720,160 C960,110 1200,210 1440,160 L1440,220 L0,220 Z" fill="rgba(201,162,75,.16)"/>
+    </svg>
+  </div>
+  <div class="hero-veil" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <span class="eyebrow">קהילה בת יותר מאלפיים שנה</span>
+      <h1>מורשת <span class="accent">שאלוניקי ויוון</span> חיה, נושמת וממשיכה</h1>
+      <p class="lead">המרכז ע״ש ליאון רקנאטי שומר, מנציח ומעביר הלאה את סיפורה של קהילת סלוניקי היהודית, דרך חינוך, אירועים, גלריות, טעמים וסיפורי עדוּת.</p>
+      <div class="hero-cta">
+        <a href="#events" class="btn btn-primary">לוח האירועים</a>
+        <a href="#contact" class="btn btn-ghost">הזמנת פעילות</a>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-ind" aria-hidden="true">
+    <div class="mouse"></div>
+    <span>גללו לגילוי</span>
+  </div>
+</section>
+
+<!-- ============================ ווידג'ט נגלל,פס אירועים ============================ -->
+<div class="ticker" aria-label="אירועים קרובים">
+  <div class="ticker-label" aria-hidden="true">★ אירועים קרובים</div>
+  <div class="ticker-track" id="ticker">
+    <!-- שכפול הרשימה מבטיח לולאה רציפה -->
+    <div class="ticker-item"><span class="date">18.7</span> שישי משפחתי: טעמי סלוניקי <span class="tag">משפחות</span></div>
+    <div class="ticker-item"><span class="date">24.7</span> יום עיון: יהדות יוון בין שתי מלחמות <span class="tag">אקדמיה</span></div>
+    <div class="ticker-item"><span class="date">03.8</span> סיור מודרך במרכז ליאון רקנאטי <span class="tag">ביקורים</span></div>
+    <div class="ticker-item"><span class="date">11.8</span> ערב עדוּת: יהודה ספורטה <span class="tag">הוקרה</span></div>
+    <div class="ticker-item"><span class="date">18.7</span> שישי משפחתי: טעמי סלוניקי <span class="tag">משפחות</span></div>
+    <div class="ticker-item"><span class="date">24.7</span> יום עיון: יהדות יוון בין שתי מלחמות <span class="tag">אקדמיה</span></div>
+    <div class="ticker-item"><span class="date">03.8</span> סיור מודרך במרכז ליאון רקנאטי <span class="tag">ביקורים</span></div>
+    <div class="ticker-item"><span class="date">11.8</span> ערב עדוּת: יהודה ספורטה <span class="tag">הוקרה</span></div>
+  </div>
+</div>
+
+<!-- ============================ אודות ============================ -->
+<section class="section about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-txt rv">
+        <span class="eyebrow">אודות המרכז</span>
+        <h2>שומרים על הזיכרון, בונים את ההמשך</h2>
+        <p>קהילת סלוניקי (שאלוניקי) הייתה מגדולות ומרכזיות הקהילות היהודיות באגן הים התיכון, מרכז תורה, מסחר ותרבות שהתקיים למעלה מאלפיים שנה, עד שנחרב בשואה.</p>
+        <p>המרכז ע״ש ליאון רקנאטי מוקדש לשימור המורשת הענפה הזו ולהעברתה לדורות הבאים, באמצעות מחקר, פעילות חינוכית לבתי ספר, חיילים וסטודנטים, אירועי קהילה, גלריות, ספרייה עשירה ואוצר של טעמים, ניגונים וסיפורי עדוּת.</p>
+        <a href="#" class="link-more">קראו עוד על המרכז →</a>
+      </div>
+      <div class="about-img rv" role="img" aria-label="תצלום היסטורי של קהילת סלוניקי">
+        <div class="frame"></div>
+        <div class="cap"><b>ליאון רקנאטי</b><small>1890-1945 · מנהיג הקהילה</small></div>
+      </div>
+    </div>
+
+    <div class="counters">
+      <div class="counter rv"><div class="num" data-count="2000">0</div><div class="lbl">שנות מורשת</div></div>
+      <div class="counter rv"><div class="num" data-count="120">0</div><div class="lbl">אירועים בשנה</div></div>
+      <div class="counter rv"><div class="num" data-count="15000">0</div><div class="lbl">מבקרים ותלמידים</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ תחומי פעילות ============================ -->
+<section class="section activity">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">תחומי פעילות ואירועים</span>
+      <h2>פעילות חינוכית וקהילתית לכל הגילאים</h2>
+      <p>תוכניות מותאמות לבתי ספר, סטודנטים, חיילים ומשפחות. חוויה של מורשת חיה.</p>
+    </div>
+    <div class="grid-cards g3">
+      <article class="card rv"><div class="body">
+        <div class="icon" aria-hidden="true">🎓</div><h3>פעילויות לבתי ספר</h3>
+        <p>סדנאות והרצאות חווייתיות המותאמות לתוכנית הלימודים, עם ליווי והרשמה מקוונת.</p>
+      </div><span class="goldline"></span></article>
+      <article class="card rv"><div class="body">
+        <div class="icon" aria-hidden="true">📚</div><h3>ימי עיון לסטודנטים</h3>
+        <p>מפגשים אקדמיים לסטודנטים ותלמידי מחקר בנושאי יהדות יוון והים התיכון.</p>
+      </div><span class="goldline"></span></article>
+      <article class="card rv"><div class="body">
+        <div class="icon" aria-hidden="true">🎖️</div><h3>פעילות לחיילים</h3>
+        <p>ימי תרבות ומורשת לחיילי צה״ל: סיפור הקהילה, גבורה וזהות.</p>
+      </div><span class="goldline"></span></article>
+      <article class="card rv"><div class="body">
+        <div class="icon" aria-hidden="true">👨‍👩‍👧</div><h3>שישי משפחתי</h3>
+        <p>מפגשי משפחות עונתיים סביב מסורת, טעמים וניגונים של קהילת סלוניקי.</p>
+      </div><span class="goldline"></span></article>
+      <article class="card rv"><div class="body">
+        <div class="icon" aria-hidden="true">🕎</div><h3>תרבות חגים ומנהגים</h3>
+        <p>אוסף מאמרים ופעילויות סביב מנהגי החגים הייחודיים של יהדות יוון.</p>
+      </div><span class="goldline"></span></article>
+      <article class="card rv"><div class="body">
+        <div class="icon" aria-hidden="true">🏛️</div><h3>ביקורים מודרכים</h3>
+        <p>סיורים מודרכים במרכז ליאון רקנאטי ובתערוכות המתחלפות.</p>
+      </div><span class="goldline"></span></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ לוח אירועים ============================ -->
+<section class="section events" id="events">
+  <div class="wrap">
+    <div class="events-head rv">
+      <div style="max-width:560px">
+        <span class="eyebrow">לוח אירועים</span>
+        <h2>מה חדש במרכז</h2>
+        <p>הפוסטים והאירועים העדכניים ביותר. גללו את הסליידר ימינה ושמאלה.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+        <a href="#" class="btn btn-outline">לכל האירועים →</a>
+        <div class="slider-nav">
+          <button class="slider-btn" id="evPrev" aria-label="אירועים חדשים יותר">›</button>
+          <button class="slider-btn" id="evNext" aria-label="אירועים קודמים">‹</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="slider-viewport">
+      <div class="slider-track" id="eventsTrack">
+        <!-- מסודר מהחדש ביותר לישן. IMAGE: תמונות אירוע יסופקו ע"י הלקוח -->
+        <article class="post-card">
+          <div class="post-thumb"><div class="ph ph-a ph-dots"></div><div class="post-date"><span class="d">11</span><span class="m">אוג׳</span></div></div>
+          <div class="post-body">
+            <span class="tag-pill">הוקרה</span>
+            <h3>ערב עדוּת: יהודה ספורטה</h3>
+            <p>ערב מיוחד להנצחת קולות הקהילה, עדוּת חיה, סיפורים ותצלומים מתקופת סלוניקי.</p>
+            <div class="post-meta"><span>🕕 19:00</span><span>📍 אולם ההרצאות</span></div>
+          </div>
+        </article>
+        <article class="post-card">
+          <div class="post-thumb"><div class="ph ph-d ph-dots"></div><div class="post-date"><span class="d">03</span><span class="m">אוג׳</span></div></div>
+          <div class="post-body">
+            <span class="tag-pill">ביקורים</span>
+            <h3>סיור מודרך במרכז רקנאטי</h3>
+            <p>סיור חווייתי בתערוכות הקבע והמתחלפות, בליווי מדריך מומחה למורשת יהדות יוון.</p>
+            <div class="post-meta"><span>🕚 11:00</span><span>📍 המרכז</span></div>
+          </div>
+        </article>
+        <article class="post-card">
+          <div class="post-thumb"><div class="ph ph-c ph-dots"></div><div class="post-date"><span class="d">24</span><span class="m">יולי</span></div></div>
+          <div class="post-body">
+            <span class="tag-pill">אקדמיה</span>
+            <h3>יום עיון: יהדות יוון בין המלחמות</h3>
+            <p>מפגש אקדמי לסטודנטים ותלמידי מחקר על חיי הקהילה בתקופת בין שתי מלחמות העולם.</p>
+            <div class="post-meta"><span>🕕 18:00</span><span>📍 אולם ההרצאות</span></div>
+          </div>
+        </article>
+        <article class="post-card">
+          <div class="post-thumb"><div class="ph ph-b ph-dots"></div><div class="post-date"><span class="d">18</span><span class="m">יולי</span></div></div>
+          <div class="post-body">
+            <span class="tag-pill">משפחות</span>
+            <h3>שישי משפחתי: טעמי סלוניקי</h3>
+            <p>מפגש משפחתי סביב המטבח המסורתי של סלוניקי, עם טעמים, ניגונים וסיפורים לכל המשפחה.</p>
+            <div class="post-meta"><span>🕙 10:00</span><span>📍 מרכז רקנאטי</span></div>
+          </div>
+        </article>
+        <article class="post-card">
+          <div class="post-thumb"><div class="ph ph-e ph-dots"></div><div class="post-date"><span class="d">05</span><span class="m">יולי</span></div></div>
+          <div class="post-body">
+            <span class="tag-pill">חיילים</span>
+            <h3>יום תרבות ומורשת לחיילים</h3>
+            <p>יום פעילות לחיילי צה״ל: סיפור הקהילה, גבורה וזהות יהודית־יוונית.</p>
+            <div class="post-meta"><span>🕘 09:00</span><span>📍 המרכז</span></div>
+          </div>
+        </article>
+        <article class="post-card">
+          <div class="post-thumb"><div class="ph ph-f ph-dots"></div><div class="post-date"><span class="d">28</span><span class="m">יוני</span></div></div>
+          <div class="post-body">
+            <span class="tag-pill">בתי ספר</span>
+            <h3>סדנה חווייתית לתלמידי תיכון</h3>
+            <p>סדנה אינטראקטיבית על מורשת סלוניקי, מותאמת לתוכנית הלימודים בהיסטוריה.</p>
+            <div class="post-meta"><span>🕘 09:30</span><span>📍 כיתת הסדנאות</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ גלריה ============================ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">גלריה</span>
+      <h2>רגעים מתוך המורשת</h2>
+      <p>תצלומים מאירועים, ביקורים, אנשי עדוּת ופעילויות המרכז.</p>
+    </div>
+    <div class="gallery-cubes rv">
+      <!-- IMAGE: תצלומי כל גלריה יסופקו ע"י הלקוח -->
+      <a href="#" class="cube"><div class="ph ph-c ph-dots"></div><span class="ring"></span><div class="meta"><span class="count">32 תמונות</span><h3>חגים ומנהגים</h3><span class="go">לצפייה בגלריה →</span></div></a>
+      <a href="#" class="cube"><div class="ph ph-b ph-dots"></div><span class="ring"></span><div class="meta"><span class="count">18 תמונות</span><h3>אנשי עדוּת</h3><span class="go">לצפייה בגלריה →</span></div></a>
+      <a href="#" class="cube"><div class="ph ph-a ph-dots"></div><span class="ring"></span><div class="meta"><span class="count">27 תמונות</span><h3>ביקורים מיוחדים</h3><span class="go">לצפייה בגלריה →</span></div></a>
+      <a href="#" class="cube"><div class="ph ph-d ph-dots"></div><span class="ring"></span><div class="meta"><span class="count">21 תמונות</span><h3>סטודנטים</h3><span class="go">לצפייה בגלריה →</span></div></a>
+      <a href="#" class="cube"><div class="ph ph-e ph-dots"></div><span class="ring"></span><div class="meta"><span class="count">24 תמונות</span><h3>שישי משפחתי</h3><span class="go">לצפייה בגלריה →</span></div></a>
+      <a href="#" class="cube"><div class="ph ph-f ph-dots"></div><span class="ring"></span><div class="meta"><span class="count">15 תמונות</span><h3>פעילות לחיילים</h3><span class="go">לצפייה בגלריה →</span></div></a>
+    </div>
+    <div class="rv" style="text-align:center;margin-top:34px"><a href="#" class="link-more">לגלריה המלאה →</a></div>
+  </div>
+</section>
+
+<!-- ============================ מתכונים,טיזר תלת-ממד ============================ -->
+<section class="section recipes" id="recipes">
+  <div class="ph-dots" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="recipes-grid">
+      <div class="rv">
+        <span class="eyebrow" style="color:var(--gold-lt)">מתכונים וטעמים</span>
+        <h2>ספר המתכונים של סלוניקי</h2>
+        <p>גלריית דפדוף תלת־ממדית ייחודית של מתכונים מסורתיים, טעמים וניחוחות שעברו מדור לדור בקהילת יהדות יוון. חוויית גלישה שמזמינה לדפדף, לקרוא ולבשל.</p>
+        <a href="#" class="btn btn-primary">כניסה לספר המתכונים</a>
+      </div>
+      <div class="book3d rv" aria-hidden="true">
+        <div class="cover">
+          <span>מטבח סלוניקי</span>
+          <b>טעמים וניחוחות</b>
+          <span>◆ ◆ ◆</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ מדיה וספרים ============================ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">מדיה וספרים</span>
+      <h2>ארכיון עשיר לחקר ולזיכרון</h2>
+      <p>ספרים, עיתונים, תקליטורים, סרטים ומאמרים, נגישים לצפייה, האזנה וחיפוש.</p>
+    </div>
+    <div class="media-strip rv">
+      <a href="#" class="media-item"><div class="ic" aria-hidden="true">📖</div><b>ספרים</b></a>
+      <a href="#" class="media-item"><div class="ic" aria-hidden="true">📰</div><b>עיתונים</b></a>
+      <a href="#" class="media-item"><div class="ic" aria-hidden="true">💿</div><b>תקליטורים</b></a>
+      <a href="#" class="media-item"><div class="ic" aria-hidden="true">🗞️</div><b>עיתונים של פעם</b></a>
+      <a href="#" class="media-item"><div class="ic" aria-hidden="true">🎬</div><b>סרטים</b></a>
+      <a href="#" class="media-item"><div class="ic" aria-hidden="true">✍️</div><b>מאמרים</b></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ קישורים נוספים ============================ -->
+<section class="section morelinks" id="morelinks">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">קישורים נוספים</span>
+      <h2>שערים למאגרים ולפרויקטים שלנו</h2>
+      <p>גישה מהירה למאגרי מידע, ספריות ומערכות ייעודיות המחוברות למרכז.</p>
+    </div>
+    <div class="morelinks-grid rv">
+      <a href="#" class="mlink"><span class="ext" aria-hidden="true">↗</span><div class="ic" aria-hidden="true">🌍</div><div class="t"><b>פרויקט רוסיה</b><span>תיעוד וקשרי מורשת יהדות יוון ורוסיה</span></div></a>
+      <a href="#" class="mlink"><span class="ext" aria-hidden="true">↗</span><div class="ic" aria-hidden="true">📗</div><div class="t"><b>מילון לדינו-עברי-אנגלי</b><span>מילון מקוון לחיפוש מונחים בלדינו</span></div></a>
+      <a href="#" class="mlink"><span class="ext" aria-hidden="true">↗</span><div class="ic" aria-hidden="true">🏛️</div><div class="t"><b>ספריית המרכז</b><span>קטלוג הספרייה הראשית של המרכז</span></div></a>
+      <a href="#" class="mlink"><span class="ext" aria-hidden="true">↗</span><div class="ic" aria-hidden="true">📚</div><div class="t"><b>ספריית ד״ר אבנר פרץ</b><span>אוסף מיוחד בחקר הלדינו והספרדית-יהודית</span></div></a>
+      <a href="#" class="mlink"><span class="ext" aria-hidden="true">↗</span><div class="ic" aria-hidden="true">🔎</div><div class="t"><b>קטלוג ספרים</b><span>חיפוש והזמנה מתוך אוסף הספרים</span></div></a>
+      <a href="#" class="mlink"><span class="ext" aria-hidden="true">↗</span><div class="ic" aria-hidden="true">🗄️</div><div class="t"><b>מערכת יעקב</b><span>מעבר למערכת המידע המותאמת</span></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ הוקרה / עדות ============================ -->
+<section class="section tribute">
+  <div class="ph-dots" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="tribute-inner rv">
+      <div class="quote-mark" aria-hidden="true">”</div>
+      <blockquote>שאלוניקי הייתה "אם בישראל", עיר שבה נשמע קול התורה בכל פינה, ולחסד הזיכרון שלה אנו מחויבים.</blockquote>
+      <cite>מתוך עדויות בני הקהילה</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ניוזלטר + צור קשר ============================ -->
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="join-grid">
+      <div class="newsletter rv">
+        <h3>הישארו מעודכנים</h3>
+        <p>הצטרפו לרשימת התפוצה וקבלו עדכונים על אירועים, ימי עיון ופעילויות חדשות.</p>
+        <form class="nl-form" id="nlForm" novalidate>
+          <input type="email" id="nlEmail" placeholder="כתובת האימייל שלכם" aria-label="כתובת אימייל" required>
+          <button type="submit" class="btn btn-primary">הרשמה</button>
+        </form>
+        <div class="nl-msg" id="nlMsg" role="status" aria-live="polite"></div>
+      </div>
+      <div class="contact-brief rv">
+        <h3>צור קשר</h3>
+        <ul>
+          <li><span class="ic" aria-hidden="true">📍</span><span><b>כתובת</b>מרכז ליאון רקנאטי, ישראל</span></li>
+          <li><span class="ic" aria-hidden="true">✉️</span><span><b>אימייל</b>info@salonikaheritage.org</span></li>
+          <li><span class="ic" aria-hidden="true">📞</span><span><b>טלפון</b>000-000-0000</span></li>
+        </ul>
+        <a href="#" class="btn btn-outline">לעמוד צור קשר המלא →</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand-f">
+          <span class="mono" aria-hidden="true">ש</span>
+          <b>מרכז מורשת יהדות<br>שאלוניקי ויוון</b>
+        </div>
+        <p>ע״ש ליאון רקנאטי (1890-1945). שימור מורשתה של קהילת סלוניקי היהודית והעברתה לדורות הבאים.</p>
+        <div class="socials">
+          <a href="#" aria-label="פייסבוק">f</a>
+          <a href="#" aria-label="אינסטגרם">◎</a>
+          <a href="#" aria-label="יוטיוב">▶</a>
+        </div>
+      </div>
+      <div>
+        <h4>ניווט</h4>
+        <ul>
+          <li><a href="#">אודות המרכז</a></li>
+          <li><a href="#events">לוח אירועים</a></li>
+          <li><a href="#">גלריה</a></li>
+          <li><a href="#recipes">מתכונים וטעמים</a></li>
+          <li><a href="#">מדיה וספרים</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>שפות</h4>
+        <ul>
+          <li><a href="#">עברית</a></li>
+          <li><a href="#" class="ltr">English</a></li>
+          <li><a href="#">לדינו</a></li>
+          <li><a href="#" class="ltr">Français</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>צור קשר</h4>
+        <p>מרכז ליאון רקנאטי, ישראל<br>info@salonikaheritage.org<br>000-000-0000</p>
+      </div>
+    </div>
+
+    <div class="ext-row">
+      <span class="lbl">קישורים נוספים:</span>
+      <a href="#">פרויקט רוסיה ↗</a>
+      <a href="#">מילון לדינו-עברי-אנגלי ↗</a>
+      <a href="#">ספריית המרכז ↗</a>
+      <a href="#">ספריית ד״ר אבנר פרץ ↗</a>
+      <a href="#">קטלוג ספרים ↗</a>
+      <a href="#">מערכת יעקב ↗</a>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 המרכז למורשת יהדות שאלוניקי ויוון ע״ש ליאון רקנאטי. כל הזכויות שמורות.</span>
+      <span><a href="#">הצהרת נגישות</a> · <a href="#">מדיניות פרטיות</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* --- תפריטים נפתחים בלחיצה בלבד (דסקטופ) --- */
+  var navLis = Array.prototype.slice.call(document.querySelectorAll('.nav > li'));
+  var langWrap = document.querySelector('.lang');
+  var langBtn = document.querySelector('.lang-btn');
+  function closeMenus(except){
+    navLis.forEach(function(li){
+      if(li!==except){ li.classList.remove('open'); var b=li.querySelector('button'); if(b) b.setAttribute('aria-expanded','false'); }
+    });
+    if(langWrap && except!==langWrap){ langWrap.classList.remove('open'); if(langBtn) langBtn.setAttribute('aria-expanded','false'); }
+  }
+  document.querySelectorAll('.nav > li > button').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var li = btn.parentElement;
+      var willOpen = !li.classList.contains('open');
+      closeMenus(li);
+      li.classList.toggle('open', willOpen);
+      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+  });
+  if(langBtn){
+    langBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var willOpen = !langWrap.classList.contains('open');
+      closeMenus(langWrap);
+      langWrap.classList.toggle('open', willOpen);
+      langBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+  }
+  document.addEventListener('click', function(){ closeMenus(null); });
+  document.querySelectorAll('.dropdown a, .lang-menu a').forEach(function(a){
+    a.addEventListener('click', function(){ closeMenus(null); });
+  });
+  /* התפריטים נסגרים אוטומטית בגלילה כדי שלא יישארו פתוחים */
+  window.addEventListener('scroll', function(){ closeMenus(null); }, {passive:true});
+
+  /* --- מגירת מובייל --- */
+  var burger = document.getElementById('burger');
+  var drawer = document.getElementById('drawer');
+  var overlay = document.getElementById('overlay');
+  var closeBtn = document.getElementById('drawerClose');
+  function openDrawer(){drawer.classList.add('open');overlay.classList.add('open');burger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';}
+  function closeDrawer(){drawer.classList.remove('open');overlay.classList.remove('open');burger.setAttribute('aria-expanded','false');document.body.style.overflow='';}
+  burger.addEventListener('click', function(e){ e.stopPropagation(); openDrawer(); });
+  overlay.addEventListener('click', closeDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  /* אם המסך מתרחב לרוחב דסקטופ,סוגר את המגירה כדי שלא תכסה את הניווט הרגיל */
+  window.addEventListener('resize', function(){ if(window.innerWidth > 1080) closeDrawer(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeDrawer(); closeMenus(null); } });
+
+  /* --- אקורדיון במגירה --- */
+  document.querySelectorAll('.acc-trigger').forEach(function(t){
+    t.addEventListener('click', function(){
+      var panel = t.nextElementSibling;
+      var isOpen = t.classList.toggle('open');
+      panel.style.maxHeight = isOpen ? panel.scrollHeight + 'px' : '0';
+    });
+  });
+  /* סגירת המגירה בלחיצה על קישור פנימי */
+  drawer.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', closeDrawer);
+  });
+
+  /* --- reveal on scroll --- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('on'); io.unobserve(en.target); }
+    });
+  }, {threshold:0.14, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+
+  /* --- counters --- */
+  function animateCount(el){
+    var target = parseInt(el.getAttribute('data-count'),10);
+    var dur = 1600, start = null;
+    var suffix = target >= 15000 ? '+' : (target === 2000 ? '+' : '');
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/dur, 1);
+      var eased = 1 - Math.pow(1-p, 3);
+      var val = Math.floor(eased * target);
+      el.textContent = val.toLocaleString('he-IL') + (p===1 ? suffix : '');
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var cio = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ animateCount(en.target); cio.unobserve(en.target); }
+    });
+  }, {threshold:0.5});
+  document.querySelectorAll('.counter .num').forEach(function(el){ cio.observe(el); });
+
+  /* --- סליידר אירועים (נע ימינה/שמאלה, מהחדש ביותר) --- */
+  var track = document.getElementById('eventsTrack');
+  if(track){
+    var vp = track.parentElement;
+    var evPrev = document.getElementById('evPrev');
+    var evNext = document.getElementById('evNext');
+    var off = 0, tmr = null;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function step(){ var c = track.querySelector('.post-card'); return c ? c.getBoundingClientRect().width + 24 : 300; }
+    function maxOff(){ return Math.max(0, track.scrollWidth - vp.clientWidth); }
+    function render(){
+      off = Math.max(0, Math.min(off, maxOff()));
+      track.style.transform = 'translateX(' + off + 'px)';   /* RTL: חיובי חושף אירועים ישנים משמאל */
+      evPrev.disabled = off <= 0.5;
+      evNext.disabled = off >= maxOff() - 0.5;
+    }
+    function tick(){ off = (off >= maxOff() - 0.5) ? 0 : off + step(); render(); }
+    function restart(){ if(reduce) return; clearInterval(tmr); tmr = setInterval(tick, 4500); }
+    evPrev.addEventListener('click', function(){ off -= step(); render(); restart(); });
+    evNext.addEventListener('click', function(){ off += step(); render(); restart(); });
+    vp.addEventListener('mouseenter', function(){ clearInterval(tmr); });
+    vp.addEventListener('mouseleave', restart);
+    var rt; window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(render, 150); });
+    render(); restart();
+  }
+
+  /* --- טופס ניוזלטר (הדגמה, ללא שליחה אמיתית) --- */
+  var form = document.getElementById('nlForm');
+  var email = document.getElementById('nlEmail');
+  var msg = document.getElementById('nlMsg');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = email.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+      msg.style.color = 'var(--terra)';
+      msg.textContent = 'נא להזין כתובת אימייל תקינה.';
+      return;
+    }
+    msg.style.color = 'var(--sea)';
+    msg.textContent = 'תודה! נרשמתם בהצלחה לרשימת התפוצה.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>
